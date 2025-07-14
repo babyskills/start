@@ -1,217 +1,217 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Адаптивный слайдер</title>
-<style>
-  body {
-    background-color: black;
-    margin: 0;
-    font-family: sans-serif;
-    color: #2E2E31;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
-  .frame {
-    width: 375px;
-    height: 667px;
-    background-color: #040507;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .header {
-    position: absolute;
-    top: 68px; /* Опускаем вниз на 68px */
-    width: 100%;
-    text-align: center;
-    font-size: 16px;
-    color: #2E2E31;
-    z-index: 10;
-  }
-  .header a {
-    color: #414753;
-    text-decoration: none;
-  }
-  .image-container {
-    width: 85%;
-    aspect-ratio: 1 / 1;
-    background-color: #040507;
-    border-radius: 20px;
-    overflow: hidden;
-    position: relative;
-    margin-top: 150px; /* Опускаем вниз на 150px */
-  }
-  .image-wrapper {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0; left: 0;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-  }
-  .image-wrapper.active {
-    opacity: 1;
-    position: relative;
-  }
-  .image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 20px;
-    user-select: none;
-  }
-  /* Контейнер для подписей под слайдером */
-  .caption-container {
-    margin-top: 46px;
-    height: 24px; /* фиксированная высота для подписи */
-    text-align: center;
-    color: #2E2E31; /* цвет текста */
-    font-size: 24px;
-    user-select: none;
-    position: relative;
-  }
-.caption {
-    position: absolute;
-    width: 100%;
-    opacity: 0;
-}
-.caption.active {
-    opacity: 1;
-    position: relative;
-}
-  .bottom-panel {
-    width: 100%;
-    height: 99px;
-    background-image: url("data:image/svg+xml,%3Csvg width='375' height='99' viewBox='0 0 375 99' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0H71.3676C79.298 0 86.9059 3.14011 92.5276 8.73373L111.847 27.957C117.469 33.5506 125.077 36.6907 133.007 36.6907H241.993C249.923 36.6907 257.531 33.5506 263.153 27.957L282.472 8.73372C288.094 3.1401 295.702 0 303.632 0H375V99H0V0Z' fill='%230C0C10'/%3E%3C/svg%3E");
-    background-size: 100% 99px;
-    background-repeat: no-repeat;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    box-sizing: border-box;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-  }
-  .circle {
-    margin: 12px;
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    background-color: #15171B;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-  }
-  .arrow {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-  }
-  .arrow svg {
-    width: 15px;
-    height: 16px;
-    fill: #737476;
-  }
-  .arrow-left svg {
-    transform: scaleX(-1);
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Адаптивный слайдер</title>
+  <style>
+    body {
+      background-color: #040507;
+      margin: 0;
+      font-family: sans-serif;
+      color: #2E2E31;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Общие стили для frame (базовые) */
+    .frame {
+      width: 100%; /* Полная ширина экрана */
+      max-width: 375px; /* Ограничиваем ширину */
+      height: 100vh; /* Полная высота экрана */
+      background-color: #040507;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header {
+      position: absolute;
+      top: 20px; /* Расположение заголовка наверху экрана*/
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+      color: #2E2E31;
+      z-index: 10;
+    }
+
+    .header a {
+      color: #414753;
+      text-decoration: none;
+      margin-top: 20px; /* Отступ от верхнего края */
+      display: inline-block; /* Чтобы работал margin-top */
+    }
+
+    .image-container {
+      width: 85%; /* ширина картинки */
+      aspect-ratio: 1/1; /* Квадратная картинка */
+      background-color: #040507;
+      overflow: hidden;
+      position: relative;
+      margin-top: 160px; /* Отступ от заголовка */
+      border-radius: 20px;
+    }
+
+    .image-wrapper {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .image-wrapper.active {
+      opacity: 1;
+      position: relative;
+    }
+
+    .image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      user-select: none;
+      border-radius: 20px;
+    }
+
+    .alt-text {
+      text-align: center;
+      margin-top: 26px;
+      font-size: 34px;
+    }
+
+    /* Стили для bottom-panel */
+    .bottom-panel {
+      position: fixed; /* Теперь фиксирована внизу */
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 99px; /* Высота, соответствующая высоте SVG */
+      background-color: #0C0C10; /* Темно-серый фон */
+      display: flex;
+      justify-content: space-around; /* Располагаем элементы равномерно */
+      align-items: center;
+      padding: 0 10px; /* Добавляем небольшие отступы по бокам */
+      box-sizing: border-box;
+      z-index: 10; /* Чтобы панель была над всем */
+    }
+
+    /* Стили для кругов (кнопок навигации) */
+    .circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #15171B;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .circle:hover {
+        background-color: #25282E; /* Изменение цвета при наведении */
+    }
+
+    /* Стили для стрелок (SVG) */
+    .arrow {
+        width: 14px;
+        height: 16px;
+        fill: #737476;
+    }
+
+    .arrow-left {
+        transform: rotate(180deg); /* Переворачиваем стрелку влево */
+    }
+  </style>
 </head>
 <body>
 
-<div class="frame">
-  <div class="header">
-    <a href="index.html">Вернуться назад, к другим заданиям</a>
+  <div class="frame">
+    <div class="header">
+      <a href="index.html">Вернуться назад, к другим заданиям</a>
+    </div>
+
+    <div class="image-container" id="image-container">
+      <!-- Здесь будут изображения -->
+    </div>
+
+    <p class="alt-text" id="alt-text"></p>
+
+    <!-- Новая bottom-panel -->
+    <div class="bottom-panel">
+        <div class="circle" onclick="previousImage()">
+            <svg class="arrow arrow-left" width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.8178 9.15838C13.6637 8.63788 13.6637 7.40842 12.8178 6.88792L2.03151 0.250172C1.14339 -0.296361 -6.56441e-05 0.342598 -6.56441e-05 1.38541L-6.56441e-05 14.6609C-6.56441e-05 15.7037 1.14339 16.3427 2.03151 15.7961L12.8178 9.15838Z" fill="#737476"/>
+            </svg>
+        </div>
+
+        <div class="circle" onclick="nextImage()">
+            <svg class="arrow" width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.8178 9.15838C13.6637 8.63788 13.6637 7.40842 12.8178 6.88792L2.03151 0.250172C1.14339 -0.296361 -6.56441e-05 0.342598 -6.56441e-05 1.38541L-6.56441e-05 14.6609C-6.56441e-05 15.7037 1.14339 16.3427 2.03151 15.7961L12.8178 9.15838Z" fill="#737476"/>
+            </svg>
+        </div>
+    </div>
   </div>
 
-  <div class="image-container" id="image-container"></div>
+  <script>
+    // Массив с данными изображений и их описаниями
+    const slides = [
+      {src: "img/Стрекоза.jpg", alt: "Стрекоза"},
+      {src: "img/Джойстик.jpg", alt: "Джойстик"},
+      {src: "img/Трясогузка.jpg", alt: "Трясогузка"},
+      {src: "img/Степлер.jpg", alt: "Степлер"}
+    ];
 
-  <div class="caption-container" id="caption-container"></div>
+    const imageContainer = document.getElementById('image-container');
+    const altTextElement = document.getElementById('alt-text');
+    let currentIndex = 0; // Индекс текущего активного слайда
+    const total = slides.length;
 
-  <div class="bottom-panel">
-    <div class="circle" onclick="previousImage()">
-      <div class="arrow arrow-left">
-        <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13.5171 9.15839C14.3629 8.63789 14.3629 7.40843 13.5171 6.88792L2.73073 0.250181C1.84262 -0.296352 0.699159 0.342607 0.699159 1.38542L0.699159 14.6609C0.699159 15.7037 1.84262 16.3427 2.73073 15.7961L13.5171 9.15839Z" fill="#737476"/>
-        </svg>
-      </div>
-    </div>
-    <div class="circle" onclick="nextImage()">
-      <div class="arrow">
-        <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13.5171 9.15839C14.3629 8.63789 14.3629 7.40843 13.5171 6.88792L2.73073 0.250181C1.84262 -0.296352 0.699159 0.342607 0.699159 1.38542L0.699159 14.6609C0.699159 15.7037 1.84262 16.3427 2.73073 15.7961L13.5171 9.15839Z" fill="#737476"/>
-        </svg>
-      </div>
-    </div>
-  </div>
-</div>
+    // Функция показа слайда по индексу
+    function showSlide(index) {
+      // Сначала очищаем imageContainer
+      imageContainer.innerHTML = '';
 
-<script>
-  // Массив с данными изображений и их описаниями
-  const slides = [
-    {src: "img/Стрекоза.jpg", alt: "Стрекоза"},
-    {src: "img/Джойстик.jpg", alt: "Джойстик"},
-    {src: "img/Трясогузка.jpg", alt: "Трясогузка"},
-    {src: "img/Степлер.jpg", alt: "Степлер"}
-  ];
+      // Создаем и добавляем новое изображение
+      const img = document.createElement('img');
+      img.src = slides[index].src;
+      img.alt = slides[index].alt;
+      img.style.width = '100%'; // Важно для масштабирования
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '20px';
+      imageContainer.appendChild(img);
 
-  const imageContainer = document.getElementById('image-container');
-  const captionContainer = document.getElementById('caption-container');
+      // Обновляем alt текст
+      altTextElement.textContent = slides[index].alt;
+    }
 
-  // Создаем изображения и подписи динамически
-  slides.forEach((slide, index) => {
-    const imgWrapper = document.createElement('div');
-    imgWrapper.classList.add('image-wrapper');
-    if (index === 0) imgWrapper.classList.add('active');
+    // Показать следующий слайд
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % total; // Цикличность
+      showSlide(currentIndex);
+    }
 
-    const img = document.createElement('img');
-    img.src = slide.src;
-    img.alt = slide.alt;
+    // Показать предыдущий слайд
+    function previousImage() {
+      currentIndex = (currentIndex - 1 + total) % total; // Цикличность
+      showSlide(currentIndex);
+    }
 
-    imgWrapper.appendChild(img);
-    imageContainer.appendChild(imgWrapper);
+    // Инициализация слайдера
+    function initializeSlider() {
+      showSlide(currentIndex); // Показываем первый слайд
+    }
 
-    const caption = document.createElement('div');
-    caption.classList.add('caption');
-    if (index === 0) caption.classList.add('active');
-    caption.textContent = slide.alt;
-    captionContainer.appendChild(caption);
-  });
-
-  let currentIndex = 0;
-  const images = imageContainer.querySelectorAll('.image-wrapper');
-  const captions = captionContainer.querySelectorAll('.caption');
-  const total = slides.length;
-
-  // Функция показа слайда по индексу
-  function showSlide(index) {
-    images.forEach((img, i) => img.classList.toggle('active', i === index));
-    captions.forEach((cap, i) => cap.classList.toggle('active', i === index));
-  }
-
-  // Показать следующий слайд
-  function nextImage() {
-    currentIndex = (currentIndex + 1) % total;
-    showSlide(currentIndex);
-  }
-
-  // Показать предыдущий слайд
-  function previousImage() {
-    currentIndex = (currentIndex - 1 + total) % total;
-    showSlide(currentIndex);
-  }
-</script>
+    // Запускаем слайдер при загрузке страницы
+    initializeSlider();
+  </script>
 
 </body>
 </html>
