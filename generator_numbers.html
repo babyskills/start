@@ -1,100 +1,124 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>ГЕНЕРАТОР СЛУЧАЙНЫХ ЦИФР</title>
     <style>
-        body {
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
             background-color: #222;
             color: #eee;
             font-family: sans-serif;
+            overflow: hidden;
+        }
+        body {
             display: flex;
             flex-direction: column;
             align-items: center; /* Горизонтальное центрирование */
             justify-content: center; /* Вертикальное центрирование */
             min-height: 100vh; /* Занимает всю высоту экрана */
-            padding: 150px;
-            overflow: hidden; /* Скрываем вертикальную прокрутку */
+            padding: 20px; /* Уменьшил паддинг для полного влезания */
+            box-sizing: border-box;
         }
 
         h1 {
             margin-bottom: 10px;
             text-align: center;
+            font-size: 1.8em;
         }
 
         #result {
-            font-size: 10em;
+            font-size: 8em;
             margin-bottom: 10px;
             text-align: center;
+            line-height: 1;
+            user-select: none;
         }
 
         button {
             background-color: #068278;
             color: #eee;
             border: none;
-            padding: 24px 58px;
-            font-size: 1em;
+            padding: 20px 50px;
+            font-size: 1.2em;
             cursor: pointer;
             border-radius: 10px;
             margin-bottom: 20px;
+            user-select: none;
+            transition: background-color 0.2s;
         }
 
         button:hover {
             background-color: #666;
         }
 
+        button:active {
+            background-color: #2C2C2C;
+        }
+
         .range-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 20px; /* Добавляем отступ сверху */
-            margin-bottom: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 320px;
         }
 
         .range-container label {
-            margin-right: 10px;
-            margin-bottom: 20px;
-            font-size: 16px; /* Размер текста для "В диапазоне от:" */
+            margin-bottom: 10px;
+            font-size: 16px;
+            user-select: none;
         }
 
         .range-container .input-row {
             display: flex;
             align-items: center;
+            width: 100%;
+            justify-content: center;
+            gap: 10px;
         }
 
         .range-container input {
             background-color: #333;
             color: #eee;
-            border: 0px solid #555;
-            padding: 20px;
+            border: none;
+            padding: 15px;
             border-radius: 10px;
             width: 80px;
-            margin-right: 10px;
-            font-size: 18px; /* Размер текста в полях ввода */
+            font-size: 18px;
+            text-align: center;
+            user-select: text;
         }
 
         .range-container span {
-            margin-right: 10px;
-            font-size: 16px; /* Размер текста для "до" */
+            font-size: 16px;
+            user-select: none;
+            color: #ccc;
         }
 
         footer {
-            margin-top: 20px;
+            margin-top: auto;
+            padding: 10px 0;
             text-align: center;
-            margin-top: 20px;
+            width: 100%;
+            color: #888888;
+            font-size: 16px;
+            user-select: none;
         }
 
         footer a {
-            color: #068278; /* Цвет текста кнопки */
+            color: #888888;
             text-decoration: none;
-            font-size: 14px; /* Размер текста ссылки */
         }
 
         footer a:hover {
             text-decoration: underline;
         }
-
     </style>
 </head>
 <body>
@@ -107,12 +131,15 @@
     <div class="range-container">
         <label for="min">В диапазоне от:</label>
         <div class="input-row">
-          <input type="number" id="min" value="1">
-          <span>до</span>
-          <input type="number" id="max" value="100">
+            <input type="number" id="min" value="1" />
+            <span>до</span>
+            <input type="number" id="max" value="100" />
         </div>
     </div>
 
+    <footer>
+        <a href="index.html">Вернуться назад, к другим заданиям</a>
+    </footer>
 
     <script>
         function generateRandomNumber() {
@@ -133,9 +160,5 @@
             document.getElementById("result").textContent = randomNumber;
         }
     </script>
-
-    <footer>
-        <a href="index.html">Вернуться назад, к другим заданиям</a>
-    </footer>
 </body>
 </html>
