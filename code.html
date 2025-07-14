@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Набери код</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #252525;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    flex-direction: column;
+  }
+  .container {
+    text-align: center;
+  }
+  #status-message {
+    height: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    user-select: none;
+    color: #7C7C7C;
+    margin-bottom: 20px; /* поднимает надписи выше табло */
+    line-height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 240px;
+  }
+  #display {
+    width: 230px;
+    height: 60px;
+    margin: 0 auto 60px;
+    border: 0px solid #333;
+    border-radius: 8px;
+    font-size: 24px;
+    letter-spacing: normal;
+    background: white;
+    user-select: none;
+    color: #4F4F4F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+  }
+  .char {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 14px;
+    font-weight: bold;
+  }
+  .char.key-svg svg {
+    width: 10px;
+    height: 19px;
+    fill: currentColor;
+    display: block;
+  }
+  .buttons-wrapper {
+    background-color: #c9c9c9;
+    padding: 15px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(4, 60px);
+    gap: 10px;
+    justify-content: center;
+  }
+  button {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    border-radius: 8px;
+    border: 0px solid #666;
+    background: #3d3d3d;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s;
+    color: white;
+    padding: 0;
+  }
+  button:hover {
+    background: #686868;
+  }
+  button:active {
+    background: #2C2C2C;
+  }
+  button svg {
+    width: 28px;
+    height: 54px;
+    fill: white;
+    transform-origin: center center;
+    transform: scale(0.5);
+  }
+  #modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  #modal-content {
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+  #modal-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0px;
+  }
+  /* Стили для ссылки внизу страницы */
+  #link {
+    margin-top: 40px;
+    color: #888888;
+    font-size: 16px;
+    text-decoration: none;
+  }
+  #link:hover {
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div id="status-message">Введи код</div>
+    <div id="display"></div>
+    <div class="buttons-wrapper">
+      <div class="buttons">
+        <button data-value="1">1</button>
+        <button data-value="2">2</button>
+        <button data-value="3">3</button>
+
+        <button data-value="4">4</button>
+        <button data-value="5">5</button>
+        <button data-value="6">6</button>
+
+        <button data-value="7">7</button>
+        <button data-value="8">8</button>
+        <button data-value="9">9</button>
+
+        <button data-value="*key*" aria-label="ключ">
+          <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 559886 1110963" >
+            <path fill="white" fill-rule="nonzero" d="M279945 1c-154356,-11 -279944,125576 -279945,279947 0,115908 70962,218965 178019,260734l2 455797c0,4678 1687,9194 4739,12713l82524 95078c7770,8957 21490,8885 29317,7l82522 -95078c3060,-3528 4755,-8048 4748,-12720l-7 -53907c0,-4171 -1338,-8213 -3821,-11560l-46201 -62242 46091 -62131c5098,-6868 5098,-16254 -6,-23129l-46092 -62119 46201 -62240c2484,-3349 3823,-7404 3829,-11568l0 -106893c107078,-41789 178020,-144827 178020,-260735 11,-74784 -29113,-145089 -81982,-197957 -52877,-52878 -123181,-82002 -197958,-81997zm67079 172464c0,37049 -30029,67079 -67078,67079 -37049,0 -67079,-30030 -67079,-67079 0,-37049 30030,-67080 67079,-67080 37049,0 67078,30031 67078,67080z"/>
+          </svg>
+        </button>
+        <button data-value="0">0</button>
+        <button data-value="C">C</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal">
+    <div id="modal-content">
+      <img src="https://99px.ru/sstorage/86/2016/12/image_860512162311346150086.gif" alt="Правильный код" />
+    </div>
+  </div>
+
+  <a id="link" href="index.html">Вернуться назад, к другим заданиям</a>
+
+<script>
+  const display = document.getElementById('display');
+  const statusMessage = document.getElementById('status-message');
+  const buttons = document.querySelectorAll('.buttons button');
+  const modal = document.getElementById('modal');
+  const correctCode = ['6', '0', '*key*', '3', '5', '5', '8'];
+
+  let inputCode = [];
+  let modalTimeout = null;
+  let modalOpenTimeout = null;
+
+  function createKeySVG(color) {
+    const svgns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgns, "svg");
+    svg.setAttribute("viewBox", "0 0 559886 1110963");
+    svg.setAttribute("width", "10");
+    svg.setAttribute("height", "19");
+    svg.style.fill = color;
+    svg.style.display = "block";
+
+    const path = document.createElementNS(svgns, "path");
+    path.setAttribute("fill-rule", "nonzero");
+    path.setAttribute("d", "M279945 1c-154356,-11 -279944,125576 -279945,279947 0,115908 70962,218965 178019,260734l2 455797c0,4678 1687,9194 4739,12713l82524 95078c7770,8957 21490,8885 29317,7l82522 -95078c3060,-3528 4755,-8048 4748,-12720l-7 -53907c0,-4171 -1338,-8213 -3821,-11560l-46201 -62242 46091 -62131c5098,-6868 5098,-16254 -6,-23129l-46092 -62119 46201 -62240c2484,-3349 3823,-7404 3829,-11568l0 -106893c107078,-41789 178020,-144827 178020,-260735 11,-74784 -29113,-145089 -81982,-197957 -52877,-52878 -123181,-82002 -197958,-81997zm67079 172464c0,37049 -30029,67079 -67078,67079 -37049,0 -67079,-30030 -67079,-67079 0,-37049 30030,-67080 67079,-67080 37049,0 67078,30031 67078,67080z");
+    svg.appendChild(path);
+    return svg;
+  }
+
+  function resetInput() {
+    inputCode = [];
+    statusMessage.style.color = "#C9C9C9";
+    statusMessage.textContent = "Введи код";
+    display.style.color = "#C9C9C9";
+    updateDisplay();
+  }
+
+  function updateDisplay() {
+    display.innerHTML = "";
+    if (inputCode.length === 0) {
+      statusMessage.style.color = "#C9C9C9";
+      statusMessage.textContent = "Введи код";
+      display.style.color = "#C9C9C9";
+      return;
+    }
+
+    let color = "#323232";
+    let messageText = "Продолжай!";
+    let messageColor = "#3DB362";
+    let showModal = false;
+
+    if (inputCode.length === correctCode.length) {
+      let isCorrect = true;
+      for (let i = 0; i < correctCode.length; i++) {
+        if (inputCode[i] !== correctCode[i]) {
+          isCorrect = false;
+          break;
+        }
+      }
+      if (isCorrect) {
+        color = "green";
+        messageText = "Молодец! Правильно!";
+        messageColor = "#3DB362";
+        showModal = true;
+      } else {
+        color = "red";
+        messageText = "Неправильно";
+        messageColor = "red";
+      }
+    }
+
+    statusMessage.style.color = messageColor;
+    statusMessage.textContent = messageText;
+    display.style.color = color;
+
+    inputCode.forEach(ch => {
+      if (ch === "*key*") {
+        const span = document.createElement("span");
+        span.className = "char key-svg";
+        const svg = createKeySVG(color);
+        span.appendChild(svg);
+        display.appendChild(span);
+      } else {
+        const span = document.createElement("span");
+        span.className = "char";
+        span.textContent = ch;
+        span.style.color = color;
+        display.appendChild(span);
+      }
+    });
+
+    if (showModal) {
+      if (modalOpenTimeout) clearTimeout(modalOpenTimeout);
+      modalOpenTimeout = setTimeout(() => {
+        modal.style.display = "flex";
+        if (modalTimeout) clearTimeout(modalTimeout);
+        modalTimeout = setTimeout(() => {
+          modal.style.display = "none";
+          resetInput();
+        }, 7000); // время показа гифки
+      }, 1200); // задержка перед открытием модалки
+    }
+  }
+
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      const val = button.getAttribute("data-value");
+      if (val === "C") {
+        if (modalTimeout) clearTimeout(modalTimeout);
+        if (modalOpenTimeout) clearTimeout(modalOpenTimeout);
+        modal.style.display = "none";
+        resetInput();
+        return;
+      }
+      if (inputCode.length < correctCode.length) {
+        inputCode.push(val);
+        updateDisplay();
+      }
+    });
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      if (modalTimeout) clearTimeout(modalTimeout);
+      if (modalOpenTimeout) clearTimeout(modalOpenTimeout);
+      modal.style.display = "none";
+      resetInput();
+    }
+  });
+</script>
+</body>
+</html>

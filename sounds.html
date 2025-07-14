@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Угадай звук</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #222;
+            color: #eee;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-link {
+            display: block;
+            text-align: center;
+            padding: 20px 0;
+            color: #ccc;
+            font-size: 16px;
+            text-decoration: none;
+            user-select: none;
+            background-color: #1A1A1A;
+        }
+        .top-link:hover {
+            color: #DDDDDD;
+            text-decoration: none;
+        }
+
+        .cards-container {
+            width: 80%;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card {
+            background-color: #333;
+            border: 1px solid #555;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            box-sizing: border-box;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .card.playing {
+            background-color: #366344; /* цвет, пока играет аудио */
+        }
+
+        .play-area {
+            background-color: #3DC17A;
+            border-radius: 12px;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .play-area.playing {
+            background-color: #42C47B; /* цвет, пока играет аудио */
+        }
+
+        .play-area:hover:not(.playing) {
+            background-color: #42C47B;
+        }
+
+        .play-area svg {
+            display: block;
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            fill: #fff;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        h3 {
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: #ddd;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="top-link">Вернуться назад, к другим заданиям</a>
+
+    <div class="cards-container" id="cards-container">
+        <!-- Cards will be added here by JavaScript -->
+    </div>
+
+    <script>
+        const cardsContainer = document.getElementById('cards-container');
+        const cardData = [
+            { title: "Скажи, кто это?", sound: "sounds/воробей.mp3", description: "Нажми на область, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/лягушка.mp3", description: "Нажми на область, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/дрозд.mp3", description: "Нажми на область, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/кот.mp3", description: "Нажми на область, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/петух.mp3", description: "Нажми на область, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/свинья.mp3", description: "Нажми на область, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/комар.mp3", description: "Нажми на область, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/собака.mp3", description: "Нажми на область, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/ворона.mp3", description: "Нажми на область, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/корова.mp3", description: "Нажми на область, чтобы послушать" }
+        ];
+
+        let currentAudio = null;
+        let currentPlayArea = null;
+        let currentCard = null;
+
+        function createCards() {
+            cardsContainer.innerHTML = '';
+
+            cardData.forEach(data => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+
+                const cardContent = document.createElement('div');
+                cardContent.classList.add('card-content');
+
+                cardContent.innerHTML = `
+                    <h3>${data.title}</h3>
+                    <p>${data.description}</p>
+                `;
+
+                const playArea = document.createElement('div');
+                playArea.classList.add('play-area');
+                playArea.innerHTML = `
+                    <svg width="30" height="30" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M30 0C46.5685 0 60 13.4315 60 30C60 46.5685 46.5685 60 30 60C13.4315 60 0 46.5685 0 30C0 13.4315 13.4315 0 30 0ZM23.4941 17.8486C22.8275 17.4699 22 17.952 22 18.7188V40.2812C22 41.048 22.8275 41.5301 23.4941 41.1514L42.4697 30.3701C43.1444 29.9868 43.1444 29.0142 42.4697 28.6309L23.4941 17.8486Z" fill="#fff"/>
+                    </svg>
+                `;
+
+                card.appendChild(cardContent);
+                card.appendChild(playArea);
+                cardsContainer.appendChild(card);
+
+                playArea.addEventListener('click', () => {
+                    if (currentAudio && !currentAudio.paused) {
+                        currentAudio.pause();
+                        currentAudio.currentTime = 0;
+                        if (currentPlayArea) currentPlayArea.classList.remove('playing');
+                        if (currentCard) currentCard.classList.remove('playing');
+                    }
+
+                    if (currentPlayArea === playArea && currentAudio && !currentAudio.paused) {
+                        currentAudio = null;
+                        currentPlayArea = null;
+                        if (currentCard) {
+                            currentCard.classList.remove('playing');
+                            currentCard = null;
+                        }
+                        return;
+                    }
+
+                    currentAudio = new Audio(data.sound);
+                    currentPlayArea = playArea;
+                    currentCard = card;
+                    currentPlayArea.classList.add('playing');
+                    currentCard.classList.add('playing');
+                    currentAudio.play();
+
+                    currentAudio.onended = () => {
+                        if (currentPlayArea) currentPlayArea.classList.remove('playing');
+                        if (currentCard) currentCard.classList.remove('playing');
+                        currentPlayArea = null;
+                        currentCard = null;
+                        currentAudio = null;
+                    };
+                });
+            });
+        }
+
+        createCards();
+    </script>
+</body>
+</html>
