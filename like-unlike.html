@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Люблю и не люблю</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #222;
+            color: #eee;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        /* Ссылка на index.html */
+        .index-link {
+            color: #888;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .area-container {
+            width: 100%;
+            margin: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .area-header {
+            background-color: #161616;
+            color: #eee;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .top-area, .bottom-area {
+            background-color: #333;
+            padding: 20px;
+            text-align: left;
+            border-radius: 0 0 5px 5px;
+            box-sizing: border-box;
+            min-height: 150px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Горизонтальное выравнивание по центру */
+            overflow-x: hidden;
+            overflow-y: hidden;
+            transition: background-color 0.2s ease; /* Плавное изменение цвета */
+        }
+
+        .top-area.hovered,
+        .bottom-area.hovered {
+            background-color: #444A2D; /* Зеленый цвет */
+        }
+
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 10px;
+            box-sizing: border-box;
+            width: 100%;
+            margin: 10px;
+            position: relative;
+            min-height: 220px;
+        }
+
+        .product-item {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            border: 1px solid #555;
+            border-radius: 10px;
+            cursor: grab;
+            transition: transform 0.2s ease;
+            object-fit: cover;
+            background-color: #444;
+            position: absolute;
+            z-index: 1000;
+        }
+
+        .dragging {
+            transform: scale(1.1);
+            opacity: 0.7;
+            z-index: 1001;
+            cursor: grabbing;
+        }
+
+        .top-area .product-item,
+        .bottom-area .product-item {
+            position: relative;
+            margin: 5px;
+            z-index: auto;
+            cursor: grab; /* Добавлено */
+        }
+
+        /* Адаптивный дизайн */
+        @media (max-width: 600px) {
+            .product-item {
+                width: 60px;
+                height: 60px;
+            }
+            .top-area, .bottom-area {
+                padding: 10px;
+                min-height: 100px;
+            }
+        }
+
+        /* Стиль для сообщения "Молодец!" */
+        .congratulations {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #4CB14C; /* Изменено */
+            font-size: 2em;
+            font-weight: bold; /* Изменено */
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none; /* Добавлено */
+        }
+
+        .congratulations.show {
+            opacity: 1;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.17/dist/interact.min.js"></script>
+</head>
+<body>
+    <a href="index.html" class="index-link">Вернуться назад, к другим заданиям</a>
+    <div class="game-container">
+
+        <div class="area-container">
+            <div class="area-header">Я люблю</div>
+            <div class="top-area" id="topArea">
+            </div>
+        </div>
+
+        <div class="product-container" id="productContainer">
+            <img class="product-item" src="files/img01.jpg" alt="Картинка">
+            <img class="product-item" src="files/img02.jpg" alt="Картинка">
+            <img class="product-item" src="files/img03.jpg" alt="Картинка">
+            <img class="product-item" src="files/img04.jpg" alt="Картинка">
+            <img class="product-item" src="files/img05.jpg" alt="Картинка">
+            <img class="product-item" src="files/img06.jpg" alt="Картинка">
+            <img class="product-item" src="files/img07.jpg" alt="Картинка">
+            <img class="product-item" src="files/img08.jpg" alt="Картинка">
+            <img class="product-item" src="files/img09.jpg" alt="Картинка">
+            <img class="product-item" src="files/img10.jpg" alt="Картинка">
+            <img class="product-item" src="files/img11.jpg" alt="Картинка">
+            <img class="product-item" src="files/img12.jpg" alt="Картинка">
+        </div>
+
+        <div class="area-container">
+            <div class="area-header">Я не люблю</div>
+            <div class="bottom-area" id="bottomArea">
+            </div>
+        </div>
+    </div>
+
+    <!-- Элемент для отображения "Молодец!" -->
+    <div class="congratulations">Молодец!</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const productContainer = document.getElementById('productContainer');
+            const topArea = document.getElementById('topArea');
+            const bottomArea = document.getElementById('bottomArea');
+            const productItems = document.querySelectorAll('.product-item');
+            const congratulationsElement = document.querySelector('.congratulations');
+
+            // Инициализация позиций
+            function initPositions() {
+                const containerRect = productContainer.getBoundingClientRect();
+                const itemWidth = 100 + 20; // Ширина элемента + margin
+                const itemHeight = 100 + 20;
+
+                const itemsPerRow = Math.floor(containerRect.width / itemWidth);
+                const numItems = productItems.length;
+
+                productItems.forEach((item, index) => {
+                    const row = Math.floor(index / itemsPerRow);
+                    const col = index % itemsPerRow;
+                    const x = (containerRect.width - (itemsPerRow * itemWidth - 20)) / 2 + (col * itemWidth -10);
+                    const y = (containerRect.height - (Math.ceil(numItems / itemsPerRow) * itemHeight - 20)) / 2 + (row * itemHeight -10);
+
+
+                    item.style.left = x + 'px';
+                    item.style.top = y + 'px';
+                });
+            }
+            initPositions();
+
+            // Функция для воспроизведения звука
+            function playSound(soundFile) {
+                const audio = new Audio('files/' + soundFile);
+                audio.play();
+            }
+
+            // Функция для отображения поздравления
+            function showCongratulations() {
+                congratulationsElement.classList.add('show');
+                setTimeout(() => {
+                    congratulationsElement.classList.remove('show');
+                }, 2000); // Скрыть через 2 секунды
+            }
+
+            // Функция для проверки завершения игры
+            function checkGameCompletion() {
+                const allItemsInAreas = document.querySelectorAll('.top-area .product-item, .bottom-area .product-item').length;
+                if (allItemsInAreas === productItems.length) {
+                    showCongratulations();
+                }
+            }
+
+            // Настройка InteractJS для перетаскивания
+            interact('.product-item')
+                .draggable({
+                    inertia: true,
+                    modifiers: [
+                        interact.modifiers.restrictRect({
+                            restriction: document.body,
+                            endOnly: true
+                        })
+                    ],
+                    autoScroll: true,
+                    listeners: {
+                        start (event) {
+                            event.target.classList.add('dragging');
+                        },
+                        move (event) {
+                            const target = event.target;
+                            const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                            const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                            target.style.transform = `translate(${x}px, ${y}px)`;
+
+                            target.setAttribute('data-x', x);
+                            target.setAttribute('data-y', y);
+
+                            // Проверяем, находится ли элемент над целевой областью во время перемещения
+                            const targetArea = getTargetArea(event);
+                            if (targetArea) {
+                                targetArea.classList.add('hovered');
+                            } else {
+                                topArea.classList.remove('hovered');
+                                bottomArea.classList.remove('hovered');
+                            }
+                        },
+                        end (event) {
+                            event.target.classList.remove('dragging');
+                            topArea.classList.remove('hovered');
+                            bottomArea.classList.remove('hovered');
+
+                            const targetArea = getTargetArea(event);
+                            const target = event.target;
+
+                            if (targetArea) {
+                                // Воспроизводим звук в зависимости от целевой области
+                                if (targetArea === topArea) {
+                                    playSound('like.mp3');
+                                } else if (targetArea === bottomArea) {
+                                    playSound('dislike.mp3');
+                                }
+
+                                targetArea.appendChild(target);
+
+                                target.style.position = 'relative';
+                                target.style.transform = 'none';
+                                target.style.left = '';
+                                target.style.top = '';
+                                target.setAttribute('data-x', 0);
+                                target.setAttribute('data-y', 0);
+                            } else {
+                                // Возвращаем в productContainer
+                                productContainer.appendChild(target);
+                                target.style.position = 'absolute';
+                                target.style.transform = 'none';
+
+                                 // Возвращаем к исходному положению
+                                initPositions();
+                            }
+                            checkGameCompletion(); // Проверяем завершение после каждого перетаскивания
+                        }
+                    }
+                });
+
+            function getTargetArea(event) {
+                const x = event.clientX || (event.touches && event.touches[0]?.clientX);
+                const y = event.clientY || (event.touches && event.touches[0]?.clientY);
+
+                if (!x || !y) return null;
+
+                const topRect = topArea.getBoundingClientRect();
+                const bottomRect = bottomArea.getBoundingClientRect();
+                const productContainerRect = productContainer.getBoundingClientRect(); // Добавлено
+
+                if (y >= topRect.top && y <= topRect.bottom && x >= topRect.left && x <= topRect.right) {
+                    return topArea;
+                } else if (y >= bottomRect.top && y <= bottomRect.bottom && x >= bottomRect.left && x <= bottomRect.right) {
+                    return bottomArea;
+                } else if (y >= productContainerRect.top && y <= productContainerRect.bottom && x >= productContainerRect.left && x <= productContainerRect.right) {  // Добавлено
+                    return productContainer;
+                }
+                return null;
+            }
+        });
+    </script>
+</body>
+</html>
