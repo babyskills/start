@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Календарь</title>
+  <style>
+    body {
+      background-color: #0D0303;
+      margin: 0;
+      font-family: sans-serif;
+      color: #5A3838; /* color of rest of the text */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column; /* Stack content vertically */
+    }
+
+    .frame {
+      width: 100%;
+      max-width: 500px;
+      /*height: 100vh; -- REMOVED fixed height*/
+      background-color: #0D0303;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header {
+      position: absolute;
+      top: -42px;  /* Move the header up by 60px (18 - 60 = -42) */
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+      color: #5A3838;
+      z-index: 10;
+    }
+
+    .header a {
+      color: #5A3838;
+      text-decoration: none;
+      margin-top: 52px;
+      display: inline-block;
+    }
+
+    .image-container {
+      width: 90%;
+      aspect-ratio: 1 / 1;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 50px;  /*Adjust margin top for image to be higher*/
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .alt-text {
+      text-align: center;
+      margin-top: 30px; /* Increased margin-top for alt-text (10 + 20 = 30) */
+      font-size: 22px; /* Reduced font-size for alt-text */
+      color: #5A3838;  /* color of the text below calendar images */
+      user-select: none;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center; /* Center buttons horizontally */
+      align-items: center;
+      margin-top: -66px; /* Move buttons up */
+      margin-bottom: 80px; /* Increased space below buttons */
+    }
+
+    .circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #190C0C; /* Changed base color for buttons */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 0 166px; /* Increased spacing between the buttons */
+    }
+
+    .circle:hover {
+      background-color: #1B0C0C; /* Hover color for buttons */
+    }
+
+    .arrow {
+      width: 14px;
+      height: 16px;
+      fill: #5F3B3B;
+    }
+
+    .arrow-left {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="frame">
+    <div class="header">
+      <a href="index.html">Вернуться назад, к другим заданиям</a>
+    </div>
+
+    <div class="image-container" id="image-container">
+      <!-- Здесь будет изображение -->
+    </div>
+
+    <p class="alt-text" id="alt-text"></p>
+
+    <div class="button-container">  <!-- Button container -->
+      <div class="circle" onclick="previousImage()">
+        <svg class="arrow arrow-left" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.8178 9.15838C13.6637 8.63788 13.6637 7.40842 12.8178 6.88792L2.03151 0.250172C1.14339 -0.296361 -6.56441e-05 0.342598 -6.56441e-05 1.38541L-6.56441e-05 14.6609C-6.56441e-05 15.7037 1.14339 16.3427 2.03151 15.7961L12.8178 9.15838Z"/>
+        </svg>
+      </div>
+
+      <div class="circle" onclick="nextImage()">
+        <svg class="arrow" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.8178 9.15838C13.6637 8.63788 13.6637 7.40842 12.8178 6.88792L2.03151 0.250172C1.14339 -0.296361 -6.56441e-05 0.342598 -6.56441e-05 1.38541L-6.56441e-05 14.6609C-6.56441e-05 15.7037 1.14339 16.3427 2.03151 15.7961L12.8178 9.15838Z"/>
+        </svg>
+      </div>
+    </div> <!-- End Button Container -->
+  </div>
+
+  <script>
+    const images = [
+      "cal_img/calendar1.png",
+      "cal_img/calendar2.png",
+      "cal_img/calendar3.png",
+      "cal_img/calendar4.png",
+      "cal_img/calendar5.png",
+      "cal_img/calendar6.png",
+      "cal_img/calendar7.png",
+      "cal_img/calendar8.png"
+    ];
+
+    const altText = [
+      "Календарь",
+      "Месяц",
+      "День недели",
+      "Дни недели",
+      "Число",
+      "Числа",
+      "Выходные дни",
+      "Будние дни"
+    ];
+
+    const imageContainer = document.getElementById('image-container');
+    const altTextElement = document.getElementById('alt-text');
+    let currentIndex = 0;
+
+    function showSlide(index) {
+      imageContainer.innerHTML = '';
+
+      const img = document.createElement('img');
+      img.src = images[index % images.length];
+      img.alt = altText[index % altText.length];
+      img.style.maxWidth = '100%';
+      img.style.maxHeight = '100%';
+
+      imageContainer.appendChild(img);
+      altTextElement.textContent = altText[index % altText.length];
+    }
+
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % images.length;
+      showSlide(currentIndex);
+    }
+
+    function previousImage() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      showSlide(currentIndex);
+    }
+
+    showSlide(currentIndex);
+// Add keyboard controls
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowLeft') {
+        previousImage();
+      } else if (event.key === 'ArrowRight') {
+        nextImage();
+      }
+    });
+  </script>
+
+</body>
+</html>
