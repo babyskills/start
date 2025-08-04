@@ -19,8 +19,17 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            min-height: 100vh; /* Минимальная высота экрана */
-            padding-bottom: 30px; /* Отступ снизу */
+            min-height: 100vh;
+        }
+
+        /* Добавляем отступ сверху к первому элементу в body */
+        body > *:first-child {
+            margin-top: 4px;
+        }
+
+        /* Добавляем отступ снизу к последнему элементу в body */
+        body > *:last-child {
+            margin-bottom: 60px; /* Увеличиваем отступ снизу */
         }
 
         /* Контейнер слайдера */
@@ -31,7 +40,7 @@
             justify-content: center;
             width: 90vw;
             max-width: 600px;
-            padding: 20px;
+            padding: 30px;
             background-color: #040507;
             border-radius: 8px;
             position: relative;
@@ -131,7 +140,7 @@
 
         /* Ссылка на главную */
         .home-link-container {
-            margin-top: 30px;
+            margin-top: 18px;
         }
 
         .home-link {
@@ -202,6 +211,7 @@
         const nextBtn = document.getElementById('next-btn');
 
         const images = [
+            { src: 'img/Радуга.jpg', title: 'Радуга' },
             { src: 'img/Ватрушка.jpg', title: 'Ватрушка' },
             { src: 'img/Джойстик.jpg', title: 'Джойстик' },
             { src: 'img/Оса.jpg', title: 'Оса' },
