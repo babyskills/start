@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 новых слов</title>
+    <style>
+        /* Общие сбросы и стили */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            color: #e0e0e0;
+            background-color: #040507;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Добавляем отступ сверху к первому элементу в body */
+        body > *:first-child {
+            margin-top: 4px;
+        }
+
+        /* Добавляем отступ снизу к последнему элементу в body */
+        body > *:last-child {
+            margin-bottom: 60px; /* Увеличиваем отступ снизу */
+        }
+
+        /* Контейнер слайдера */
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90vw;
+            max-width: 560px;
+            padding: 30px;
+            background-color: #040507;
+            border-radius: 8px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* Название картинки */
+        #image-title {
+            font-size: 2.5em;
+            margin-bottom: 26px;
+            text-align: center;
+            color: #5A6171;
+        }
+
+        /* Область отображения картинки */
+        .slider-image-wrapper {
+            width: 100%;
+            padding-bottom: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background-color: #333;
+        }
+
+        .slider-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            border-radius: 24px;
+        }
+
+        /* Кнопки навигации */
+        .slider-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            background-color: #15151B; /* Изменяем цвет неактивной кнопки */
+            color: #e0e0e0;
+            border: none;
+            cursor: pointer;
+            border-radius: 9999px;
+            /*transition: background-color 0.2s ease, transform 0.1s ease;*/ /* Анимация убрана */
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-sizing: border-box;
+            min-width: 85px;
+            height: 75px;
+        }
+
+        .nav-button.prev {
+            width: 30%;
+            height: 75px;
+        }
+
+        .nav-button.next {
+            width: 30%;
+            height: 75px;
+        }
+
+        /* SVG иконки */
+        .nav-icon {
+            width: 30%;
+            height: 30%;
+            display: block;
+        }
+
+        /* Задаем цвет стрелкам через CSS, чтобы можно было легко менять */
+        .nav-icon path {
+          stroke: #e0e0e0;
+        }
+
+        /* Отражаем SVG для кнопки "Предыдущая" */
+        .nav-button.prev .nav-icon {
+            transform: scaleX(-1);
+        }
+
+        .nav-button:hover {
+            background-color: #1a1a20; /* Немного темнее для ховера */
+            /*transform: translateY(-1px);*/ /* Анимация убрана */
+        }
+
+        .nav-button:active {
+            background-color: #262930; /* Более светлый цвет для нажатия */
+            /*transform: translateY(0);*/ /* Анимация убрана */
+        }
+
+        /* Ссылка на главную */
+        .home-link-container {
+            margin-top: 4px;
+        }
+
+        .home-link {
+            color: #262930;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .home-link:hover {
+            color: #363940;
+            text-decoration: underline;
+        }
+
+        /* Адаптация для очень маленьких экранов */
+        @media (max-width: 480px) {
+          .slider-container {
+              width: 95vw;
+              padding: 15px;
+          }
+          #image-title {
+              font-size: 2em; /* На маленьких экранах по-прежнему 2em */
+              margin-bottom: 15px; /* И этот отступ остался прежним для маленьких экранов */
+          }
+          .nav-button {
+            border-radius: 9999px; /* Максимальное скругление */
+             height: 60px; /* Уменьшаем высоту кнопок: */
+              width: 30%; /* Уменьшили ширину кнопок */
+            min-width: auto; /* убираем минимальную ширину */
+
+          }
+          .nav-icon {
+            width: 24%; /* Уменьшаем размер стрелки для маленьких экранов */
+            height: 24%; /* Уменьшаем размер стрелки для маленьких экранов */
+          }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slider-container">
+        <div id="image-title">Название Изображения</div>
+        <div class="slider-image-wrapper">
+            <img id="current-image" src="" alt="Слайд" class="slider-image">
+        </div>
+        <div class="slider-buttons">
+            <button id="prev-btn" class="nav-button prev" aria-label="Предыдущий слайд">
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001"  stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button id="next-btn" class="nav-button next" aria-label="Следующий слайд">
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001"  stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="home-link-container">
+        <a href="index.html" class="home-link">Вернуться на главную</a>
+    </div>
+
+    <script>
+        const imageElement = document.getElementById('current-image');
+        const imageTitleElement = document.getElementById('image-title');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        const images = [
+            { src: 'img/Пешеходный переход.jpg', title: 'Пешеходный переход' },
+            { src: 'img/Бегемот.jpg', title: 'Бегемот' },
+            { src: 'img/Картинка.jpg', title: 'Название' }
+        ];
+
+        let currentIndex = 0;
+
+        function updateSlider() {
+            const currentImage = images[currentIndex];
+            imageElement.src = currentImage.src;
+            imageTitleElement.textContent = currentImage.title;
+            imageElement.alt = currentImage.title;
+        }
+
+        function showNextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateSlider();
+        }
+
+        function showPrevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateSlider();
+        }
+
+        nextBtn.addEventListener('click', showNextImage);
+        prevBtn.addEventListener('click', showPrevImage);
+
+        // Слушаем события keydown на document
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') {
+                showNextImage();
+            } else if (event.key === 'ArrowLeft') {
+                showPrevImage();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (images.length > 0) {
+                updateSlider();
+            } else {
+                imageTitleElement.textContent = "Изображения не найдены";
+                imageElement.alt = "Нет изображений для показа";
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                prevBtn.style.cursor = 'not-allowed';
+                nextBtn.style.cursor = 'not-allowed';
+            }
+        });
+    </script>
+
+</body>
+</html>
