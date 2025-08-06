@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>100 новых слов</title>
+    <title>100 слов (часть 1)</title>
     <style>
         /* Общие сбросы и стили */
         html, body {
@@ -39,7 +39,7 @@
             align-items: center;
             justify-content: center;
             width: 90vw;
-            max-width: 560px;
+            max-width: 500px;
             padding: 30px;
             background-color: #040507;
             border-radius: 8px;
@@ -53,6 +53,7 @@
             margin-bottom: 26px;
             text-align: center;
             color: #5A6171;
+            cursor: pointer; /* Добавляем курсор, чтобы показать, что на название можно кликнуть */
         }
 
         /* Область отображения картинки */
@@ -182,7 +183,7 @@
 <body>
 
     <div class="slider-container">
-        <div id="image-title">Название Изображения</div>
+        <div id="image-title">Показать подсказку</div>
         <div class="slider-image-wrapper">
             <img id="current-image" src="" alt="Слайд" class="slider-image">
         </div>
@@ -211,18 +212,66 @@
         const nextBtn = document.getElementById('next-btn');
 
         const images = [
-            { src: '100words01/Пешеходный_переход.jpg', title: 'Пешеходный переход' },
+            { src: '100words01/Ворона.jpg', title: 'Ворона' },
+            { src: '100words01/Душ.jpg', title: 'Душ' },
+            { src: '100words01/Трава.jpg', title: 'Трава' },
+            { src: '100words01/Хлеб.jpg', title: 'Хлеб' },
             { src: '100words01/Бегемот.jpg', title: 'Бегемот' },
+            { src: '100words01/Сыр.jpg', title: 'Сыр' },
+            { src: '100words01/Пылесос.jpg', title: 'Пылесос' },
+            { src: '100words01/Лёд.jpg', title: 'Лёд' },
+            { src: '100words01/Ручка.jpg', title: 'Ручка' },
+            { src: '100words01/Пешеходный_переход.jpg', title: 'Что на картике?' },
+
+            { src: '100words01/Лиса.jpg', title: 'Лиса' },
+            { src: '100words01/Помидор.jpg', title: 'Помидор' },
+            { src: '100words01/Зубная_щётка.jpg', title: 'Зубная щётка' },
+            { src: '100words01/Цветок.jpg', title: 'Цветок' },
+            { src: '100words01/Сосиски.jpg', title: 'Сосиски' },
+            { src: '100words01/Чайник.jpg', title: 'Чайник' },
+            { src: '100words01/Лужа.jpg', title: 'Лужа' },
+            { src: '100words01/Телефон.jpg', title: 'Телефон' },
+            { src: '100words01/Резиновые_сапоги.jpg', title: 'Резиновые сапоги' },
+            { src: '100words01/Фонарик.jpg', title: 'Фонарик' },
+
+            { src: '100words01/Монитор.jpg', title: 'Монитор' },
+            { src: '100words01/Туалет.jpg', title: 'Туалет' },
+            { src: '100words01/Глаз.jpg', title: 'Глаз' },
+            { src: '100words01/Тигр.jpg', title: 'Тигр' },
+            { src: '100words01/Лестница.jpg', title: 'Лестница' },
+            { src: '100words01/Юла.jpg', title: 'Юла' },
+            { src: '100words01/Выключатель.jpg', title: 'Выключатель' },
+            { src: '100words01/Стол.jpg', title: 'Стол' },
+            { src: '100words01/Рельсы.jpg', title: 'Рельсы' },
+            { src: '100words01/Дерево.jpg', title: 'Дерево' },
+
+            { src: '100words01/Кран.jpg', title: 'Кран' },
+            { src: '100words01/Лестница.jpg', title: 'Лестница' },
+            { src: '100words01/Муха.jpg', title: 'Муха' },
+            { src: '100words01/Стул.jpg', title: 'Стул' },
+            { src: '100words01/Лось.jpg', title: 'Лось' },
+            { src: '100words01/Холодильник.jpg', title: 'Холодильник' },
+            { src: '100words01/Светофор.jpg', title: 'Светофор' },
+            { src: '100words01/Нож.jpg', title: 'Нож' },
+            { src: '100words01/Поезд.jpg', title: 'Поезд' },
+            { src: '100words01/Мышка.jpg', title: 'Мышка' },
+
+            { src: '100words01/Пицца.jpg', title: 'Пицца'' },
+            { src: '100words01/Гриб.jpg', title: 'Гриб'' },
+            { src: '100words01/Картинка.jpg', title: 'Название'' },
             { src: '100words01/Картинка.jpg', title: 'Название' }
         ];
 
         let currentIndex = 0;
+        let titleIsOriginal = false; // Инвертируем начальное значение флага
 
         function updateSlider() {
             const currentImage = images[currentIndex];
             imageElement.src = currentImage.src;
-            imageTitleElement.textContent = currentImage.title;
             imageElement.alt = currentImage.title;
+
+            imageTitleElement.textContent = "Показать подсказку"; // Всегда показываем "Показать подсказку"
+            titleIsOriginal = false; // Сбрасываем флаг
         }
 
         function showNextImage() {
@@ -235,8 +284,21 @@
             updateSlider();
         }
 
+        function toggleTitle() {
+            titleIsOriginal = !titleIsOriginal; // Инвертируем флаг
+
+            if (!titleIsOriginal) {
+                imageTitleElement.textContent = "Показать подсказку";
+            } else {
+                imageTitleElement.textContent = images[currentIndex].title;
+            }
+        }
+
         nextBtn.addEventListener('click', showNextImage);
         prevBtn.addEventListener('click', showPrevImage);
+
+        // Слушаем событие click на НАЗВАНИИ картинки
+        imageTitleElement.addEventListener('click', toggleTitle);
 
         // Слушаем события keydown на document
         document.addEventListener('keydown', (event) => {
