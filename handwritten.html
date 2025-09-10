@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Прописные буквы</title>
+    <style>
+        /* Общие сбросы и стили */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            color: #e0e0e0;
+            background-color: #040507;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Отступы тела */
+        body > *:first-child {
+            margin-top: 4px;
+        }
+        body > *:last-child {
+            margin-bottom: 60px;
+        }
+
+        /* Контейнер слайдера */
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90vw;
+            max-width: 500px;
+            padding: 30px;
+            background-color: #040507;
+            border-radius: 8px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* Название картинки - статичное */
+        #image-title {
+            font-size: 2.5em;
+            margin-bottom: 26px;
+            text-align: center;
+            color: #5A6171;
+            cursor: default; /* Убираем курсор pointer */
+        }
+
+        /* Область отображения картинки */
+        .slider-image-wrapper {
+            width: 100%;
+            padding-bottom: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background-color: #333;
+        }
+
+        .slider-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            border-radius: 24px;
+        }
+
+        /* Кнопки навигации */
+        .slider-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            background-color: #15151B;
+            color: #e0e0e0;
+            border: none;
+            cursor: pointer;
+            border-radius: 9999px;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-sizing: border-box;
+            min-width: 85px;
+            height: 75px;
+        }
+
+        .nav-button.prev {
+            width: 30%;
+            height: 75px;
+        }
+
+        .nav-button.next {
+            width: 30%;
+            height: 75px;
+        }
+
+        /* SVG иконки */
+        .nav-icon {
+            width: 30%;
+            height: 30%;
+            display: block;
+        }
+
+        /* Цвет стрелок */
+        .nav-icon path {
+            stroke: #e0e0e0;
+        }
+
+        /* Отражаем SVG для кнопки "Предыдущая" */
+        .nav-button.prev .nav-icon {
+            transform: scaleX(-1);
+        }
+
+        .nav-button:hover {
+            background-color: #1a1a20;
+        }
+
+        .nav-button:active {
+            background-color: #262930;
+        }
+
+        /* Ссылка на главную */
+        .home-link-container {
+            margin-top: 4px;
+        }
+
+        .home-link {
+            color: #262930;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .home-link:hover {
+            color: #363940;
+            text-decoration: underline;
+        }
+
+        /* Адаптация для очень маленьких экранов */
+        @media (max-width: 480px) {
+            .slider-container {
+                width: 95vw;
+                padding: 15px;
+            }
+
+            #image-title {
+                font-size: 2em;
+                margin-bottom: 15px;
+            }
+
+            .nav-button {
+                border-radius: 9999px;
+                height: 60px;
+                width: 30%;
+                min-width: auto;
+            }
+
+            .nav-icon {
+                width: 24%;
+                height: 24%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div id="image-title">Буква А</div>
+        <div class="slider-image-wrapper">
+            <img id="current-image" src="" alt="Слайд" class="slider-image" />
+        </div>
+        <div class="slider-buttons">
+            <button id="prev-btn" class="nav-button prev" aria-label="Предыдущий слайд">
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+            <button id="next-btn" class="nav-button next" aria-label="Следующий слайд">
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="home-link-container">
+        <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+    </div>
+
+    <script>
+        const imageElement = document.getElementById('current-image');
+        const imageTitleElement = document.getElementById('image-title');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        const images = [
+            { src: 'handwritten/буква_а.gif', title: 'Буква А' },
+            { src: 'handwritten/буква_б.gif', title: 'Буква Б' },
+            { src: 'handwritten/буква_в.gif', title: 'Буква В' },
+            { src: 'handwritten/буква_г.gif', title: 'Буква Г' },
+            { src: 'handwritten/буква_д.gif', title: 'Буква Д' },
+            { src: 'handwritten/буква_е.gif', title: 'Буква Е' },
+            { src: 'handwritten/буква_ё.gif', title: 'Буква Ё' },
+            { src: 'handwritten/буква_ж.gif', title: 'Буква Ж' },
+            { src: 'handwritten/буква_з.gif', title: 'Буква З' },
+            { src: 'handwritten/буква_и.gif', title: 'Буква И' },
+            { src: 'handwritten/буква_й.gif', title: 'Буква Й' },
+            { src: 'handwritten/буква_к.gif', title: 'Буква К' },
+            { src: 'handwritten/буква_л.gif', title: 'Буква Л' },
+            { src: 'handwritten/буква_м.gif', title: 'Буква М' },
+            { src: 'handwritten/буква_н.gif', title: 'Буква Н' },
+            { src: 'handwritten/буква_о.gif', title: 'Буква О' },
+            { src: 'handwritten/буква_п.gif', title: 'Буква П' },
+            { src: 'handwritten/буква_р.gif', title: 'Буква Р' },
+            { src: 'handwritten/буква_с.gif', title: 'Буква С' },
+            { src: 'handwritten/буква_т.gif', title: 'Буква Т' },
+            { src: 'handwritten/буква_у.gif', title: 'Буква У' },
+            { src: 'handwritten/буква_ф.gif', title: 'Буква Ф' },
+            { src: 'handwritten/буква_х.gif', title: 'Буква Х' },
+            { src: 'handwritten/буква_ц.gif', title: 'Буква Ц' },
+            { src: 'handwritten/буква_ч.gif', title: 'Буква Ч' },
+            { src: 'handwritten/буква_ш.gif', title: 'Буква Ш' },
+            { src: 'handwritten/буква_щ.gif', title: 'Буква Щ' },
+            { src: 'handwritten/буква_ъ.gif', title: 'Буква Ъ' },
+            { src: 'handwritten/буква_ы.gif', title: 'Буква Ы' },
+            { src: 'handwritten/буква_ь.gif', title: 'Буква Ь' },
+            { src: 'handwritten/буква_э.gif', title: 'Буква Э' },
+            { src: 'handwritten/буква_ю.gif', title: 'Буква Ю' },
+            { src: 'handwritten/буква_я.gif', title: 'Буква Я' }
+        ];
+
+        let currentIndex = 0;
+
+        function updateSlider() {
+            const currentImage = images[currentIndex];
+            imageElement.src = currentImage.src;
+            imageElement.alt = currentImage.title;
+            imageTitleElement.textContent = currentImage.title; // всегда показываем название буквы
+        }
+
+        function showNextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateSlider();
+        }
+
+        function showPrevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateSlider();
+        }
+
+        nextBtn.addEventListener('click', showNextImage);
+        prevBtn.addEventListener('click', showPrevImage);
+
+        // Обработка нажатий клавиш стрелок для переключения слайдов
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') {
+                showNextImage();
+            } else if (event.key === 'ArrowLeft') {
+                showPrevImage();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (images.length > 0) {
+                updateSlider();
+            } else {
+                imageTitleElement.textContent = "Изображения не найдены";
+                imageElement.alt = "Нет изображений для показа";
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                prevBtn.style.cursor = 'not-allowed';
+                nextBtn.style.cursor = 'not-allowed';
+            }
+        });
+    </script>
+</body>
+</html>
