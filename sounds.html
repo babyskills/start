@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <title>Угадай звук</title>
     <style>
         body {
@@ -96,7 +97,7 @@
 </head>
 <body>
 
-    <a href="index.html" class="top-link">Вернуться назад, к другим заданиям</a>
+    <a href="index.html" class="top-link">Вернуться к другим заданиям</a>
 
     <div class="cards-container" id="cards-container">
         <!-- Cards will be added here by JavaScript -->
@@ -105,16 +106,16 @@
     <script>
         const cardsContainer = document.getElementById('cards-container');
         const cardData = [
-            { title: "Скажи, кто это?", sound: "sounds/воробей.mp3", description: "Нажми на область, чтобы послушать" },
-            { title: "Скажи, кто это?", sound: "sounds/лягушка.mp3", description: "Нажми на область, чтобы послушать" },
-            { title: "Скажи, кто это?", sound: "sounds/дрозд.mp3", description: "Нажми на область, чтобы послушать" },
-            { title: "Скажи, кто это?", sound: "sounds/кот.mp3", description: "Нажми на область, чтобы послушать" },
-            { title: "Скажи, кто это?", sound: "sounds/петух.mp3", description: "Нажми на область, чтобы послушать" },
-            { title: "Скажи, кто это?", sound: "sounds/свинья.mp3", description: "Нажми на область, чтобы послушать" },
-            { title: "Скажи, кто это?", sound: "sounds/комар.mp3", description: "Нажми на область, чтобы послушать" },
-            { title: "Скажи, кто это?", sound: "sounds/собака.mp3", description: "Нажми на область, чтобы послушать" },
-            { title: "Скажи, кто это?", sound: "sounds/ворона.mp3", description: "Нажми на область, чтобы послушать" },
-            { title: "Скажи, кто это?", sound: "sounds/корова.mp3", description: "Нажми на область, чтобы послушать" }
+            { title: "Скажи, кто это?", sound: "sounds/воробей.mp3", description: "Нажми на кнопку, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/лягушка.mp3", description: "Нажми на кнопку, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/дрозд.mp3", description: "Нажми на кнопку, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/кот.mp3", description: "Нажми на кнопку, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/петух.mp3", description: "Нажми на кнопку, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/свинья.mp3", description: "Нажми на кнопку, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/комар.mp3", description: "Нажми на кнопку, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/собака.mp3", description: "Нажми на кнопку, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/ворона.mp3", description: "Нажми на кнопку, чтобы послушать" },
+            { title: "Скажи, кто это?", sound: "sounds/корова.mp3", description: "Нажми на кнопку, чтобы послушать" }
         ];
 
         let currentAudio = null;
