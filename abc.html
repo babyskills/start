@@ -1,185 +1,219 @@
 <!DOCTYPE html>
 <html lang="ru" translate="no">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="google" content="notranslate" />
-  <title>Алфавит</title>
-  <style>
-    body {
-      background-color: #040507;
-      margin: 0;
-      font-family: sans-serif;
-      color: #2E2E31;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .frame {
-      width: 100%;
-      max-width: 375px;
-      height: 100vh;
-      background-color: #040507;
-      overflow: hidden;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .header {
-      position: absolute;
-      top: 18px;
-      width: 100%;
-      text-align: center;
-      font-size: 16px;
-      color: #2E2E31;
-      z-index: 10;
-    }
-
-    .header a {
-      color: #414753;
-      text-decoration: none;
-      margin-top: 52px;
-      display: inline-block;
-    }
-
-    .image-container {
-      width: 85%;
-      aspect-ratio: 1 / 1;
-      background-color: white;
-      border-radius: 20px;
-      overflow: hidden;
-      position: relative;
-      margin-top: 150px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .letter-slide {
-      font-size: 180px;
-      font-weight: bold;
-      color: #2E2E31;
-      user-select: none;
-      line-height: 1;
-    }
-
-    .alt-text {
-      text-align: center;
-      margin-top: 44px;
-      font-size: 30px;
-      color: #2E2E31;
-      user-select: none;
-    }
-
-    .bottom-panel {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 99px;
-      background-color: #0C0C10;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 28px;
-      box-sizing: border-box;
-      z-index: 10;
-    }
-
-    .circle {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: #15171B;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .circle:hover {
-      background-color: #25282E;
-    }
-
-    .arrow {
-      width: 14px;
-      height: 16px;
-      fill: #737476;
-    }
-
-    .arrow-left {
-      transform: rotate(180deg);
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <meta name="google" content="notranslate" />
+    <title>Прописные буквы</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            color: #2E2E31;
+            background-color: #040507;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        body > *:first-child {
+            margin-top: 4px;
+        }
+        body > *:last-child {
+            margin-bottom: 60px;
+        }
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90vw;
+            max-width: 500px;
+            padding: 30px;
+            background-color: #040507;
+            border-radius: 8px;
+            position: relative;
+            box-sizing: border-box;
+        }
+        #image-title {
+            font-size: 2.5em;
+            margin-bottom: 26px;
+            text-align: center;
+            color: #5A6171;
+            cursor: default;
+        }
+        .slider-image-wrapper {
+            width: 100%;
+            padding-bottom: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .letter-slide {
+            font-size: 180px;
+            font-weight: bold;
+            color: #2E2E31;
+            user-select: none;
+            line-height: 1;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .slider-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .nav-button {
+            background-color: #15171B;
+            color: #e0e0e0;
+            border: none;
+            cursor: pointer;
+            border-radius: 9999px;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-sizing: border-box;
+            min-width: 85px;
+            height: 75px;
+        }
+        .nav-button.prev {
+            width: 30%;
+            height: 75px;
+        }
+        .nav-button.next {
+            width: 30%;
+            height: 75px;
+        }
+        .nav-icon {
+            width: 30%;
+            height: 30%;
+            display: block;
+        }
+        .nav-icon path {
+            stroke: #e0e0e0;
+        }
+        .nav-button.prev .nav-icon {
+            transform: scaleX(-1);
+        }
+        .nav-button:hover {
+            background-color: #1a1a20;
+        }
+        .nav-button:active {
+            background-color: #262930;
+        }
+        .home-link-container {
+            margin-top: 4px;
+        }
+        .home-link {
+            color: #262930;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+        .home-link:hover {
+            color: #363940;
+            text-decoration: underline;
+        }
+        @media (max-width: 480px) {
+            .slider-container {
+                width: 95vw;
+                padding: 15px;
+            }
+            #image-title {
+                font-size: 2em;
+                margin-bottom: 15px;
+            }
+            .nav-button {
+                border-radius: 9999px;
+                height: 60px;
+                width: 30%;
+                min-width: auto;
+            }
+            .nav-icon {
+                width: 24%;
+                height: 24%;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <div class="frame">
-    <div class="header">
-      <a href="index.html">Вернуться назад, к другим заданиям</a>
+    <div class="slider-container">
+        <div id="image-title">Буква А</div>
+        <div class="slider-image-wrapper" id="image-container">
+            <!-- Буква отобразится здесь -->
+        </div>
+        <div class="slider-buttons">
+            <button id="prev-btn" class="nav-button prev" aria-label="Предыдущий слайд">
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+            <button id="next-btn" class="nav-button next" aria-label="Следующий слайд">
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
     </div>
-
-    <div class="image-container" id="image-container">
-      <!-- Здесь будет буква -->
+    <div class="home-link-container">
+        <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
     </div>
+    <script>
+        const letters = [
+            'А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М',
+            'Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'
+        ];
+        const imageContainer = document.getElementById('image-container');
+        const imageTitleElement = document.getElementById('image-title');
+        let currentIndex = 0;
+        const total = letters.length;
 
-    <p class="alt-text" id="alt-text"></p>
+        function showSlide(index) {
+            imageContainer.innerHTML = '';
+            const letterDiv = document.createElement('div');
+            letterDiv.className = 'letter-slide';
+            letterDiv.textContent = letters[index];
+            imageContainer.appendChild(letterDiv);
+            imageTitleElement.textContent = `Буква ${letters[index]}`;
+        }
 
-    <div class="bottom-panel">
-      <div class="circle" onclick="previousImage()">
-        <svg class="arrow arrow-left" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12.8178 9.15838C13.6637 8.63788 13.6637 7.40842 12.8178 6.88792L2.03151 0.250172C1.14339 -0.296361 -6.56441e-05 0.342598 -6.56441e-05 1.38541L-6.56441e-05 14.6609C-6.56441e-05 15.7037 1.14339 16.3427 2.03151 15.7961L12.8178 9.15838Z"/>
-        </svg>
-      </div>
+        function showNextImage() {
+            currentIndex = (currentIndex + 1) % total;
+            showSlide(currentIndex);
+        }
 
-      <div class="circle" onclick="nextImage()">
-        <svg class="arrow" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12.8178 9.15838C13.6637 8.63788 13.6637 7.40842 12.8178 6.88792L2.03151 0.250172C1.14339 -0.296361 -6.56441e-05 0.342598 -6.56441e-05 1.38541L-6.56441e-05 14.6609C-6.56441e-05 15.7037 1.14339 16.3427 2.03151 15.7961L12.8178 9.15838Z"/>
-        </svg>
-      </div>
-    </div>
-  </div>
+        function showPrevImage() {
+            currentIndex = (currentIndex - 1 + total) % total;
+            showSlide(currentIndex);
+        }
 
-  <script>
-    // Массив заглавных букв русского алфавита
-    const letters = [
-      'А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М',
-      'Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я'
-    ];
+        document.getElementById('next-btn').addEventListener('click', showNextImage);
+        document.getElementById('prev-btn').addEventListener('click', showPrevImage);
 
-    const imageContainer = document.getElementById('image-container');
-    const altTextElement = document.getElementById('alt-text');
-    let currentIndex = 0;
-    const total = letters.length;
+        document.addEventListener('keydown', (event) => {
+            if(event.key === 'ArrowRight'){
+                showNextImage();
+            } else if(event.key === 'ArrowLeft'){
+                showPrevImage();
+            }
+        });
 
-    function showSlide(index) {
-      imageContainer.innerHTML = '';
-      const letterDiv = document.createElement('div');
-      letterDiv.className = 'letter-slide';
-      letterDiv.textContent = letters[index];
-      imageContainer.appendChild(letterDiv);
-
-      altTextElement.textContent = `Буква ${letters[index]}`;
-    }
-
-    function nextImage() {
-      currentIndex = (currentIndex + 1) % total;
-      showSlide(currentIndex);
-    }
-
-    function previousImage() {
-      currentIndex = (currentIndex - 1 + total) % total;
-      showSlide(currentIndex);
-    }
-
-    // Инициализация
-    showSlide(currentIndex);
-  </script>
-
+        showSlide(currentIndex);
+    </script>
 </body>
 </html>
