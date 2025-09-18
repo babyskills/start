@@ -13,7 +13,7 @@
     height: 100vh;
     justify-content: center;
     align-items: center;
-    padding: 10px 30px 20px; /* Оставляем увеличенный отступ */
+    padding: 10px 30px 20px;
     box-sizing: border-box;
   }
   .container {
@@ -55,6 +55,7 @@
   .hint.invalid {
     color: #B32E3E;
   }
+  /* display-container шириной совпадает с dialer */
   .display-container {
     display: flex;
     align-items: center;
@@ -63,15 +64,14 @@
     color: #969DA0;
     border-radius: 10px;
     height: 70px;
-    width: calc(3 * 75px + 2 * 15px);
-    max-width: 100%;
+    max-width: calc(3 * 75px + 2 * 15px); /* равна max-width у dialer */
+    width: 100%;
     padding: 12px 15px;
     box-sizing: border-box;
     user-select: none;
     transition: color 0.3s ease;
     margin-bottom: 15px;
     font-weight: 600;
-    max-width: 100%;
   }
   .display-container.invalid {
     color: #B32E3E;
@@ -95,7 +95,6 @@
     display: flex;
     align-items: center;
   }
-  /* Центрируем диалер, задаём max-width и отменяем фиксированную ширину */
   .dialer {
     display: grid;
     grid-template-columns: repeat(3, 75px);
@@ -103,7 +102,7 @@
     padding: 0;
     max-width: calc(3 * 75px + 2 * 15px);
     width: 100%;
-    justify-content: center; /* Центрируем содержимое */
+    justify-content: center;
     box-sizing: border-box;
     margin: 0 auto;
   }
@@ -184,8 +183,8 @@
     }
     .display-container {
       height: 70px;
-      width: 100vw;
-      max-width: 100%;
+      max-width: min(100vw, calc(3 * 90px + 2 * 12px));
+      width: 100%;
       font-size: 1.6rem;
       padding: 10px 16px;
       margin-bottom: 12px;
