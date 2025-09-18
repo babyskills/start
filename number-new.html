@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Имитация звонков</title>
 <style>
-  html {
-    font-size: 110%; /* Увеличение всей верстки на 10% */
-  }
   body {
     margin: 0;
     background-color: #0A1A20;
@@ -16,7 +13,7 @@
     height: 100vh;
     justify-content: center;
     align-items: center;
-    padding: 5.5px 5.5px 13.2px;
+    padding: 6px 6px 12px;
     box-sizing: border-box;
   }
   .container {
@@ -32,9 +29,9 @@
     color: #969DA0;
     font-weight: normal;
     font-size: 1rem;
-    margin-bottom: 5.5px;
+    margin-bottom: 5px;
     user-select: none;
-    height: 24.2px;
+    height: 22px;
     transition: opacity 0.3s ease, height 0.3s ease, margin-bottom 0.3s ease;
   }
   h1.hidden {
@@ -47,8 +44,8 @@
     color: #969DA0;
     font-size: 1.1rem;
     text-align: center;
-    margin-bottom: 15.4px;
-    min-height: 1.32em;
+    margin-bottom: 10px;
+    min-height: 1.2em;
     user-select: none;
     transition: color 0.3s ease;
   }
@@ -65,14 +62,15 @@
     background-color: #071217;
     color: #969DA0;
     border-radius: 10px;
-    height: 68.2px;
-    width: calc(3 * 66.4px + 2 * 11px); /* увеличено на 10% */
+    height: 65px;
+    /* ширина чуть больше (с запасом) для номера */
+    width: calc(3 * 62px + 2 * 11px);
     max-width: 100%;
-    padding: 11px 13px;
+    padding: 10px 12px;
     box-sizing: border-box;
     user-select: none;
     transition: color 0.3s ease;
-    margin-bottom: 15.4px;
+    margin-bottom: 14px;
     font-weight: 600;
     overflow: hidden;
   }
@@ -83,7 +81,7 @@
     color: #13AD48;
   }
   .number-text {
-    font-size: 1.54rem;
+    font-size: 1.3rem; /* уменьшаем шрифт для гарантии вхождения номера */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -101,16 +99,16 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    padding: 0 5.5px;
+    padding: 0 5px;
     display: flex;
     align-items: center;
   }
   .dialer {
     display: grid;
-    grid-template-columns: repeat(3, 66.4px); /* увеличена ширина кнопок */
-    gap: 13.2px;
+    grid-template-columns: repeat(3, 62px); /* кнопки увеличены пропорционально */
+    gap: 11px;
     padding: 0;
-    width: calc(3 * 66.4px + 2 * 13.2px);
+    width: calc(3 * 62px + 2 * 11px);
     max-width: 100%;
     box-sizing: border-box;
     margin: 0 auto;
@@ -119,9 +117,9 @@
   .button {
     background-color: #162931;
     color: white;
-    font-size: 1.54rem;
+    font-size: 1.3rem; /* пропорционально шрифт */
     border-radius: 50%;
-    width: 66.4px;
+    width: 62px;
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
@@ -135,7 +133,7 @@
   }
   .call-button {
     background-color: #13AD48;
-    width: 66.4px;
+    width: 62px;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     grid-column: 2 / 3;
@@ -151,8 +149,8 @@
     background-color: #0e8d37;
   }
   .call-button svg {
-    width: 30.8px;
-    height: 30.8px;
+    width: 28px;
+    height: 28px;
   }
   .popup-overlay {
     position: fixed;
@@ -168,10 +166,10 @@
   }
   .popup-content {
     background: black;
-    width: 96.8vw;
-    height: 96.8vw;
-    max-width: 411.6px;
-    max-height: 411.6px;
+    width: 88vw;
+    height: 88vw;
+    max-width: 378px;
+    max-height: 378px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -191,7 +189,7 @@
   <div class="display-container" id="displayContainer" aria-live="polite" aria-atomic="true" tabindex="0">
     <span class="number-text" id="numberText"></span>
     <button class="clear-button" id="clearButton" aria-label="Удалить последнюю цифру" title="Удалить последнюю цифру">
-      <svg width="25.3" height="17.6" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <svg width="24" height="16" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
         <path d="M6.40238 0.68299C6.78216 0.24896 7.33081 0 7.90753 0H21C22.1046 0 23 0.895431 23 2V14C23 15.1046 22.1046 16 21 16H7.90753C7.33081 16 6.78216 15.751 6.40238 15.317L1.15238 9.31701C0.492582 8.56296 0.492584 7.43704 1.15238 6.68299L6.40238 0.68299Z" fill="#5D7B89"/>
         <path d="M17.7675 5.35352L15.121 8L17.7675 10.6465L16.3535 12.0605L13.707 9.41406L11.0605 12.0605L9.64642 10.6465L12.2929 8L9.64642 5.35352L11.0605 3.93945L13.707 6.58594L16.3535 3.93945L17.7675 5.35352Z" fill="white"/>
       </svg>
