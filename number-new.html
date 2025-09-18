@@ -13,7 +13,7 @@
     height: 100vh;
     justify-content: center;
     align-items: center;
-    padding: 10px 30px 20px;
+    padding: 10px 10px 20px;
     box-sizing: border-box;
   }
   .container {
@@ -55,7 +55,6 @@
   .hint.invalid {
     color: #B32E3E;
   }
-  /* display-container шириной совпадает с dialer */
   .display-container {
     display: flex;
     align-items: center;
@@ -64,8 +63,8 @@
     color: #969DA0;
     border-radius: 10px;
     height: 70px;
-    max-width: calc(3 * 75px + 2 * 15px); /* равна max-width у dialer */
-    width: 100%;
+    width: calc(3 * 75px + 2 * 15px);
+    max-width: 100%;
     padding: 12px 15px;
     box-sizing: border-box;
     user-select: none;
@@ -80,7 +79,7 @@
     color: #13AD48;
   }
   .number-text {
-    font-size: clamp(1.3rem, 2vw, 1.5rem);
+    font-size: 1.5rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -100,9 +99,8 @@
     grid-template-columns: repeat(3, 75px);
     gap: 15px;
     padding: 0;
-    max-width: calc(3 * 75px + 2 * 15px);
-    width: 100%;
-    justify-content: center;
+    width: calc(3 * 75px + 2 * 15px);
+    max-width: 100%;
     box-sizing: border-box;
     margin: 0 auto;
   }
@@ -173,49 +171,59 @@
     height: 100%;
     border-radius: 22px;
   }
+
   @media (max-width: 400px) {
     body {
-      padding: 10px 30px 16px;
+      padding: 10px 8px 16px;
     }
     h1 {
       font-size: 1rem;
       margin-bottom: 4px;
     }
+    .hint {
+      color: #969DA0;
+      font-size: 1.2rem;
+      text-align: center;
+      margin-bottom: 18px;
+      min-height: 1.2em;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
     .display-container {
-      height: 70px;
-      max-width: min(100vw, calc(3 * 90px + 2 * 12px));
+      height: 80px;
+      max-width: min(100vw, calc(3 * 110px + 2 * 15px));
       width: 100%;
-      font-size: 1.6rem;
-      padding: 10px 16px;
-      margin-bottom: 12px;
+      font-size: 1.9rem;
+      padding: 12px 20px;
+      margin-bottom: 16px;
       box-sizing: border-box;
     }
     .number-text {
-      font-size: 1.6rem;
+      font-size: 1.9rem;
       white-space: nowrap;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       flex-grow: 1;
     }
     .dialer {
-      grid-template-columns: repeat(3, 90px);
-      gap: 12px;
-      max-width: min(100vw, calc(3 * 90px + 2 * 12px));
+      grid-template-columns: repeat(3, 110px);
+      gap: 15px;
+      max-width: min(100vw, calc(3 * 110px + 2 * 15px));
       width: 100%;
       justify-content: center;
       margin: 0 auto;
       box-sizing: border-box;
     }
     .button {
-      width: 90px;
-      font-size: 1.8rem;
+      width: 110px;
+      font-size: 2.1rem;
     }
     .call-button {
-      width: 90px;
+      width: 110px;
     }
     .call-button svg {
-      width: 36px;
-      height: 36px;
+      width: 44px;
+      height: 44px;
     }
     .popup-content {
       width: 90vw;
@@ -262,7 +270,7 @@
 </div>
 <div class="popup-overlay" id="popupOverlay" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
   <div class="popup-content">
-    <video id="doneVideo" src="mynumber/done.mp4" muted></video>
+    <video id="doneVideo" src="number/done.mp4" muted></video>
   </div>
 </div>
 <script>
@@ -314,7 +322,7 @@
       hint.classList.remove('invalid');
       displayContainer.classList.remove('invalid');
       displayContainer.classList.add('valid');
-    } else if(rawNumber.length > 0 && !isIncorrectSoFar(formattedNumber)){
+    } else if(rawNumber.length > 0 && !isIncorrectSoFar(formattedNum)){
       hint.textContent = "Правильно, продолжай!";
       hint.classList.remove('invalid');
       hint.classList.remove('valid');
