@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Имитация звонков</title>
 <style>
   body {
@@ -15,6 +15,7 @@
     align-items: center;
     padding: 8px 8px 14px;
     box-sizing: border-box;
+    overflow-y: hidden; /* Убираем вертикальный скролл */
   }
   .container {
     display: flex;
@@ -28,7 +29,7 @@
   h1 {
     color: #969DA0;
     font-weight: normal;
-    font-size: 1.2rem; /* увеличен заголовок +20% */
+    font-size: 1.2rem;
     margin-bottom: 6px;
     user-select: none;
     height: 26.4px;
@@ -42,13 +43,13 @@
   }
   .hint {
     color: #969DA0;
-    font-size: 1.3rem; /* чуть больше для читаемости */
+    font-size: 1.3rem;
     text-align: center;
     margin-bottom: 10px;
     min-height: 2.4em; /* достаточно места под две строки */
     user-select: none;
-    max-width: 230px; /* ограничение ширины для переносов */
-    white-space: pre-line; /* перенос текста с переносом по \n */
+    max-width: 230px;
+    white-space: pre-wrap;
     word-wrap: break-word;
     overflow-wrap: break-word;
     transition: color 0.3s ease;
@@ -66,8 +67,8 @@
     background-color: #071217;
     color: #969DA0;
     border-radius: 10px;
-    height: 78px; /* увеличена высота на 20% */
-    width: calc(3 * 58px + 2 * 10px); /* ширина кнопок оставлена прежней */
+    height: 78px;
+    width: calc(3 * 58px + 2 * 10px);
     max-width: 100%;
     padding: 12px 13px;
     box-sizing: border-box;
@@ -84,7 +85,7 @@
     color: #13AD48;
   }
   .number-text {
-    font-size: 1.1rem; /* чуть уменьшен шрифт чтоб номер влез */
+    font-size: 1.1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -234,66 +235,71 @@
   const doneVideo = document.getElementById('doneVideo');
   const inputTitle = document.getElementById('inputTitle');
   let rawNumber = '';
-  
+
   function formatNumber(num) {
     let digits = num.replace(/\D/g, '').slice(0, 11);
     let formatted = '';
-    if(digits.length > 0) formatted += digits[0];
-    if(digits.length > 1) formatted += ' ' + digits.slice(1, 4);
-    if(digits.length > 4) formatted += ' ' + digits.slice(4, 7);
-    if(digits.length > 7) formatted += ' ' + digits.slice(7, 9);
-    if(digits.length > 9) formatted += ' ' + digits.slice(9, 11);
+    if (digits.length > 0) formatted += digits[0];
+    if (digits.length > 1) formatted += ' ' + digits.slice(1, 4);
+    if (digits.length > 4) formatted += ' ' + digits.slice(4, 7);
+    if (digits.length > 7) formatted += ' ' + digits.slice(7, 9);
+    if (digits.length > 9) formatted += ' ' + digits.slice(9, 11);
     return formatted;
   }
-  
+
   function isValidNumber(formattedNum) {
     return formattedNum === "8 916 888 88 88";
   }
-  
+
   function isIncorrectSoFar(formattedNum) {
-    if(!formattedNum.startsWith("8")) return true;
+    if (!formattedNum.startsWith("8")) return true;
     const parts = formattedNum.split(" ");
-    if(!parts[0].startsWith("8")) return true;
+    if (!parts[0].startsWith("8")) return true;
     const correctNumber = "8 916 888 88 88";
-    for(let i=0; i < formattedNum.length; i++){
-      if(i >= correctNumber.length) break;
-      if(formattedNum[i] !== correctNumber[i]) return true;
+    for (let i = 0; i < formattedNum.length; i++) {
+      if (i >= correctNumber.length) break;
+      if (formattedNum[i] !== correctNumber[i]) return true;
     }
     return false;
   }
-  
+
   function updateDisplay() {
     const formattedNumber = formatNumber(rawNumber);
     displayText.textContent = formattedNumber;
-  
-    if(rawNumber.length > 0){
+
+    if (rawNumber.length > 0) {
       inputTitle.classList.add('hidden');
     } else {
       inputTitle.classList.remove('hidden');
     }
-  
+
     displayText.classList.remove('valid', 'invalid');
     displayContainer.classList.remove('valid', 'invalid');
     hint.classList.remove('valid', 'invalid');
     hint.style.whiteSpace = 'normal'; // сброс переносов
-  
-    if(isValidNumber(formattedNumber)){
+    hint.style.color = '#969DA0'; // сброс цвета
+
+    if (isValidNumber(formattedNumber)) {
       hint.textContent = "Правильно! Теперь нажми на зелёную кнопку.";
       setTimeout(() => {
-        if(hint.scrollWidth > hint.clientWidth){
+        if (hint.scrollWidth > hint.clientWidth) {
           hint.textContent = "Правильно! Теперь\nнажми на зелёную кнопку.";
           hint.style.whiteSpace = 'pre-line';
         }
       }, 10);
       hint.classList.add('valid');
+      hint.style.color = "#13AD48";
       displayContainer.classList.add('valid');
       displayText.classList.add('valid');
-    } else if(rawNumber.length > 0 && !isIncorrectSoFar(formattedNumber)){
+    } else if (rawNumber.length > 0 && !isIncorrectSoFar(formattedNumber)) {
       hint.textContent = "Правильно, продолжай!";
-      hint.style.color = '#969DA0';
-    } else if(rawNumber.length > 0 && isIncorrectSoFar(formattedNumber)){
+      // Не разбиваем этот текст на две строки
+      hint.classList.remove('valid', 'invalid');
+      displayContainer.classList.remove('invalid', 'valid');
+    } else if (rawNumber.length > 0 && isIncorrectSoFar(formattedNumber)) {
       hint.textContent = "Неправильно. Удали!";
       hint.classList.add('invalid');
+      hint.style.color = "#B32E3E";
       displayContainer.classList.add('invalid');
       displayText.classList.add('invalid');
     } else {
@@ -301,27 +307,27 @@
       hint.style.color = '';
     }
   }
-  
+
   buttons.forEach(button => {
     button.addEventListener('click', () => {
       const val = button.textContent;
-      if(rawNumber.length < 11 && /^[0-9]$/.test(val)){
+      if (rawNumber.length < 11 && /^[0-9]$/.test(val)) {
         rawNumber += val;
       }
       updateDisplay();
     });
   });
-  
+
   clearButton.addEventListener('click', () => {
-    if(rawNumber.length > 0){
+    if (rawNumber.length > 0) {
       rawNumber = rawNumber.slice(0, -1);
     }
     updateDisplay();
   });
-  
+
   callButton.addEventListener('click', () => {
     const formattedNumber = formatNumber(rawNumber);
-    if(isValidNumber(formattedNumber)){
+    if (isValidNumber(formattedNumber)) {
       hint.textContent = "";
       hint.classList.remove('invalid');
       hint.classList.add('valid');
@@ -335,11 +341,12 @@
       hint.textContent = 'Неправильно. Попробуй ещё раз!';
       hint.classList.add('invalid');
       hint.classList.remove('valid');
+      hint.style.color = "#B32E3E";
       displayContainer.classList.add('invalid');
       displayContainer.classList.remove('valid');
     }
   });
-  
+
   doneVideo.addEventListener('ended', () => {
     popupOverlay.classList.remove('active');
     doneVideo.pause();
