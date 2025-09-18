@@ -42,17 +42,16 @@
   }
   .hint {
     color: #969DA0;
-    font-size: 1.32rem; /* увеличен размер */
+    font-size: 1.3rem; /* чуть больше для читаемости */
     text-align: center;
     margin-bottom: 10px;
     min-height: 2.4em; /* достаточно места под две строки */
     user-select: none;
-    max-width: 230px; /* ограниченная ширина для визульного выравнивания */
-    white-space: normal;
+    max-width: 230px; /* ограничение ширины для переносов */
+    white-space: pre-line; /* перенос текста с переносом по \n */
     word-wrap: break-word;
     overflow-wrap: break-word;
     transition: color 0.3s ease;
-    white-space: pre-line; /* переносы на новые строки если есть \n */
   }
   .hint.valid {
     color: #13AD48;
@@ -85,7 +84,7 @@
     color: #13AD48;
   }
   .number-text {
-    font-size: 1.1rem; /* немного уменьшен шрифт для гарантии вписывания */
+    font-size: 1.1rem; /* чуть уменьшен шрифт чтоб номер влез */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -121,7 +120,7 @@
   .button {
     background-color: #162931;
     color: white;
-    font-size: 1.32rem;
+    font-size: 1.3rem;
     border-radius: 50%;
     width: 58px;
     aspect-ratio: 1 / 1;
@@ -277,11 +276,9 @@
     displayContainer.classList.remove('valid', 'invalid');
     hint.classList.remove('valid', 'invalid');
     hint.style.whiteSpace = 'normal'; // сброс переносов
-
+  
     if(isValidNumber(formattedNumber)){
       hint.textContent = "Правильно! Теперь нажми на зелёную кнопку.";
-      // Проверка ширины подсказки после вставки текста,
-      // если ширина больше чем max, переносим текст на 2 строки вручную
       setTimeout(() => {
         if(hint.scrollWidth > hint.clientWidth){
           hint.textContent = "Правильно! Теперь\nнажми на зелёную кнопку.";
@@ -291,10 +288,10 @@
       hint.classList.add('valid');
       displayContainer.classList.add('valid');
       displayText.classList.add('valid');
-    } else if(rawNumber.length > 0 && !isIncorrectSoFar(formattedNum)){
+    } else if(rawNumber.length > 0 && !isIncorrectSoFar(formattedNumber)){
       hint.textContent = "Правильно, продолжай!";
       hint.style.color = '#969DA0';
-    } else if(rawNumber.length > 0 && isIncorrectSoFar(formattedNum)){
+    } else if(rawNumber.length > 0 && isIncorrectSoFar(formattedNumber)){
       hint.textContent = "Неправильно. Удали!";
       hint.classList.add('invalid');
       displayContainer.classList.add('invalid');
