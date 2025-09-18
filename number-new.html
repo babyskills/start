@@ -63,7 +63,7 @@
     color: #969DA0;
     border-radius: 10px;
     height: 60px;
-    width: calc(3 * 58px + 2 * 12px); /* Уменьшена ширина кнопок по 58px для вмещения последней цифры */
+    width: calc(3 * 60px + 2 * 10px + 5px); /* Увеличена ширина для вмещания последней цифры */
     max-width: 100%;
     padding: 10px 12px;
     box-sizing: border-box;
@@ -81,7 +81,8 @@
   .number-text {
     font-size: 1.3rem;
     white-space: nowrap;
-    overflow: hidden;
+    overflow-x: auto; /* Позволяет прокручивать номер по горизонтали */
+    -webkit-overflow-scrolling: touch;
     text-overflow: ellipsis;
     flex-grow: 1;
     user-select: text;
@@ -103,10 +104,10 @@
   }
   .dialer {
     display: grid;
-    grid-template-columns: repeat(3, 58px); /* Уменьшена ширина кнопок для вмещения */
-    gap: 12px;
+    grid-template-columns: repeat(3, 60px);
+    gap: 10px; /* сократил gap для большей ширины */
     padding: 0;
-    width: calc(3 * 58px + 2 * 12px);
+    width: calc(3 * 60px + 2 * 10px + 5px); /* увеличил ширину с запасом */
     max-width: 100%;
     box-sizing: border-box;
     margin: 0 auto;
@@ -115,9 +116,9 @@
   .button {
     background-color: #162931;
     color: white;
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     border-radius: 50%;
-    width: 58px;
+    width: 60px;
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
@@ -131,7 +132,7 @@
   }
   .call-button {
     background-color: #13AD48;
-    width: 58px;
+    width: 60px;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     grid-column: 2 / 3;
@@ -147,8 +148,8 @@
     background-color: #0e8d37;
   }
   .call-button svg {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
   }
   .popup-overlay {
     position: fixed;
