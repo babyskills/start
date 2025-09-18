@@ -13,7 +13,7 @@
     height: 100vh;
     justify-content: center;
     align-items: center;
-    padding: 7px 7px 14px;
+    padding: 8px 8px 14px;
     box-sizing: border-box;
   }
   .container {
@@ -28,10 +28,10 @@
   h1 {
     color: #969DA0;
     font-weight: normal;
-    font-size: 1.1rem; /* Увеличиваем размер заголовка чуть больше на 10% */
+    font-size: 1.2rem; /* увеличен заголовок +20% */
     margin-bottom: 6px;
     user-select: none;
-    height: 24px;
+    height: 26.4px;
     transition: opacity 0.3s ease, height 0.3s ease, margin-bottom 0.3s ease;
   }
   h1.hidden {
@@ -42,11 +42,13 @@
   }
   .hint {
     color: #969DA0;
-    font-size: 1.15rem; /* чуть больше для читаемости */
+    font-size: 1.32rem; /* увеличен размер */
     text-align: center;
-    margin-bottom: 12px;
-    min-height: 1.2em;
+    margin-bottom: 10px;
+    min-height: 2.4em; /* достаточно места под две строки */
     user-select: none;
+    white-space: pre-wrap; /* перенос текста по словам */
+    width: 230px; /* ограничение ширины для переносов */
     transition: color 0.3s ease;
   }
   .hint.valid {
@@ -62,10 +64,10 @@
     background-color: #071217;
     color: #969DA0;
     border-radius: 10px;
-    height: 70px; /* увеличена высота */
-    width: calc(3 * 58px + 2 * 9px); /* уменьшена ширина кнопок и промежутков, чтобы номер влез без прокрутки */
+    height: 78px; /* увеличена высота на 20% */
+    width: calc(3 * 58px + 2 * 10px); /* ширина кнопок оставлена прежней */
     max-width: 100%;
-    padding: 11px 9px;
+    padding: 12px 13px;
     box-sizing: border-box;
     user-select: none;
     transition: color 0.3s ease;
@@ -80,7 +82,7 @@
     color: #13AD48;
   }
   .number-text {
-    font-size: 1.15rem; /* уменьшаем шрифт для вмещения */
+    font-size: 1.04rem; /* уменьшен шрифт, чтобы номер влезал */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -104,10 +106,10 @@
   }
   .dialer {
     display: grid;
-    grid-template-columns: repeat(3, 58px); /* уменьшены кнопки */
-    gap: 9px;
+    grid-template-columns: repeat(3, 58px);
+    gap: 10px;
     padding: 0;
-    width: calc(3 * 58px + 2 * 9px);
+    width: calc(3 * 58px + 2 * 10px);
     max-width: 100%;
     box-sizing: border-box;
     margin: 0 auto;
@@ -116,7 +118,7 @@
   .button {
     background-color: #162931;
     color: white;
-    font-size: 1.15rem;
+    font-size: 1.32rem;
     border-radius: 50%;
     width: 58px;
     aspect-ratio: 1 / 1;
@@ -184,7 +186,9 @@
 <body>
 <div class="container" role="main">
   <h1 id="inputTitle">Напечатай мамин номер</h1>
-  <div class="hint" id="hint" aria-live="polite" aria-atomic="true"></div>
+  <div class="hint" id="hint" aria-live="polite" aria-atomic="true">
+    <!-- Текст может ломаться на две строки -->
+  </div>
   <div class="display-container" id="displayContainer" aria-live="polite" aria-atomic="true" tabindex="0">
     <span class="number-text" id="numberText"></span>
     <button class="clear-button" id="clearButton" aria-label="Удалить последнюю цифру" title="Удалить последнюю цифру">
@@ -273,11 +277,11 @@
     hint.classList.remove('valid', 'invalid');
   
     if(isValidNumber(formattedNumber)){
-      hint.textContent = "Правильно! Теперь нажми на зелёную кнопку.";
+      hint.textContent = "Правильно! Теперь\nнажми на зелёную кнопку.";
       hint.classList.add('valid');
       displayContainer.classList.add('valid');
       displayText.classList.add('valid');
-    } else if(rawNumber.length > 0 && !isIncorrectSoFar(formattedNum)){
+    } else if(rawNumber.length > 0 && !isIncorrectSoFar(formattedNumber)){
       hint.textContent = "Правильно, продолжай!";
       hint.style.color = '#969DA0';
     } else if(rawNumber.length > 0 && isIncorrectSoFar(formattedNum)){
