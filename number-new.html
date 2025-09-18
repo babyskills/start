@@ -13,7 +13,7 @@
     height: 100vh;
     justify-content: center;
     align-items: center;
-    padding: 5px 5px 10px;
+    padding: 5px 5px 8px;
     box-sizing: border-box;
   }
   .container {
@@ -23,15 +23,15 @@
     width: 100%;
     max-height: 100vh;
     box-sizing: border-box;
-    overflow: auto;
+    overflow: hidden;
   }
   h1 {
     color: #969DA0;
     font-weight: normal;
-    font-size: 1rem;
-    margin-bottom: 4px;
+    font-size: 0.9rem;
+    margin-bottom: 2px;
     user-select: none;
-    height: 20px;
+    height: 18px;
     transition: opacity 0.3s ease, height 0.3s ease, margin-bottom 0.3s ease;
   }
   h1.hidden {
@@ -44,7 +44,7 @@
     color: #969DA0;
     font-size: 1rem;
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     min-height: 1.2em;
     user-select: none;
     transition: color 0.3s ease;
@@ -62,15 +62,16 @@
     background-color: #071217;
     color: #969DA0;
     border-radius: 10px;
-    height: 60px;
-    width: calc(3 * 60px + 2 * 10px + 5px); /* Увеличена ширина для вмещания последней цифры */
+    height: 55px;
+    width: calc(3 * 54px + 2 * 8px + 6px); /* с запасом чуть шире кнопок */
     max-width: 100%;
-    padding: 10px 12px;
+    padding: 8px 8px;
     box-sizing: border-box;
     user-select: none;
     transition: color 0.3s ease;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-weight: 600;
+    overflow: hidden;
   }
   .display-container.invalid {
     color: #B32E3E;
@@ -79,10 +80,9 @@
     color: #13AD48;
   }
   .number-text {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     white-space: nowrap;
-    overflow-x: auto; /* Позволяет прокручивать номер по горизонтали */
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
     text-overflow: ellipsis;
     flex-grow: 1;
     user-select: text;
@@ -98,16 +98,16 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    padding: 0 5px;
+    padding: 0 4px;
     display: flex;
     align-items: center;
   }
   .dialer {
     display: grid;
-    grid-template-columns: repeat(3, 60px);
-    gap: 10px; /* сократил gap для большей ширины */
+    grid-template-columns: repeat(3, 54px); /* чуть уменьшаем кнопки */
+    gap: 8px;
     padding: 0;
-    width: calc(3 * 60px + 2 * 10px + 5px); /* увеличил ширину с запасом */
+    width: calc(3 * 54px + 2 * 8px + 6px);
     max-width: 100%;
     box-sizing: border-box;
     margin: 0 auto;
@@ -116,9 +116,9 @@
   .button {
     background-color: #162931;
     color: white;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     border-radius: 50%;
-    width: 60px;
+    width: 54px;
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
@@ -132,7 +132,7 @@
   }
   .call-button {
     background-color: #13AD48;
-    width: 60px;
+    width: 54px;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     grid-column: 2 / 3;
@@ -148,8 +148,8 @@
     background-color: #0e8d37;
   }
   .call-button svg {
-    width: 28px;
-    height: 28px;
+    width: 22px;
+    height: 22px;
   }
   .popup-overlay {
     position: fixed;
@@ -165,10 +165,10 @@
   }
   .popup-content {
     background: black;
-    width: 90vw;
-    height: 90vw;
-    max-width: 380px;
-    max-height: 380px;
+    width: 85vw;
+    height: 85vw;
+    max-width: 340px;
+    max-height: 340px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -185,10 +185,10 @@
 <div class="container" role="main">
   <h1 id="inputTitle">Напечатай мамин номер</h1>
   <div class="hint" id="hint" aria-live="polite" aria-atomic="true"></div>
-  <div class="display-container" id="displayContainer" aria-live="polite" aria-atomic="true">
+  <div class="display-container" id="displayContainer" aria-live="polite" aria-atomic="true" tabindex="0">
     <span class="number-text" id="numberText"></span>
     <button class="clear-button" id="clearButton" aria-label="Удалить последнюю цифру" title="Удалить последнюю цифру">
-      <svg width="23" height="16" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <svg width="20" height="14" viewBox="0 0 23 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
         <path d="M6.40238 0.68299C6.78216 0.24896 7.33081 0 7.90753 0H21C22.1046 0 23 0.895431 23 2V14C23 15.1046 22.1046 16 21 16H7.90753C7.33081 16 6.78216 15.751 6.40238 15.317L1.15238 9.31701C0.492582 8.56296 0.492584 7.43704 1.15238 6.68299L6.40238 0.68299Z" fill="#5D7B89"/>
         <path d="M17.7675 5.35352L15.121 8L17.7675 10.6465L16.3535 12.0605L13.707 9.41406L11.0605 12.0605L9.64642 10.6465L12.2929 8L9.64642 5.35352L11.0605 3.93945L13.707 6.58594L16.3535 3.93945L17.7675 5.35352Z" fill="white"/>
       </svg>
