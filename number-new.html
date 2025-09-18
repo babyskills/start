@@ -47,9 +47,12 @@
     margin-bottom: 10px;
     min-height: 2.4em; /* достаточно места под две строки */
     user-select: none;
-    white-space: pre-wrap; /* перенос текста по словам */
-    width: 230px; /* ограничение ширины для переносов */
+    max-width: 230px; /* ограниченная ширина для визульного выравнивания */
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     transition: color 0.3s ease;
+    white-space: pre-line; /* переносы на новые строки если есть \n */
   }
   .hint.valid {
     color: #13AD48;
@@ -82,7 +85,7 @@
     color: #13AD48;
   }
   .number-text {
-    font-size: 1.04rem; /* уменьшен шрифт, чтобы номер влезал */
+    font-size: 1.1rem; /* немного уменьшен шрифт для гарантии вписывания */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -186,9 +189,7 @@
 <body>
 <div class="container" role="main">
   <h1 id="inputTitle">Напечатай мамин номер</h1>
-  <div class="hint" id="hint" aria-live="polite" aria-atomic="true">
-    <!-- Текст может ломаться на две строки -->
-  </div>
+  <div class="hint" id="hint" aria-live="polite" aria-atomic="true"></div>
   <div class="display-container" id="displayContainer" aria-live="polite" aria-atomic="true" tabindex="0">
     <span class="number-text" id="numberText"></span>
     <button class="clear-button" id="clearButton" aria-label="Удалить последнюю цифру" title="Удалить последнюю цифру">
@@ -275,13 +276,22 @@
     displayText.classList.remove('valid', 'invalid');
     displayContainer.classList.remove('valid', 'invalid');
     hint.classList.remove('valid', 'invalid');
-  
+    hint.style.whiteSpace = 'normal'; // сброс переносов
+
     if(isValidNumber(formattedNumber)){
-      hint.textContent = "Правильно! Теперь\nнажми на зелёную кнопку.";
+      hint.textContent = "Правильно! Теперь нажми на зелёную кнопку.";
+      // Проверка ширины подсказки после вставки текста,
+      // если ширина больше чем max, переносим текст на 2 строки вручную
+      setTimeout(() => {
+        if(hint.scrollWidth > hint.clientWidth){
+          hint.textContent = "Правильно! Теперь\nнажми на зелёную кнопку.";
+          hint.style.whiteSpace = 'pre-line';
+        }
+      }, 10);
       hint.classList.add('valid');
       displayContainer.classList.add('valid');
       displayText.classList.add('valid');
-    } else if(rawNumber.length > 0 && !isIncorrectSoFar(formattedNumber)){
+    } else if(rawNumber.length > 0 && !isIncorrectSoFar(formattedNum)){
       hint.textContent = "Правильно, продолжай!";
       hint.style.color = '#969DA0';
     } else if(rawNumber.length > 0 && isIncorrectSoFar(formattedNum)){
