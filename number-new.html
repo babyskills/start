@@ -63,7 +63,7 @@
     color: #969DA0;
     border-radius: 10px;
     height: 60px;
-    width: calc(3 * 60px + 2 * 12px);
+    width: calc(3 * 58px + 2 * 12px); /* Уменьшена ширина кнопок по 58px для вмещения последней цифры */
     max-width: 100%;
     padding: 10px 12px;
     box-sizing: border-box;
@@ -103,10 +103,10 @@
   }
   .dialer {
     display: grid;
-    grid-template-columns: repeat(3, 60px);
+    grid-template-columns: repeat(3, 58px); /* Уменьшена ширина кнопок для вмещения */
     gap: 12px;
     padding: 0;
-    width: calc(3 * 60px + 2 * 12px);
+    width: calc(3 * 58px + 2 * 12px);
     max-width: 100%;
     box-sizing: border-box;
     margin: 0 auto;
@@ -115,9 +115,9 @@
   .button {
     background-color: #162931;
     color: white;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     border-radius: 50%;
-    width: 60px;
+    width: 58px;
     aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
@@ -131,7 +131,7 @@
   }
   .call-button {
     background-color: #13AD48;
-    width: 60px;
+    width: 58px;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     grid-column: 2 / 3;
@@ -147,8 +147,8 @@
     background-color: #0e8d37;
   }
   .call-button svg {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
   }
   .popup-overlay {
     position: fixed;
@@ -229,7 +229,7 @@
   const doneVideo = document.getElementById('doneVideo');
   const inputTitle = document.getElementById('inputTitle');
   let rawNumber = '';
-
+  
   function formatNumber(num) {
     let digits = num.replace(/\D/g, '').slice(0, 11);
     let formatted = '';
@@ -240,11 +240,11 @@
     if(digits.length > 9) formatted += ' ' + digits.slice(9, 11);
     return formatted;
   }
-
+  
   function isValidNumber(formattedNum) {
     return formattedNum === "8 916 888 88 88";
   }
-
+  
   function isIncorrectSoFar(formattedNum) {
     if(!formattedNum.startsWith("8")) return true;
     const parts = formattedNum.split(" ");
@@ -256,22 +256,21 @@
     }
     return false;
   }
-
+  
   function updateDisplay() {
     const formattedNumber = formatNumber(rawNumber);
     displayText.textContent = formattedNumber;
-
+  
     if(rawNumber.length > 0){
       inputTitle.classList.add('hidden');
     } else {
       inputTitle.classList.remove('hidden');
     }
-
-    // Remove previous classes
+  
     displayText.classList.remove('valid', 'invalid');
     displayContainer.classList.remove('valid', 'invalid');
     hint.classList.remove('valid', 'invalid');
-
+  
     if(isValidNumber(formattedNumber)){
       hint.textContent = "Правильно! Теперь нажми на зелёную кнопку.";
       hint.classList.add('valid');
@@ -290,7 +289,7 @@
       hint.style.color = '';
     }
   }
-
+  
   buttons.forEach(button => {
     button.addEventListener('click', () => {
       const val = button.textContent;
@@ -300,14 +299,14 @@
       updateDisplay();
     });
   });
-
+  
   clearButton.addEventListener('click', () => {
     if(rawNumber.length > 0){
       rawNumber = rawNumber.slice(0, -1);
     }
     updateDisplay();
   });
-
+  
   callButton.addEventListener('click', () => {
     const formattedNumber = formatNumber(rawNumber);
     if(isValidNumber(formattedNumber)){
@@ -328,7 +327,7 @@
       displayContainer.classList.remove('valid');
     }
   });
-
+  
   doneVideo.addEventListener('ended', () => {
     popupOverlay.classList.remove('active');
     doneVideo.pause();
