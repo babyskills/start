@@ -16,6 +16,7 @@
     padding: 8px 8px 14px;
     box-sizing: border-box;
     overflow-y: hidden; /* отключить вертикальный скролл */
+    flex-direction: column;
   }
   .container {
     display: flex;
@@ -204,6 +205,33 @@
     height: 100%;
     border-radius: 22px;
   }
+  /* Стили для ссылки внизу страницы */
+  .home-link-container {
+    margin-top: 32px;
+    user-select: text;
+    width: 100%;
+    max-width: 250px; /* уменьшено для одной строки */
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .home-link {
+    display: inline-block;
+    width: 100%;
+    color: #33505C; /* изменён цвет */
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+    white-space: nowrap; /* чтобы быть в одну строку */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
+  .home-link:hover,
+  .home-link:focus {
+    color: #27454a;
+    text-decoration: underline;
+  }
 </style>
 </head>
 <body>
@@ -240,6 +268,9 @@
       </svg>
     </div>
   </div>
+  <div class="home-link-container">
+    <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+  </div>
 </div>
 <div class="popup-overlay" id="popupOverlay" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
   <div class="popup-content">
@@ -275,8 +306,6 @@
 
   function isIncorrectSoFar(formattedNum) {
     if (!formattedNum.startsWith("8")) return true;
-    const parts = formattedNum.split(" ");
-    if (!parts[0].startsWith("8")) return true;
     const correctNumber = "8 916 428 05 58";
     for (let i = 0; i < formattedNum.length; i++) {
       if (i >= correctNumber.length) break;
