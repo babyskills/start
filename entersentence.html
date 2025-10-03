@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Задания</title>
+<title>Послушай и напечатай!</title>
 <style>
   * {
     margin: 0;
@@ -209,7 +209,12 @@
     { phrase: 'зимой на улице холодно', audioSrc: 'entersentence/voice2.mp3', taskLabel: 'Задание 2', prompt: 'Послушай и напечатай!' },
     { phrase: 'ночью за окном темно', audioSrc: 'entersentence/voice3.mp3', taskLabel: 'Задание 3', prompt: 'Послушай и напечатай!' },
     { phrase: 'руки надо мыть с мылом', audioSrc: 'entersentence/voice4.mp3', taskLabel: 'Задание 4', prompt: 'Послушай и напечатай!' },
-    { phrase: 'я слушаю музыку в наушниках', audioSrc: 'entersentence/voice5.mp3', taskLabel: 'Задание 5', prompt: 'Послушай и напечатай!' }
+    { phrase: 'я слушаю музыку в наушниках', audioSrc: 'entersentence/voice5.mp3', taskLabel: 'Задание 5', prompt: 'Послушай и напечатай!' },
+    { phrase: 'зелёный мячик укатился под диван', audioSrc: 'entersentence/voice6.mp3', taskLabel: 'Задание 6', prompt: 'Послушай и напечатай!' },
+    { phrase: 'мы идём в парк кормить уток', audioSrc: 'entersentence/voice7.mp3', taskLabel: 'Задание 7', prompt: 'Послушай и напечатай!' },
+    { phrase: 'я мою руки когда прихожу с улицы', audioSrc: 'entersentence/voice8.mp3', taskLabel: 'Задание 8', prompt: 'Послушай и напечатай!' },
+    { phrase: 'мы едем на электричке к бабушке', audioSrc: 'entersentence/voice9.mp3', taskLabel: 'Задание 9', prompt: 'Послушай и напечатай!' },
+    { phrase: 'я люблю играть в игры на компьютере', audioSrc: 'entersentence/voice10.mp3', taskLabel: 'Задание 10', prompt: 'Послушай и напечатай!' }
   ];
 
   const successAudio = new Audio('entersentence/success.mp3');
@@ -328,7 +333,7 @@
     if (currentTaskIndex < tasks.length) {
       loadTask(currentTaskIndex);
     } else {
-      nextTaskElem.textContent = "Все задания выполнены.";
+      nextTaskElem.textContent = "Конец!";
       inputField.disabled = true;
       playBtn.disabled = true;
       nextButton.style.display = "none";
