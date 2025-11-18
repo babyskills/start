@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Послушай и напечатай!</title>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<title>Послушай и напечатай! (часть 1)</title>
 <style>
   * {
     margin: 0;
@@ -34,10 +35,14 @@
     flex-shrink: 0;
   }
   .small-text {
-    font-size: 0.9rem;
+    font-size: 1.3rem;
     color: #54546A;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     margin-top: -16px;
+  }
+  .small-text.completed {
+    color: #3B8645;
+    font-weight: 600;
   }
   .large-text {
     font-weight: 700;
@@ -62,6 +67,7 @@
     animation-duration: 2.5s;
     animation-iteration-count: infinite;
     animation-timing-function: ease-in-out;
+    position: relative;
   }
   .play-button.played, .play-button.disabled {
     animation: none !important;
@@ -70,18 +76,17 @@
     background-color: #1B3220;
   }
   .play-icon {
-    width: 14px;
-    height: 18px;
-    clip-path: polygon(10% 0%, 90% 50%, 10% 100%, 10% 100%, 20% 90%, 20% 10%);
-    background-color: #E0E0E0;
-    border-radius: 0;
+    width: 24px;
+    height: 24px;
     margin-left: 2px;
   }
   .stop-icon {
-    width: 14px;
-    height: 14px;
-    background-color: #E0E0E0;
-    border-radius: 0;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   @keyframes pulse-scale {
     0%, 100% { transform: scale(1); }
@@ -181,7 +186,11 @@
     <div id="task-number" class="small-text">Задание 1</div>
     <div id="task-prompt" class="large-text" aria-live="polite">Послушай и напечатай!</div>
     <button id="play-btn" class="play-button" aria-label="Воспроизвести звук">
-      <div id="play-icon" class="play-icon"></div>
+      <div id="play-icon" class="play-icon">
+        <svg width="24" height="24" viewBox="0 0 48 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 3.00498C0 0.618735 2.65095 -0.812389 4.64597 0.49684L46.077 27.6859C47.8824 28.8707 47.8824 31.5174 46.077 32.7022L4.64597 59.8912C2.65095 61.2004 0 59.7693 0 57.3831V3.00498Z" fill="#E0E0E0"/>
+        </svg>
+      </div>
     </button>
     <div class="input-wrapper" aria-live="polite">
       <div id="input-fill" class="input-fill"></div>
@@ -205,20 +214,18 @@
   </footer>
 <script>
   const tasks = [
-    { phrase: 'в понедельник я пойду в школу', audioSrc: 'entersentence01/voice1.mp3', taskLabel: 'Задание 1', prompt: 'Послушай и напечатай!' },
-    { phrase: 'зимой на улице холодно', audioSrc: 'entersentence01/voice2.mp3', taskLabel: 'Задание 2', prompt: 'Послушай и напечатай!' },
-    { phrase: 'ночью за окном темно', audioSrc: 'entersentence01/voice3.mp3', taskLabel: 'Задание 3', prompt: 'Послушай и напечатай!' },
-    { phrase: 'руки надо мыть с мылом', audioSrc: 'entersentence01/voice4.mp3', taskLabel: 'Задание 4', prompt: 'Послушай и напечатай!' },
-    { phrase: 'я слушаю музыку в наушниках', audioSrc: 'entersentence01/voice5.mp3', taskLabel: 'Задание 5', prompt: 'Послушай и напечатай!' },
-    { phrase: 'зелёный мячик укатился под диван', audioSrc: 'entersentence01/voice6.mp3', taskLabel: 'Задание 6', prompt: 'Послушай и напечатай!' },
-    { phrase: 'мы идём в парк кормить уток', audioSrc: 'entersentence01/voice7.mp3', taskLabel: 'Задание 7', prompt: 'Послушай и напечатай!' },
-    { phrase: 'я мою руки когда прихожу с улицы', audioSrc: 'entersentence01/voice8.mp3', taskLabel: 'Задание 8', prompt: 'Послушай и напечатай!' },
-    { phrase: 'мы едем на электричке к бабушке', audioSrc: 'entersentence01/voice9.mp3', taskLabel: 'Задание 9', prompt: 'Послушай и напечатай!' },
-    { phrase: 'я люблю играть в игры на компьютере', audioSrc: 'entersentence01/voice10.mp3', taskLabel: 'Задание 10', prompt: 'Послушай и напечатай!' }
+    { phrase: 'в понедельник я пойду в школу', audioSrc: 'entersentence01/voice1.mp3', taskLabel: 'Задание №1', prompt: 'Послушай и напечатай!' },
+    { phrase: 'зимой на улице холодно', audioSrc: 'entersentence01/voice2.mp3', taskLabel: 'Задание №2', prompt: 'Послушай и напечатай!' },
+    { phrase: 'ночью за окном темно', audioSrc: 'entersentence01/voice3.mp3', taskLabel: 'Задание №3', prompt: 'Послушай и напечатай!' },
+    { phrase: 'руки надо мыть с мылом', audioSrc: 'entersentence01/voice4.mp3', taskLabel: 'Задание №4', prompt: 'Послушай и напечатай!' },
+    { phrase: 'я слушаю музыку в наушниках', audioSrc: 'entersentence01/voice5.mp3', taskLabel: 'Задание №5', prompt: 'Послушай и напечатай!' },
+    { phrase: 'зелёный мячик укатился под диван', audioSrc: 'entersentence01/voice6.mp3', taskLabel: 'Задание №6', prompt: 'Послушай и напечатай!' },
+    { phrase: 'мы идём в парк кормить уток', audioSrc: 'entersentence01/voice7.mp3', taskLabel: 'Задание №7', prompt: 'Послушай и напечатай!' },
+    { phrase: 'я мою руки когда прихожу с улицы', audioSrc: 'entersentence01/voice8.mp3', taskLabel: 'Задание №8', prompt: 'Послушай и напечатай!' },
+    { phrase: 'мы едем на электричке к бабушке', audioSrc: 'entersentence01/voice9.mp3', taskLabel: 'Задание №9', prompt: 'Послушай и напечатай!' },
+    { phrase: 'я люблю играть в игры на компьютере', audioSrc: 'entersentence01/voice10.mp3', taskLabel: 'Задание №10', prompt: 'Послушай и напечатай!' }
   ];
-
   const successAudio = new Audio('entersentence01/success.mp3');
-
   let currentTaskIndex = 0;
   const taskNumberElem = document.getElementById("task-number");
   const taskPromptElem = document.getElementById("task-prompt");
@@ -229,12 +236,12 @@
   const nextTaskElem = document.getElementById("next-task");
   const nextButton = document.getElementById("next-button");
   const footerLink = document.getElementById("footer-link");
-
   const audio = new Audio();
 
   function loadTask(index) {
     const task = tasks[index];
     taskNumberElem.textContent = task.taskLabel;
+    taskNumberElem.classList.remove("completed");
     taskPromptElem.textContent = task.prompt;
     inputField.value = "";
     inputField.classList.remove("incorrect");
@@ -244,26 +251,30 @@
     nextTaskElem.textContent = "";
     inputField.setAttribute("aria-invalid", "false");
     inputField.focus();
-
     audio.src = task.audioSrc;
     audio.load();
-
     playBtn.classList.remove("played", "disabled");
     showPlayIcon();
-
-    // При загрузке задания ссылка всегда видима
     footerLink.style.display = "block";
   }
 
   function showPlayIcon() {
-    playIconDiv.className = "play-icon";
+    playIconDiv.innerHTML = `
+      <svg width="24" height="24" viewBox="0 0 48 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 3.00498C0 0.618735 2.65095 -0.812389 4.64597 0.49684L46.077 27.6859C47.8824 28.8707 47.8824 31.5174 46.077 32.7022L4.64597 59.8912C2.65095 61.2004 0 59.7693 0 57.3831V3.00498Z" fill="#E0E0E0"/>
+      </svg>
+    `;
   }
 
   function showStopIcon() {
-    playIconDiv.className = "stop-icon";
+    playIconDiv.innerHTML = `
+      <svg class="stop-icon" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 3C0 1.34315 1.34315 0 3 0H46.8989C48.5558 0 49.8989 1.34315 49.8989 3V46.8989C49.8989 48.5558 48.5558 49.8989 46.8989 49.8989H3C1.34315 49.8989 0 48.5558 0 46.8989V3Z" fill="#E0E0E0"/>
+      </svg>
+    `;
   }
 
-  playBtn.addEventListener("click", () => {
+  function togglePlay() {
     if (audio.paused) {
       audio.currentTime = 0;
       audio.play()
@@ -278,7 +289,9 @@
       showPlayIcon();
       playBtn.classList.add("played");
     }
-  });
+  }
+
+  playBtn.addEventListener("click", togglePlay);
 
   audio.addEventListener("ended", () => {
     showPlayIcon();
@@ -296,20 +309,14 @@
   inputField.addEventListener("input", () => {
     const entered = inputField.value.toLowerCase();
     const expected = tasks[currentTaskIndex].phrase.toLowerCase();
-
     updateFillWidth(entered, expected);
-
     if (expected.startsWith(entered)) {
       inputField.classList.remove("incorrect");
       inputField.setAttribute("aria-invalid", "false");
-
       if (entered === expected) {
         nextTaskElem.textContent = "";
         nextButton.style.display = "inline-block";
-
-        // Скрываем ссылку ТОЛЬКО в момент показа кнопки "Дальше"
         footerLink.style.display = "none";
-
         successAudio.currentTime = 0;
         successAudio.play().catch((e) =>
           console.error("Ошибка воспроизведения success аудио:", e)
@@ -333,16 +340,27 @@
     if (currentTaskIndex < tasks.length) {
       loadTask(currentTaskIndex);
     } else {
-      nextTaskElem.textContent = "Конец!";
+      taskNumberElem.textContent = "Все задания выполнены!";
+      taskNumberElem.classList.add("completed");
+      nextTaskElem.textContent = "";
       inputField.disabled = true;
       playBtn.disabled = true;
       nextButton.style.display = "none";
       inputFill.style.width = "0";
       showPlayIcon();
       playBtn.classList.add("disabled");
-
-      // Показываем ссылку в конце
       footerLink.style.display = "block";
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && nextButton.style.display === 'inline-block' && document.activeElement !== nextButton) {
+      event.preventDefault();
+      nextButton.click();
+    }
+    if (event.code === 'Space' && document.activeElement !== nextButton && document.activeElement !== inputField) {
+      event.preventDefault();
+      togglePlay();
     }
   });
 
