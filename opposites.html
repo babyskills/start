@@ -140,14 +140,12 @@
 </head>
 <body>
     <div class="slider-container">
-        <!-- Первый блок картинка+подсказка (слово) -->
         <div class="image-pair">
-            <div class="image-title" data-index="0" data-slide="0">Птица какая?</div>
+            <div class="image-title" data-index="0">Птица какая?</div>
             <div class="slider-image-wrapper">
                 <img class="slider-image" data-index="0" src="" alt="Слайд">
             </div>
         </div>
-        <!-- Кнопки навигации между изображениями -->
         <div class="slider-buttons">
             <button id="prev-btn" class="nav-button prev" aria-label="Предыдущий слайд">
                 <svg class="nav-icon" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -160,9 +158,8 @@
                 </svg>
             </button>
         </div>
-        <!-- Второй блок картинка+подсказка (антоним) -->
         <div class="image-pair">
-            <div class="image-title" data-index="1" data-slide="0">Гусь какой?</div>
+            <div class="image-title" data-index="1">Гусь какой?</div>
             <div class="slider-image-wrapper">
                 <img class="slider-image" data-index="1" src="" alt="Слайд">
             </div>
@@ -182,29 +179,29 @@
                 antonym: { src: 'opposites/Мышь.jpg', title: 'Маленькая', hint: 'Мышь какая?' }
             },
             {
+                word: { src: 'opposites/Руки_чистые.jpg', title: 'Чистые', hint: 'Руки какие?' },
+                antonym: { src: 'opposites/Руки_грязные.jpg', title: 'Грязные', hint: 'Руки какие?' }
+            },
+            {
                 word: { src: 'opposites/Стакан_полный.jpg', title: 'Полный', hint: 'Стакан какой?' },
                 antonym: { src: 'opposites/Стакан_пустой.jpg', title: 'Пустой', hint: 'Стакан какой?' }
             }
         ];
         let currentSlide = 0;
-        let titleIsOriginal = [false, false];
         let activeImageIndex = null;
 
         function updateSlider() {
             const currentPair = slides[currentSlide];
-            // Первая картинка (слово)
+            imageTitleElements[0].textContent = currentPair.word.hint;
+            imageTitleElements[0].dataset.title = currentPair.word.title;
             imageElements[0].src = currentPair.word.src;
             imageElements[0].alt = currentPair.word.title;
-            imageTitleElements[0].textContent = currentPair.word.hint;
-            imageTitleElements[0].dataset.hint = currentPair.word.title;
-            titleIsOriginal[0] = false;
-            // Вторая картинка (антоним)
+
+            imageTitleElements[1].textContent = currentPair.antonym.hint;
+            imageTitleElements[1].dataset.title = currentPair.antonym.title;
             imageElements[1].src = currentPair.antonym.src;
             imageElements[1].alt = currentPair.antonym.title;
-            imageTitleElements[1].textContent = currentPair.antonym.hint;
-            imageTitleElements[1].dataset.hint = currentPair.antonym.title;
-            titleIsOriginal[1] = false;
-            // Сбросить выделение при переходе на новый слайд
+
             activeImageIndex = null;
             imageElements.forEach(el => el.classList.remove('active'));
         }
@@ -220,28 +217,22 @@
         }
 
         function toggleTitle(index) {
-            titleIsOriginal[index] = !titleIsOriginal[index];
-            if (!titleIsOriginal[index]) {
-                const slideIndex = parseInt(imageTitleElements[index].dataset.slide);
-                const currentPair = slides[slideIndex];
-                const hint = index === 0 ? currentPair.word.hint : currentPair.antonym.hint;
-                imageTitleElements[index].textContent = hint;
+            const titleElement = imageTitleElements[index];
+            if (titleElement.textContent === titleElement.dataset.title) {
+                titleElement.textContent = slides[currentSlide][index === 0 ? 'word' : 'antonym'].hint;
             } else {
-                imageTitleElements[index].textContent = imageTitleElements[index].dataset.hint;
+                titleElement.textContent = titleElement.dataset.title;
             }
         }
 
         function toggleImageActive(index) {
             if (activeImageIndex === index) {
-                // Если кликнули по уже активной картинке — снимаем выделение
                 imageElements[index].classList.remove('active');
                 activeImageIndex = null;
             } else {
-                // Снимаем выделение с предыдущей активной картинки
                 if (activeImageIndex !== null) {
                     imageElements[activeImageIndex].classList.remove('active');
                 }
-                // Выделяем новую картинку
                 imageElements[index].classList.add('active');
                 activeImageIndex = index;
             }
