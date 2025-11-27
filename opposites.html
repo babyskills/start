@@ -141,7 +141,7 @@
 <body>
     <div class="slider-container">
         <div class="image-pair">
-            <div class="image-title" data-index="0">Птица какая?</div>
+            <div class="image-title" data-index="0"></div>
             <div class="slider-image-wrapper">
                 <img class="slider-image" data-index="0" src="" alt="Слайд">
             </div>
@@ -159,7 +159,7 @@
             </button>
         </div>
         <div class="image-pair">
-            <div class="image-title" data-index="1">Гусь какой?</div>
+            <div class="image-title" data-index="1"></div>
             <div class="slider-image-wrapper">
                 <img class="slider-image" data-index="1" src="" alt="Слайд">
             </div>
@@ -187,6 +187,14 @@
                 antonym: { src: 'opposites/Тарелка_разбитая.jpg', title: 'Разбитая', hint: 'Тарелка какая?' }
             },
             {
+                word: { src: 'opposites/Человек_молодой.jpg', title: 'Молодой', hint: 'Молодой или пожилой?' },
+                antonym: { src: 'opposites/Человек_пожилой.jpg', title: 'Пожилой', hint: 'Молодой или пожилой?' }
+            },
+            {
+                word: { src: 'opposites/Темно.jpg', title: 'Темно', hint: 'Темно или светло?' },
+                antonym: { src: 'opposites/Светло.jpg', title: 'Светло', hint: 'Темно или светло?' }
+            },
+            {
                 word: { src: 'opposites/Собака_сухая.jpg', title: 'Сухая', hint: 'Собака какая?' },
                 antonym: { src: 'opposites/Собака_мокрая.jpg', title: 'Мокрая', hint: 'Собака какая?' }
             },
@@ -195,16 +203,40 @@
                 antonym: { src: 'opposites/Шар_колючий.jpg', title: 'Колючий', hint: 'Шар какой?' }
             },
             {
+                word: { src: 'opposites/Утка_игрушечная.jpg', title: 'Игрушечная', hint: 'Утка какая?' },
+                antonym: { src: 'opposites/Утка_настоящая.jpg', title: 'Настоящая', hint: 'Утка какая?' }
+            },
+            {
                 word: { src: 'opposites/Руки_чистые.jpg', title: 'Чистые', hint: 'Руки какие?' },
                 antonym: { src: 'opposites/Руки_грязные.jpg', title: 'Грязные', hint: 'Руки какие?' }
+            },
+            {
+                word: { src: 'opposites/Фотография_чёрно-белая.jpg', title: 'Чёрно-белая', hint: 'Фотография какая?' },
+                antonym: { src: 'opposites/Фотография_цветная.jpg', title: 'Цветная', hint: 'Фотография какая?' }
+            },
+            {
+                word: { src: 'opposites/Человек_полный.jpg', title: 'Полный', hint: 'Человек какой?' },
+                antonym: { src: 'opposites/Человек_худой.jpg', title: 'Худой', hint: 'Человек какой?' }
             },
             {
                 word: { src: 'opposites/Перо.jpg', title: 'Лёгкое', hint: 'Перо какое?' },
                 antonym: { src: 'opposites/Гантеля.jpg', title: 'Тяжёлая', hint: 'Гантеля какая?' }
             },
             {
+                word: { src: 'opposites/Фотография_размытая.jpg', title: 'Размытая', hint: 'Фотография какая?' },
+                antonym: { src: 'opposites/Фотография_чёткая.jpg', title: 'Чёткая', hint: 'Фотография какая?' }
+            },
+            {
+                word: { src: 'opposites/Гаек_много.jpg', title: 'Много', hint: 'Много или мало?' },
+                antonym: { src: 'opposites/Гаек_мало.jpg', title: 'Мало', hint: 'Много или мало?' }
+            },
+            {
                 word: { src: 'opposites/Стакан_полный.jpg', title: 'Полный', hint: 'Стакан какой?' },
                 antonym: { src: 'opposites/Стакан_пустой.jpg', title: 'Пустой', hint: 'Стакан какой?' }
+            },
+            {
+                word: { src: 'opposites/Подушка.jpg', title: 'Мягкая', hint: 'Подушка какая?' },
+                antonym: { src: 'opposites/Камень.jpg', title: 'Твёрдый', hint: 'Камень какой?' }
             }
         ];
         let currentSlide = 0;
@@ -212,16 +244,17 @@
 
         function updateSlider() {
             const currentPair = slides[currentSlide];
+            // Обновляем первый блок (слово)
             imageTitleElements[0].textContent = currentPair.word.hint;
             imageTitleElements[0].dataset.title = currentPair.word.title;
             imageElements[0].src = currentPair.word.src;
             imageElements[0].alt = currentPair.word.title;
-
+            // Обновляем второй блок (антоним)
             imageTitleElements[1].textContent = currentPair.antonym.hint;
             imageTitleElements[1].dataset.title = currentPair.antonym.title;
             imageElements[1].src = currentPair.antonym.src;
             imageElements[1].alt = currentPair.antonym.title;
-
+            // Сбрасываем активное изображение
             activeImageIndex = null;
             imageElements.forEach(el => el.classList.remove('active'));
         }
@@ -260,9 +293,11 @@
 
         nextBtn.addEventListener('click', showNextImage);
         prevBtn.addEventListener('click', showPrevImage);
+
         imageTitleElements.forEach((el, i) => {
             el.addEventListener('click', () => toggleTitle(i));
         });
+
         imageElements.forEach((el, i) => {
             el.addEventListener('click', () => toggleImageActive(i));
         });
