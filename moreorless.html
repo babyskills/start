@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ru" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <meta name="google" content="notranslate" />
+    <title>Больше, меньше или равно?</title>
+    <style>
+        /* Общие сбросы и стили */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            color: #e0e0e0;
+            background-color: #040507;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        /* Добавляем отступ снизу к последнему элементу в body */
+        body > *:last-child {
+            margin-bottom: 60px;
+        }
+        /* Заголовок */
+        .header {
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .main-title {
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 0;
+            line-height: 1.2;
+        }
+        .task-number {
+            font-size: 1.1em;
+            color: #5A6171;
+            margin: 16px;
+        }
+        /* Контейнер слайдера */
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90vw;
+            max-width: 400px;
+            padding: 30px;
+            background-color: #040507;
+            border-radius: 8px;
+            position: relative;
+            box-sizing: border-box;
+        }
+        /* Область задания */
+        .task-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        /* Квадратные поля с цифрами */
+        .number-box {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            font-weight: bold;
+            border-radius: 8px;
+            margin: 0 10px;
+        }
+        /* Круглый знак вопроса */
+        .question-mark {
+            width: 60px;
+            height: 60px;
+            background-color: #e0e0e0;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            border-radius: 50%;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+        .question-mark svg {
+            width: 20px;
+            height: 20px;
+        }
+        /* Блок для кнопок и сообщения */
+        .answer-area {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 20px;
+            min-height: 80px;
+            position: relative;
+        }
+        /* Кнопки ответа */
+        .answer-buttons {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .answer-button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 15px;
+            min-width: 60px;
+        }
+        .answer-button {
+            width: 60px;
+            height: 60px;
+            background-color: #2BC25D;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        .answer-button:hover {
+            background-color: #239b4a;
+        }
+        /* Подсказки под кнопками */
+        .hint {
+            text-align: center;
+            font-size: 0.8em;
+            color: #5A6171;
+            margin-top: 14px;
+            width: 100px;
+        }
+        /* Сообщение о правильном ответе */
+        .correct-message {
+            color: #2BC25D;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+            white-space: nowrap;
+        }
+        /* Кнопка навигации */
+        .slider-buttons {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .nav-button {
+            background-color: #15151B;
+            color: #e0e0e0;
+            border: none;
+            cursor: pointer;
+            border-radius: 9999px;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-sizing: border-box;
+            width: 140px;
+            height: 60px;
+        }
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        /* SVG иконки */
+        .nav-icon {
+            width: 30%;
+            height: 30%;
+            display: block;
+        }
+        .nav-icon path {
+          stroke: #e0e0e0;
+        }
+        .nav-button:hover:not(:disabled) {
+            background-color: #1a1a20;
+        }
+        .nav-button:active:not(:disabled) {
+            background-color: #262930;
+        }
+        /* Ссылка на главную */
+        .home-link-container {
+            margin-top: 4px;
+        }
+        .home-link {
+            color: #262930;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+        .home-link:hover {
+            color: #363940;
+            text-decoration: underline;
+        }
+        /* Анимация ошибки */
+        @keyframes wrongAnswer {
+            0% { background-color: #2BC25D; }
+            50% { background-color: #ff4444; }
+            100% { background-color: #2BC25D; }
+        }
+        .wrong {
+            animation: wrongAnswer 0.5s;
+        }
+        /* Иконки внутри кнопок */
+        .answer-button svg {
+            width: 20px;
+            height: 20px;
+        }
+        /* Адаптация для очень маленьких экранов */
+        @media (max-width: 480px) {
+          .slider-container {
+              width: 95vw;
+              padding: 15px;
+          }
+          .number-box {
+              width: 80px;
+              height: 80px;
+              font-size: 2.5em;
+          }
+          .question-mark {
+              width: 50px;
+              height: 50px;
+              font-size: 1.5em;
+          }
+          .question-mark svg {
+              width: 16px;
+              height: 16px;
+          }
+          .answer-button {
+              width: 50px;
+              height: 50px;
+          }
+          .answer-button svg {
+              width: 16px;
+              height: 16px;
+          }
+          .nav-button {
+            height: 60px;
+            width: 100px;
+          }
+          .nav-icon {
+            width: 24%;
+            height: 24%;
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="main-title">Больше, меньше<br>или равно?</div>
+        <div class="task-number" id="taskNumber">Задание №1</div>
+    </div>
+    <div class="slider-container">
+        <div class="task-container">
+            <div class="number-box" id="number1">7</div>
+            <div class="question-mark" id="questionMark">?</div>
+            <div class="number-box" id="number2">3</div>
+        </div>
+        <div class="answer-area">
+            <div class="answer-buttons">
+                <div class="answer-button-container">
+                    <button class="answer-button" id="more" data-answer="more">
+                        <svg width="34" height="47" viewBox="0 0 34 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1.97021 2.52148L28.2829 23.0818L1.97021 43.6421" stroke="white" stroke-width="6.39977"/>
+                        </svg>
+                    </button>
+                    <div class="hint">больше</div>
+                </div>
+                <div class="answer-button-container">
+                    <button class="answer-button" id="less" data-answer="less">
+                        <svg width="34" height="47" viewBox="0 0 34 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M31.5097 2.52148L5.19702 23.0818L31.5097 43.6421" stroke="white" stroke-width="6.39977"/>
+                        </svg>
+                    </button>
+                    <div class="hint">меньше</div>
+                </div>
+                <div class="answer-button-container">
+                    <button class="answer-button" id="equal" data-answer="equal">
+                        <svg width="46" height="32" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 3.19995H46M0 28.2H46" stroke="white" stroke-width="6.39977"/>
+                        </svg>
+                    </button>
+                    <div class="hint">равно</div>
+                </div>
+            </div>
+            <div class="correct-message" id="correctMessage">Правильно!</div>
+        </div>
+        <div class="slider-buttons">
+            <button id="next-btn" class="nav-button" aria-label="Следующий слайд" disabled>
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001"  stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="home-link-container">
+        <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+    </div>
+    <audio id="successSound" src="moreorless/success.mp3" preload="auto"></audio>
+    <audio id="errorSound" src="moreorless/error.mp3" preload="auto"></audio>
+    <script>
+        // Генерация заданий с разными числами
+        function generateTasks(count) {
+            const tasks = [];
+            for (let i = 0; i < count; i++) {
+                let num1, num2, correct;
+                const type = Math.floor(Math.random() * 3);
+                switch (type) {
+                    case 0: // больше
+                        num1 = Math.floor(Math.random() * 15) + 5;
+                        num2 = Math.floor(Math.random() * (num1 - 1));
+                        correct = "more";
+                        break;
+                    case 1: // меньше
+                        num2 = Math.floor(Math.random() * 15) + 5;
+                        num1 = Math.floor(Math.random() * (num2 - 1));
+                        correct = "less";
+                        break;
+                    case 2: // равно
+                        num1 = Math.floor(Math.random() * 15) + 1;
+                        num2 = num1;
+                        correct = "equal";
+                        break;
+                }
+                tasks.push({ num1, num2, correct });
+            }
+            return tasks;
+        }
+
+        const tasks = generateTasks(20);
+        let currentTaskIndex = 0;
+        let isAnswered = false;
+        const number1El = document.getElementById('number1');
+        const number2El = document.getElementById('number2');
+        const questionMarkEl = document.getElementById('questionMark');
+        const moreBtn = document.getElementById('more');
+        const lessBtn = document.getElementById('less');
+        const equalBtn = document.getElementById('equal');
+        const nextBtn = document.getElementById('next-btn');
+        const correctMessageEl = document.getElementById('correctMessage');
+        const taskNumberEl = document.getElementById('taskNumber');
+        const successSound = document.getElementById('successSound');
+        const errorSound = document.getElementById('errorSound');
+
+        // Обновление задания
+        function updateTask() {
+            if (currentTaskIndex >= tasks.length) {
+                // Все задания выполнены
+                document.querySelector('.answer-buttons').style.display = 'none';
+                correctMessageEl.textContent = "Все задания выполнены!";
+                correctMessageEl.style.display = 'block';
+                nextBtn.disabled = true;
+                return;
+            }
+            const task = tasks[currentTaskIndex];
+            number1El.textContent = task.num1;
+            number2El.textContent = task.num2;
+            questionMarkEl.textContent = '?';
+            questionMarkEl.style.backgroundColor = "#5A6171";
+            correctMessageEl.textContent = "Правильно!";
+            correctMessageEl.style.display = 'none';
+            document.querySelector('.answer-buttons').style.display = 'flex';
+            isAnswered = false;
+            nextBtn.disabled = true;
+            taskNumberEl.textContent = `Задание №${currentTaskIndex + 1}`;
+        }
+
+        // Проверка ответа
+        function checkAnswer(userAnswer) {
+            if (isAnswered) return;
+            const task = tasks[currentTaskIndex];
+            if (userAnswer === task.correct) {
+                // Правильный ответ
+                questionMarkEl.innerHTML =
+                    userAnswer === "more" ?
+                        '<svg width="20" height="20" viewBox="0 0 34 47" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.97021 2.52148L28.2829 23.0818L1.97021 43.6421" stroke="white" stroke-width="6.39977"/></svg>' :
+                    userAnswer === "less" ?
+                        '<svg width="20" height="20" viewBox="0 0 34 47" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M31.5097 2.52148L5.19702 23.0818L31.5097 43.6421" stroke="white" stroke-width="6.39977"/></svg>' :
+                        '<svg width="20" height="20" viewBox="0 0 46 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 3.19995H46M0 28.2H46" stroke="white" stroke-width="6.39977"/></svg>';
+                questionMarkEl.style.backgroundColor = "#2BC25D";
+                document.querySelector('.answer-buttons').style.display = 'none';
+                correctMessageEl.style.display = 'block';
+                isAnswered = true;
+                nextBtn.disabled = false;
+                successSound.currentTime = 0;
+                successSound.play();
+            } else {
+                // Неправильный ответ
+                document.querySelector(`.answer-button[data-answer="${userAnswer}"]`).classList.add('wrong');
+                setTimeout(() => {
+                    document.querySelector(`.answer-button[data-answer="${userAnswer}"]`).classList.remove('wrong');
+                }, 500);
+                errorSound.currentTime = 0;
+                errorSound.play();
+            }
+        }
+
+        // Слушатели кнопок
+        moreBtn.addEventListener('click', () => checkAnswer("more"));
+        lessBtn.addEventListener('click', () => checkAnswer("less"));
+        equalBtn.addEventListener('click', () => checkAnswer("equal"));
+
+        // Навигация
+        function showNextTask() {
+            currentTaskIndex++;
+            updateTask();
+        }
+        nextBtn.addEventListener('click', showNextTask);
+
+        // Клавиатура
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight' && !nextBtn.disabled) {
+                showNextTask();
+            }
+        });
+
+        // Загрузка
+        window.addEventListener('load', updateTask);
+    </script>
+</body>
+</html>
