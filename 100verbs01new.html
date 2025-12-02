@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru" translate="no">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <meta name="google" content="notranslate" />
+    <title>100 глаголов (часть 1)</title>
+    <style>
+        html, body {
+            margin: 0; padding: 0; height: 100%; overflow: hidden; box-sizing: border-box;
+            font-family: 'Arial', sans-serif; color: #e0e0e0; background-color: #040507;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            min-height: 100vh;
+        }
+        body > *:first-child { margin-top: 0px; }
+        body > *:last-child { margin-bottom: 60px; }
+        .slider-container {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 90vw; max-width: 400px; padding: 30px; background-color: #040507;
+            border-radius: 8px; position: relative; box-sizing: border-box;
+        }
+        #image-title {
+            font-size: 2em; margin-bottom: 26px; text-align: center; color: #5A6171;
+            cursor: pointer; user-select: none;
+        }
+        .slider-image-wrapper {
+            width: 100%; padding-bottom: 100%; position: relative;
+            overflow: hidden; border-radius: 24px; background-color: #040507;
+        }
+        .slider-image {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: contain; display: block; border-radius: 24px; background-color: black;
+            transform: translateZ(0);
+        }
+        .slider-buttons {
+            display: flex; justify-content: space-between; width: 100%; margin-top: 20px;
+        }
+        .nav-button {
+            background-color: #15151B; color: #e0e0e0; border: none; cursor: pointer;
+            border-radius: 9999px; outline: none; display: flex; align-items: center;
+            justify-content: center; padding: 0; box-sizing: border-box;
+            min-width: 85px; height: 75px;
+        }
+        .nav-button.prev { width: 30%; height: 75px; }
+        .nav-button.next { width: 30%; height: 75px; }
+        .nav-icon { width: 30%; height: 30%; display: block; }
+        .nav-icon path { stroke: #e0e0e0; }
+        .nav-button.prev .nav-icon { transform: scaleX(-1); }
+        .nav-button:hover { background-color: #1a1a20; }
+        .nav-button:active { background-color: #262930; }
+        .home-link-container { margin-top: 4px; }
+        .home-link {
+            color: #262930; text-decoration: none; font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+        .home-link:hover {
+            color: #363940; text-decoration: underline;
+        }
+        @media (max-width: 480px) {
+            .slider-container { width: 95vw; padding: 15px; }
+            #image-title { font-size: 2em; margin-bottom: 15px; }
+            .nav-button {
+                border-radius: 9999px; height: 60px; width: 30%; min-width: auto;
+            }
+            .nav-icon { width: 24%; height: 24%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div id="image-title">Показать подсказку</div>
+        <div class="slider-image-wrapper">
+            <video id="current-video" class="slider-image" muted autoplay loop playsinline preload="auto"></video>
+            <video id="next-video" class="slider-image" muted autoplay loop playsinline preload="auto" style="display: none;"></video>
+        </div>
+        <div class="slider-buttons">
+            <button id="prev-btn" class="nav-button prev" aria-label="Предыдущий слайд">
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button id="next-btn" class="nav-button next" aria-label="Следующий слайд">
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="home-link-container">
+        <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+    </div>
+    <script>
+        const currentVideoElement = document.getElementById('current-video');
+        const nextVideoElement = document.getElementById('next-video');
+        const imageTitleElement = document.getElementById('image-title');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        const videos = [
+            { src: '100verbs01/Подстригает_волосы.mp4', title: 'Подстригает волосы' },
+            { src: '100verbs01/Вода_утекает.mp4', title: 'Вода утекает' },
+            { src: '100verbs01/Поёт.mp4', title: 'Поёт' },
+            { src: '100verbs01/Собака_отряхивается.mp4', title: 'Собака отряхивается' },
+            { src: '100verbs01/Ругаются.mp4', title: 'Ругаются' },
+            { src: '100verbs01/Сидят_на_уроке.mp4', title: 'Сидят на уроке' },
+            { src: '100verbs01/Моет_голову.mp4', title: 'Моет голову' },
+            { src: '100verbs01/Костёр_горит.mp4', title: 'Костёр горит' },
+            { src: '100verbs01/Гладит_кошку.mp4', title: 'Гладит кошку' },
+            { src: '100verbs01/Целуются.mp4', title: 'Целуются' },
+            { src: '100verbs01/Пьёт_воду.mp4', title: 'Пьёт воду' },
+            { src: '100verbs01/Едет_в_поезде_метро.mp4', title: 'Едет в поезде метро' },
+            { src: '100verbs01/Роняет_бокал.mp4', title: 'Роняет бокал' },
+            { src: '100verbs01/Печатает_на_клавиатуре.mp4', title: 'Печатает на клавиатуре' },
+            { src: '100verbs01/Поднимается_по_лестнице.mp4', title: 'Поднимается по лестнице' },
+            { src: '100verbs01/Наливает_воду.mp4', title: 'Наливает воду' },
+            { src: '100verbs01/Разговаривает_по_телефону.mp4', title: 'Разговаривает по телефону' }
+        ];
+
+        let currentIndex = 0;
+        let titleIsOriginal = false;
+
+        function preloadVideo(src, videoElement) {
+            videoElement.src = src;
+            videoElement.load();
+        }
+
+        function updateSlider() {
+            const currentVideo = videos[currentIndex];
+            const nextVideo = videos[(currentIndex + 1) % videos.length];
+
+            // Показываем текущее видео
+            currentVideoElement.src = currentVideo.src;
+            currentVideoElement.load();
+            currentVideoElement.style.display = 'block';
+            nextVideoElement.style.display = 'none';
+
+            // Предзагружаем следующее видео
+            preloadVideo(nextVideo.src, nextVideoElement);
+
+            imageTitleElement.textContent = "Показать подсказку";
+            titleIsOriginal = false;
+        }
+
+        function showNextVideo() {
+            currentIndex = (currentIndex + 1) % videos.length;
+            // Меняем местами текущее и следующее видео
+            const temp = currentVideoElement.src;
+            currentVideoElement.src = nextVideoElement.src;
+            currentVideoElement.style.display = 'block';
+            nextVideoElement.style.display = 'none';
+            // Предзагружаем новое следующее видео
+            const nextNextIndex = (currentIndex + 1) % videos.length;
+            preloadVideo(videos[nextNextIndex].src, nextVideoElement);
+            imageTitleElement.textContent = "Показать подсказку";
+            titleIsOriginal = false;
+        }
+
+        function showPrevVideo() {
+            currentIndex = (currentIndex - 1 + videos.length) % videos.length;
+            updateSlider();
+        }
+
+        function toggleTitle() {
+            titleIsOriginal = !titleIsOriginal;
+            if (!titleIsOriginal) {
+                imageTitleElement.textContent = "Показать подсказку";
+            } else {
+                imageTitleElement.textContent = videos[currentIndex].title;
+            }
+        }
+
+        nextBtn.addEventListener('click', showNextVideo);
+        prevBtn.addEventListener('click', showPrevVideo);
+        imageTitleElement.addEventListener('click', toggleTitle);
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') {
+                showNextVideo();
+            } else if (event.key === 'ArrowLeft') {
+                showPrevVideo();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (videos.length > 0) {
+                updateSlider();
+            } else {
+                imageTitleElement.textContent = "Видео не найдены";
+                currentVideoElement.style.display = 'none';
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                prevBtn.style.cursor = 'not-allowed';
+                nextBtn.style.cursor = 'not-allowed';
+            }
+        });
+    </script>
+</body>
+</html>
