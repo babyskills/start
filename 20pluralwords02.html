@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru" translate="no">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+ <meta name="google" content="notranslate" />
+ <title>Слова во множественном числе</title>
+ <style>
+ html, body {
+ margin: 0;
+ padding: 0;
+ height: 100%;
+ overflow: hidden;
+ box-sizing: border-box;
+ font-family: 'Arial', sans-serif;
+ color: #e0e0e0;
+ background-color: #050504;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: column;
+ min-height: 100vh;
+ }
+ body > *:last-child { margin-bottom: 60px; }
+ .slider-container {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ width: 90vw;
+ max-width: 500px;
+ padding: 30px;
+ background-color: #050504;
+ border-radius: 8px;
+ position: relative;
+ box-sizing: border-box;
+ }
+ .title-container {
+ position: relative;
+ margin-bottom: 26px;
+ text-align: center;
+ height: 80px;
+ }
+ #main-title {
+ font-size: 1.8em;
+ font-weight: bold;
+ color: #e0e0e0;
+ margin-bottom: 10px;
+ }
+ #image-title {
+ font-size: 1.4em;
+ color: #303030;
+ padding-top: 10px;
+ }
+ .checkmark-icon {
+ position: absolute;
+ top: -76px;
+ left: 50%;
+ transform: translateX(-50%);
+ width: 50px;
+ height: 50px;
+ display: none;
+ }
+ .slider-view {
+ width: 100%;
+ display: grid;
+ grid-template-columns: 1fr;
+ gap: 12px;
+ padding: 0 4px;
+ }
+ .field-set {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 12px;
+ width: 100%;
+ }
+ .text-field {
+ width: 85%;
+ max-width: 350px;
+ padding: 16px 18px;
+ border-radius: 6px;
+ border: none;
+ color: #e8e8e8;
+ font-size: 1.4em;
+ outline: none;
+ text-align: center;
+ }
+ .text-field[readonly] {
+ font-weight: bold;
+ color: #fff;
+ background-color: #050504;
+ }
+ .text-field:not([readonly]) {
+ color: #C4C4C4;
+ background-color: #0C0C0C;
+ }
+ .text-field:not([readonly])::placeholder {
+ color: #232323;
+ }
+ .text-field:not([readonly]):focus {
+ border: none;
+ box-shadow: 0 0 0 3px rgba(58, 132, 67, 0.3);
+ }
+ .text-field.correct {
+ border: none;
+ background-color: rgba(76, 175, 80, 0.1);
+ }
+ .text-field.incorrect {
+ border: none;
+ background-color: rgba(244, 67, 54, 0.1);
+ }
+ .slider-buttons {
+ display: flex;
+ justify-content: center;
+ width: 100%;
+ margin-top: 20px;
+ }
+ .nav-button {
+ background-color: #0C0C0C;
+ color: #e0e0e0;
+ border: none;
+ cursor: pointer;
+ border-radius: 9999px;
+ outline: none;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ padding: 0;
+ box-sizing: border-box;
+ width: 75px;
+ height: 75px;
+ transition: opacity 0.3s ease;
+ }
+ .nav-button.disabled {
+ opacity: 0.3;
+ cursor: default;
+ }
+ .nav-icon { width: 30%; height: 30%; display: block; }
+ .nav-icon path { stroke: #e0e0e0; }
+ .home-link-container { margin-top: 4px; }
+ .home-link { color: #303030; text-decoration: none; font-size: 1.1em; transition: color 0.3s ease; }
+ .home-link:hover { color: #303030; text-decoration: underline; }
+ @media (max-width: 720px) {
+ .slider-container { max-width: 90vw; padding: 20px; }
+ #main-title { font-size: 1.5em; }
+ #image-title { font-size: 1.3em; }
+ .text-field { font-size: 1.3em; }
+ .nav-button { height: 68px; width: 68px; }
+ }
+ @media (max-width: 480px) {
+ .slider-container { width: 95vw; padding: 15px; }
+ .text-field { font-size: 1.2em; padding: 14px 16px; }
+ .nav-button { height: 60px; width: 60px; }
+ .nav-icon { width: 24%; height: 24%; }
+ }
+ </style>
+</head>
+<body>
+ <div class="slider-container">
+ <div class="title-container">
+    <div id="main-title">Множественное число</div>
+    <svg class="checkmark-icon" width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Анимация эллипса и галочки без зазора">
+        <circle cx="50" cy="50" r="45.551" stroke="#3A8443" stroke-width="8.89794" fill="none"
+            stroke-dasharray="287" stroke-dashoffset="287" stroke-linejoin="round" stroke-linecap="round">
+            <animate attributeName="stroke-dashoffset" from="287" to="0" dur="0.6s" begin="indefinite" fill="freeze" />
+        </circle>
+        <path d="M28.9971 45.6246L45.2427 60.9787L73.4868 34.2849"
+            stroke="#3A8443" stroke-width="8.89794" fill="none" stroke-linecap="round" stroke-linejoin="round"
+            stroke-dasharray="70" stroke-dashoffset="70">
+            <animate attributeName="stroke-dashoffset" from="70" to="0" dur="0.4s" begin="indefinite" fill="freeze" />
+        </path>
+    </svg>
+    <div id="image-title">Задание №1</div>
+ </div>
+ <div class="slider-view" id="slider-view">
+    <div class="field-set" style="display: flex;">
+        <input class="text-field" type="text" value="ТЕЛЕФОН" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Телефоны">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="КНИГА" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Книги">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="РЕБЁНОК" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Дети">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="МАШИНА" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Машины">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="ВРАЧ" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Врачи">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="НОГА" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Ноги">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="ГОРА" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Горы">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="ВЕТКА" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Ветки">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="ДЕНЬ" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Дни">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="ИГРУШКА" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Игрушки">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="СНЕЖИНКА" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Снежинки">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="КАРАНДАШ" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Карандаши">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="ЭТАЖ" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Этажи">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="ФРУКТ" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Фрукты">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="БУТЫЛКА" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Бутылки">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="ПОМИДОР" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Помидоры">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="КУРТКА" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Куртки">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="ЦВЕТ" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Цвета">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="ТЕТРАДЬ" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Тетради">
+    </div>
+    <div class="field-set" style="display:none;">
+        <input class="text-field" type="text" value="МАГАЗИН" readonly>
+        <input class="text-field" type="text" placeholder="Напечатай здесь" data-answer="Магазины">
+    </div>
+ </div>
+ <div class="slider-buttons">
+    <button id="next-btn" class="nav-button next" aria-label="Следующий слайд">
+        <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+ </div>
+ </div>
+ <div class="home-link-container">
+    <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+ </div>
+ <script>
+ const view = document.getElementById('slider-view');
+ const slides = Array.from(view.querySelectorAll('.field-set'));
+ const imageTitleElement = document.getElementById('image-title');
+ const nextBtn = document.getElementById('next-btn');
+ let checkmarkIcon = document.querySelector('.checkmark-icon');
+ let currentIndex = 0;
+ let allDone = false;
+ let currentInputField = null;
+
+ function resetAndAnimateCheckmark() {
+     const oldIcon = document.querySelector('.checkmark-icon');
+     const newIcon = oldIcon.cloneNode(true);
+     oldIcon.parentNode.replaceChild(newIcon, oldIcon);
+     checkmarkIcon = newIcon;
+     const newCircleAnim = newIcon.querySelector('circle animate');
+     const newPathAnim = newIcon.querySelector('path animate');
+     newCircleAnim.beginElement();
+     setTimeout(() => newPathAnim.beginElement(), 600);
+ }
+
+ function showSlide(index) {
+     slides.forEach((el, idx) => {
+         el.style.display = (idx === index) ? 'flex' : 'none';
+     });
+     imageTitleElement.textContent = `Задание №${index + 1}`;
+     checkmarkIcon.style.display = 'none';
+     currentInputField = slides[index].querySelector('.text-field:not([readonly])');
+     currentInputField.focus();
+ }
+
+ function updateView() {
+     showSlide(currentIndex);
+ }
+
+ function showNext() {
+     if (allDone) return;
+     const currentInput = slides[currentIndex].querySelector('.text-field:not([readonly])');
+     if (!currentInput.classList.contains('correct')) {
+         return;
+     }
+     currentIndex = (currentIndex + 1) % slides.length;
+     updateView();
+ }
+
+ function checkAnswer(input) {
+     const answer = input.getAttribute('data-answer').toLowerCase();
+     const userAnswer = input.value.trim().toLowerCase();
+     input.classList.remove('correct', 'incorrect');
+     if (userAnswer.length > 0) {
+         if (userAnswer === answer) {
+             input.classList.add('correct');
+             checkmarkIcon.style.display = 'block';
+             resetAndAnimateCheckmark();
+             const allCorrect = Array.from(document.querySelectorAll('.text-field:not([readonly])')).every(field => field.classList.contains('correct'));
+             if (allCorrect && currentIndex === slides.length - 1) {
+                 allDone = true;
+                 imageTitleElement.textContent = "Все задания выполнены!";
+                 imageTitleElement.style.color = "#3A8443";
+                 nextBtn.classList.add('disabled');
+             }
+         } else if (!answer.startsWith(userAnswer)) {
+             input.classList.add('incorrect');
+             checkmarkIcon.style.display = 'none';
+         }
+     }
+ }
+
+ document.querySelectorAll('.text-field:not([readonly])').forEach(input => {
+     input.addEventListener('input', () => checkAnswer(input));
+ });
+
+ nextBtn.addEventListener('click', showNext);
+
+ document.addEventListener('keydown', (event) => {
+     if ((event.key === 'ArrowRight' || event.key === 'Enter') && !allDone) {
+         event.preventDefault();
+         const currentInput = slides[currentIndex].querySelector('.text-field:not([readonly])');
+         if (currentInput.classList.contains('correct')) {
+             showNext();
+         }
+         currentInput.focus();
+     }
+ });
+
+ window.addEventListener('load', () => {
+     updateView();
+ });
+ </script>
+</body>
+</html>
