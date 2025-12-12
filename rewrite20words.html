@@ -42,9 +42,9 @@
         }
 
         .counter {
-            font-size: clamp(1rem, 3vw, 1.1rem);
-            color: #ccc;
-            font-weight: 500;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            color: #666666;
+            font-weight: 400;
         }
 
         .word-container {
@@ -60,7 +60,7 @@
         .current-word {
             font-size: clamp(3rem, 10vw, 6rem);
             font-weight: 700;
-            margin-bottom: 30px;
+            margin-bottom: 106px;
             text-align: center;
             line-height: 1;
         }
@@ -68,7 +68,7 @@
         .arrow {
             width: clamp(35px, 8vw, 45px);
             height: clamp(47px, 10vw, 60px);
-            margin-bottom: 25px;
+            margin-bottom: 72px;
             animation: bounce 1.5s infinite;
         }
 
@@ -91,13 +91,6 @@
             gap: 8px;
             width: 100%;
             max-width: 400px;
-        }
-
-        .question {
-            font-size: clamp(0.9rem, 2.5vw, 1rem);
-            color: #666666;
-            font-weight: 400;
-            text-align: center;
         }
 
         .space-hint {
@@ -126,10 +119,17 @@
             border-color: #888;
         }
 
+        .button-hint {
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            color: #666666;
+            font-weight: 400;
+            text-align: center;
+        }
+
         /* Ссылка домой */
         .home-link-container {
             position: fixed;
-            bottom: 20px;
+            bottom: 42px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1001;
@@ -200,13 +200,18 @@
                 top: 15px;
             }
             
+            .space-hint {
+                max-width: 320px;
+                min-width: 280px;
+            }
+            
             .completion-popup {
                 padding: 40px 40px;
                 width: 85vw;
             }
             
             .home-link-container {
-                bottom: 15px;
+                bottom: 37px;
             }
         }
     </style>
@@ -214,7 +219,7 @@
 <body>
     <div class="header">
         <div class="title">Перепеши слово</div>
-        <div class="counter">Осталось слов: <span id="counter">20</span></div>
+        <div class="counter" id="counter">Осталось 20 слов</div>
     </div>
 
     <div class="word-container" id="wordContainer">
@@ -223,8 +228,8 @@
         </svg>
         <div class="current-word" id="currentWord">Мост</div>
         <div class="instruction-panel">
-            <div class="question">Переписал слово?</div>
             <div class="space-hint" id="spaceHint">Нажми пробел на клавиатуре</div>
+            <div class="button-hint">Или нажми на эту кнопку</div>
         </div>
     </div>
 
@@ -282,6 +287,16 @@
         let wordContainer;
         let header;
 
+        function pluralize(count) {
+            if (count % 10 === 1 && count % 100 !== 11) {
+                return 'слово';
+            } else if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) {
+                return 'слова';
+            } else {
+                return 'слов';
+            }
+        }
+
         function shuffleArray(array) {
             const shuffled = [...array];
             for (let i = shuffled.length - 1; i > 0; i--) {
@@ -309,7 +324,8 @@
             const counter = document.getElementById('counter');
             const currentWord = document.getElementById('currentWord');
 
-            counter.textContent = shuffledWords.length - currentIndex;
+            const remaining = shuffledWords.length - currentIndex;
+            counter.textContent = `Осталось ${remaining} ${pluralize(remaining)}`;
 
             if (currentIndex < shuffledWords.length) {
                 currentWord.textContent = shuffledWords[currentIndex];
