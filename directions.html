@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Круг по кресту</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 60px;
+            padding: 20px;
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        /* Квадратная плашка ровно за крестом */
+        .cross-wrapper {
+            position: relative;
+        }
+
+        .panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: min(50vw, 50vh, 360px);
+            height: min(50vw, 50vh, 360px);
+            background: #151515;
+            border-radius: 20px;
+            border: 1px solid #222;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .direction-title {
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0;
+            height: 30px;
+            transition: opacity 0.3s ease;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .direction-title.show {
+            opacity: 1;
+        }
+
+        .cross-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .cross {
+            position: relative;
+            width: min(40vw, 40vh, 280px);
+            height: min(40vw, 40vh, 280px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cross::before,
+        .cross::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .cross::before {
+            width: 1px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
+        .cross::after {
+            height: 1px;
+            width: 100%;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .circle {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: #00ff88;
+            border-radius: 50%;
+            transition: left 0.6s ease, top 0.6s ease, transform 0.6s ease;
+            z-index: 2;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #333;
+            background: #2a2a2a;
+            color: #ffffff;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .btn:active {
+            background: #1a1a1a;
+        }
+
+        @media (max-width: 480px) {
+            .btn {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+            
+            .control-row {
+                gap: 10px;
+            }
+            
+            .direction-title {
+                font-size: 20px;
+                top: -25%;
+            }
+            
+            .panel {
+                border-radius: 16px;
+            }
+            
+            .container {
+                gap: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="direction-title" id="directionText"></div>
+        
+        <div class="cross-wrapper">
+            <div class="panel"></div>
+            <div class="cross-section">
+                <div class="cross">
+                    <div class="circle" id="circle"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-row">
+                <button class="btn" id="left">←</button>
+                <button class="btn" id="up">↑</button>
+                <button class="btn" id="down">↓</button>
+                <button class="btn" id="right">→</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const circle = document.getElementById('circle');
+        const directionText = document.getElementById('directionText');
+        let moveTimeout = null;
+        let returnTimeout = null;
+        let isMoving = false;
+        
+        function clearTimeouts() {
+            if (moveTimeout) clearTimeout(moveTimeout);
+            if (returnTimeout) clearTimeout(returnTimeout);
+            moveTimeout = null;
+            returnTimeout = null;
+        }
+
+        function resetCircle() {
+            circle.style.left = '50%';
+            circle.style.top = '50%';
+            circle.style.transform = 'translate(-50%, -50%)';
+        }
+
+        function setDirection(dir) {
+            directionText.textContent = dir;
+            directionText.classList.add('show');
+        }
+
+        function hideDirection() {
+            directionText.classList.remove('show');
+        }
+
+        function moveToEnd(direction) {
+            clearTimeouts();
+            resetCircle(); // Сброс перед новым движением
+            switch(direction) {
+                case 'left':
+                    circle.style.left = '1%';
+                    circle.style.top = '50%';
+                    setDirection('ВЛЕВО');
+                    break;
+                case 'right':
+                    circle.style.left = '99%';
+                    circle.style.top = '50%';
+                    setDirection('ВПРАВО');
+                    break;
+                case 'up':
+                    circle.style.left = '50%';
+                    circle.style.top = '1%';
+                    setDirection('ВВЕРХ');
+                    break;
+                case 'down':
+                    circle.style.left = '50%';
+                    circle.style.top = '99%';
+                    setDirection('ВНИЗ');
+                    break;
+            }
+            circle.style.transform = 'translate(-50%, -50%)';
+        }
+
+        function returnToCenter() {
+            resetCircle();
+            hideDirection();
+        }
+
+        function moveCircle(direction) {
+            if (isMoving) return; // Блокировка быстрых нажатий
+            
+            isMoving = true;
+            clearTimeouts();
+            circle.style.transition = 'all 0.6s ease';
+            moveToEnd(direction);
+            
+            returnTimeout = setTimeout(() => {
+                circle.style.transition = 'all 0.6s ease';
+                returnToCenter();
+                isMoving = false;
+            }, 1000);
+        }
+
+        document.getElementById('left').addEventListener('click', () => moveCircle('left'));
+        document.getElementById('right').addEventListener('click', () => moveCircle('right'));
+        document.getElementById('up').addEventListener('click', () => moveCircle('up'));
+        document.getElementById('down').addEventListener('click', () => moveCircle('down'));
+
+        document.addEventListener('keydown', (e) => {
+            switch(e.key.toLowerCase()) {
+                case 'arrowleft': 
+                case 'a': moveCircle('left'); break;
+                case 'arrowright': 
+                case 'd': moveCircle('right'); break;
+                case 'arrowup': 
+                case 'w': moveCircle('up'); break;
+                case 'arrowdown': 
+                case 's': moveCircle('down'); break;
+            }
+        });
+    </script>
+</body>
+</html>
