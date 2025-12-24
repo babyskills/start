@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="icon" href="puzzle/favicon.ico" type="image/x-icon">
+<title>Конструктор пазлов</title>
+<meta name="description" content="Конструктор пазлов">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+div#modal-window h1,
+div#modal-window h2,
+div#modal-window h4,
+div#modal-window h5,
+div#modal-window h6 {
+    text-align: center;
+    margin: 10px 0;
+}
+div#modal-window h1 {
+    font-size: 28px;
+    color: #1967D2;
+}
+div#modal-window h2 {
+    font-size: 18px;
+    color: #333;
+}
+div#modal-window h3 {
+    font-size: 32px;
+    color: #1967D2;
+    font-weight: bold;
+}
+div#overlay {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.7);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    opacity: 1;
+    z-index: 10000;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+div#overlay.hide {
+    display: none;
+}
+div#modal-window {
+    font-family: Helvetica, Arial, sans-serif;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10001;
+    background: #fefefe;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border-radius: 16px;
+    width: 300px !important;
+    max-width: 300px !important;
+    max-height: 90vh;
+    color: #000;
+    text-align: center;
+}
+div#modal-window.hide {
+    display: none;
+}
+div#modal-window form {
+    display: none;
+}
+body,
+div#canvas-wrap,
+html {
+    height: 100%;
+    width: 100%;
+}
+#image-error,
+div#game-options ul li b {
+    margin: 0 10px;
+}
+#dnd,
+#image-error,
+.hide {
+    display: none;
+}
+#clock,
+div#congrat {
+    text-align: center;
+}
+body,
+html {
+    font-family: Helvetica, Arial, sans-serif;
+    overflow: hidden;
+    background: #1e1e1e;
+}
+body,
+canvas,
+div,
+html,
+li,
+ul {
+    margin: 0;
+    padding: 0;
+}
+.clear {
+    clear: both;
+}
+canvas#buffer,
+canvas#canvas,
+canvas#image-preview {
+    position: absolute;
+    top: 45px;
+    left: 0;
+}
+canvas#canvas {
+    z-index: 100;
+}
+.loading #canvas-wrap {
+    background: #2c2c2c center/contain no-repeat;
+}
+.loading canvas {
+    visibility: hidden;
+}
+canvas#buffer {
+    z-index: 70;
+}
+canvas#image-preview.show {
+    left: 50%;
+    z-index: 40;
+}
+div#game-options {
+    background: #2c2c2c;
+    z-index: 500;
+    top: 0;
+    left: 0;
+    position: fixed;
+    padding: 12px 20px;
+    width: 100%;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+div#game-options ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    list-style: none;
+    flex: 1;
+    max-width: 60%;
+}
+div#game-options ul li {
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1;
+}
+#clock {
+    width: 72px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2c2c2c;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: center;
+    box-sizing: border-box;
+}
+a.button,
+b.button {
+    color: #d9d9d9;
+    font: 13px Helvetica, Arial, sans-serif;
+    outline: 0;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    background: #2c2c2c;
+    border: 1px solid #424242;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+    box-sizing: border-box;
+    min-width: 90px;
+    margin: 0 !important;
+    position: relative;
+    padding: 0 16px;
+    text-align: center;
+}
+a.button:hover,
+b.button:hover {
+    border-color: #1967D2;
+}
+a.button:active,
+b.button:active {
+    border-color: #165ABF;
+}
+.add {
+    position: relative;
+    padding: 0 16px 0 52px !important;
+    min-width: 150px;
+    justify-content: flex-start;
+}
+.add svg {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    z-index: 1;
+    pointer-events: none;
+}
+div#game-options div.styled-select {
+    position: relative;
+    height: 36px;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #2c2c2c;
+    border: 1px solid #424242;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    transition: border-color 0.15s ease;
+    box-sizing: border-box;
+}
+div#game-options div.styled-select:hover {
+    border-color: #1967D2;
+}
+div#game-options div.styled-select::after {
+    display: none;
+}
+div#game-options div.styled-select select {
+    color: #d9d9d9;
+    font: 13px Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    padding: 0 16px;
+    background: #2c2c2c;
+    outline: 0 !important;
+    border: none;
+    height: 36px;
+    width: 100%;
+    line-height: 36px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+    text-align-last: center;
+    box-sizing: border-box;
+}
+div#game-options div.styled-select select:hover {
+    background: #2c2c2c;
+    color: #d9d9d9;
+    border: none;
+}
+div#game-options div.styled-select select:focus {
+    outline: none !important;
+    background: #2c2c2c !important;
+    color: #d9d9d9 !important;
+    box-shadow: none !important;
+}
+div#game-options div.styled-select select option {
+    background: #2c2c2c;
+    color: #d9d9d9;
+    border-radius: 4px;
+}
+#game-options #create {
+    display: block;
+}
+#help {
+    display: none !important;
+}
+@media screen and (max-width: 960px) {
+    div#game-options {
+        padding: 12px 15px;
+        height: 52px;
+    }
+    #clock {
+        width: 65px;
+        font-size: 13px;
+    }
+    div.styled-select {
+        width: 105px;
+    }
+    .add {
+        min-width: 140px;
+    }
+}
+@media screen and (max-width: 479px) {
+    #clock {
+        display: none;
+    }
+}
+</style>
+</head>
+<body>
+<div id="canvas-wrap">
+<canvas id="canvas" width="2560" height="1652" style="width: 1280px; height: 826px;"></canvas>
+<canvas class="hide" id="image" width="840" height="1094"></canvas>
+<canvas class="hide" id="image-preview" style="margin-top: 0px; width: 417px; height: 540px;" width="834" height="1080"></canvas>
+</div>
+<div id="image-error"></div>
+<div id="game-options">
+<ul>
+<li><b id="clock" class="button">00:00:00</b></li>
+<li><a id="JIGSAW_SHUFFLE" class="button">Перетасовать</a></li>
+<li><a id="SHOW_PREVIEW" class="button">Подсмотреть</a></li>
+<li>
+<div class="styled-select">
+<select id="set-parts">
+<option value="10">10 деталей</option>
+<option value="20" selected="selected">20 деталей</option>
+<option value="34">35 деталей</option>
+<option value="62">63 деталей</option>
+<option value="76">80 деталей</option>
+<option value="90">99 деталей</option>
+<option value="100">100 деталей</option>
+</select>
+</div>
+</li>
+</ul>
+<div id="create">
+<a class="button add" id="SHOW_FILEPICKER" title="Загрузить картинку">
+<svg width="22" height="22" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1.87646 4.61938H17.8264C19.0773 4.61938 19.7028 5.55761 19.7028 6.49584V22.133C19.7028 23.384 19.0773 24.3222 17.8264 24.3222H1.87646C0.938229 24.3222 0 23.384 0 22.133V6.49584C0 5.55761 0.938229 4.61938 1.87646 4.61938Z" fill="#1967D2"/>
+<path d="M6.56737 13.0632C7.94916 13.0632 9.06932 11.9431 9.06932 10.5613C9.06932 9.17948 7.94916 8.05933 6.56737 8.05933C5.18559 8.05933 4.06543 9.17948 4.06543 10.5613C4.06543 11.9431 5.18559 13.0632 6.56737 13.0632Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M19.7035 0C22.302 0 24.3231 2.02105 24.3231 4.61955C24.3231 7.21805 22.302 9.2391 19.7035 9.2391C17.3938 9.2391 15.084 7.21805 15.084 4.61955C15.084 2.02105 17.3938 0 19.7035 0Z" fill="white"/>
+<path d="M20.5692 2.021V3.75333H22.5902V5.48566H20.5692V7.21799H19.1255V5.48566H17.1045V3.75333H19.1255V2.021H20.5692Z" fill="#1967D2"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M19.7028 16.1908C15.6372 10.5615 15.3244 9.93598 10.946 15.5654C9.38229 17.4418 8.13132 18.38 5.94212 16.8163C3.12743 14.3144 2.50194 15.8781 0 18.0673V22.133C0 23.3839 0.938229 24.3222 1.87646 24.3222H17.8264C19.0773 24.3222 19.7028 23.3839 19.7028 22.133V16.1908Z" fill="white"/>
+</svg>
+Загрузить картинку
+</a>
+</div>
+</div>
+<div class="hide" id="overlay"></div>
+<div id="modal-window" class="hide">
+    <div id="modal-window-msg"></div>
+</div>
+<form class="hide" method="post" id="redirect-form" action="">
+<input type="text" name="time" id="t">
+<input type="text" name="parts" id="p">
+</form>
+<input type="file" id="image-input" style="display:none;" accept="image/*">
+<div id="congrat" class="hide">
+<h1>Молодец!</h1>
+<h2>Ваше время:</h2>
+<h3><span id="time"></span></h3>
+<form method="post" class="hide" action="" target="save-score" onsubmit="jigsaw.UI.close_lightbox();">
+<label>Your Name: <input type="text" name="name"></label>
+<input type="submit" value="Save score">
+<input type="hidden" id="time-input" name="time">
+</form>
+</div>
+<script src="puzzle/eventemiter.min.js"></script>
+<script src="puzzle/event.min.js"></script>
+<script src="puzzle/puzzle.min.js"></script>
+<script>
+window.playSound = playSound;
+var partsindex = 2;
+var Soundfx = {
+    clickit: new Audio('puzzle/stuck.mp3'),
+    wingame: new Audio('puzzle/success.mp3')
+};
+function playSound(name) {
+    if (Soundfx && Soundfx[name]) {
+        Soundfx[name].currentTime = 0;
+        Soundfx[name].play().catch(function(error) {
+            console.error('Ошибка воспроизведения звука:', error);
+        });
+    }
+}
+function showWinModal() {
+    document.getElementById('congrat').classList.remove('hide');
+    var timeEl = document.getElementById('time');
+    var timeInput = document.getElementById('time-input');
+    if (timeEl && timeInput) {
+        var time = document.getElementById('clock').textContent;
+        timeEl.textContent = time;
+        timeInput.value = time;
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    var jsaw;
+    if (typeof Util !== 'undefined') {
+        Util.calcPieces = function() { return; };
+    }
+    try {
+        jsaw = new jigsaw.Jigsaw({
+            defaultImage: "puzzle/default.jpg",
+            piecesNumberTmpl: "%d деталей",
+            rotatePieces: false,
+            shuffled: true,
+            spread: .75,
+            defaultPieces: 20,
+            offsetTop: 0
+        });
+        jsaw.set_image = function(src) {
+            var self = this;
+            self.image.src = src;
+            self.image.onload = function() {
+                self.init_pieces();
+                self.render();
+            };
+        };
+        if (jsaw.eventBus) {
+            jsaw.eventBus.on(jigsaw.Events.JIGSAW_COMPLETE, function() {
+                playSound('wingame');
+                showWinModal();
+                var ev = new Event('JIGSAW_COMPLETE');
+                document.dispatchEvent(ev);
+            });
+        }
+        document.getElementById('JIGSAW_SHUFFLE').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (jsaw.eventBus) {
+                jsaw.eventBus.emit(jigsaw.Events.JIGSAW_SHUFFLE);
+            }
+        });
+        document.getElementById('SHOW_PREVIEW').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (jsaw.eventBus) {
+                jsaw.eventBus.emit(jigsaw.Events.SHOW_PREVIEW);
+            }
+        });
+        document.getElementById('set-parts').addEventListener('change', function() {
+            if (jsaw.eventBus) {
+                jsaw.eventBus.emit(jigsaw.Events.PARTS_NUMBER_CHANGED, parseInt(this.value));
+                jsaw.eventBus.emit(jigsaw.Events.RENDER_REQUEST);
+            }
+            this.blur();
+        });
+        document.getElementById('SHOW_FILEPICKER').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('image-input').click();
+        });
+        document.getElementById('image-input').addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (file && file.type.match('image.*')) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    if (jsaw) {
+                        jsaw.set_image(e.target.result);
+                    }
+                };
+                reader.onerror = function() {
+                    alert('Ошибка загрузки изображения');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Пожалуйста, выберите изображение.');
+            }
+        });
+        var select = document.getElementById('set-parts');
+        var canvasWrap = document.getElementById('canvas-wrap');
+        if (select && canvasWrap) {
+            canvasWrap.addEventListener('click', function() {
+                select.blur();
+            });
+        }
+        document.querySelectorAll('.button').forEach(function(button) {
+            button.addEventListener('click', function() {
+                if (select) select.blur();
+            });
+        });
+        (function() {
+            var menuHidden = false;
+            var topMenu = document.getElementById('game-options');
+            if (!topMenu) return;
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'KeyH') {
+                    menuHidden = !menuHidden;
+                    topMenu.style.display = menuHidden ? 'none' : 'flex';
+                }
+            });
+            document.addEventListener('JIGSAW_COMPLETE', function() {
+                menuHidden = false;
+                topMenu.style.display = 'flex';
+            });
+            if (window.jigsaw && jigsaw.Events && jsaw && jsaw.eventBus) {
+                jsaw.eventBus.on(jigsaw.Events.JIGSAW_COMPLETE, function() {
+                    menuHidden = false;
+                    topMenu.style.display = 'flex';
+                });
+            }
+        })();
+    } catch(e) {
+        console.error('Ошибка инициализации пазла:', e);
+    }
+});
+</script>
+</body>
+</html>
