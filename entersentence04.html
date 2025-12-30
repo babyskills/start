@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<title>Послушай и напечатай! (часть 2)</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+    width: 100%;
+    background-color: #040507;
+    font-family: 'Arial', sans-serif;
+    color: #E0E0E0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .container {
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .small-text {
+    font-size: 1.3rem;
+    color: #54546A;
+    margin-bottom: 20px;
+    margin-top: -16px;
+  }
+  .small-text.completed {
+    color: #3B8645;
+    font-weight: 600;
+  }
+  .large-text {
+    font-weight: 700;
+    font-size: 1.7rem;
+    color: #E0E0E0;
+    margin-bottom: 20px;
+    white-space: nowrap;
+  }
+  .play-button {
+    background-color: #15151B;
+    border-radius: 50%;
+    width: 72px;
+    height: 72px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    transition: background-color 0.3s ease;
+    animation-name: pulse-scale;
+    animation-duration: 2.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    position: relative;
+  }
+  .play-button.played, .play-button.disabled {
+    animation: none !important;
+  }
+  .play-button:hover:not(.played):not(.disabled) {
+    background-color: #1B3220;
+  }
+  .play-icon {
+    width: 24px;
+    height: 24px;
+    margin-left: 2px;
+  }
+  .stop-icon {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  @keyframes pulse-scale {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  .input-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .input-fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background-color: #1B3220;
+    border-radius: 6px;
+    pointer-events: none;
+    transition: width 0.2s ease;
+    z-index: 0;
+    width: 0;
+    height: 100%;
+  }
+  input[type="text"] {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    background-color: transparent;
+    color: #E0E0E0;
+    outline: none;
+    border: 2px solid #15151B;
+  }
+  input[type="text"].incorrect {
+    background-color: #220D0C;
+    border-color: #220D0C;
+  }
+  input::placeholder {
+    color: #E0E0E0;
+  }
+  .next-task-text {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #54546A;
+    min-height: 1.5em;
+  }
+  #next-button {
+    margin-top: 20px;
+    padding: 10px 28px;
+    font-size: 1.1rem;
+    font-weight: 400;
+    border: none;
+    border-radius: 6px;
+    background-color: #15151B;
+    color: #E0E0E0;
+    cursor: pointer;
+    display: none;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  #next-button:hover:not(:disabled) {
+    background-color: #1B3220;
+  }
+  #next-button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  .home-link-container {
+    margin-top: 4px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .home-link {
+    color: #262930;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+    cursor: pointer;
+  }
+  .home-link:hover,
+  .home-link:focus {
+    color: #363940;
+    text-decoration: underline;
+  }
+  @media (max-width: 480px) {
+    html, body {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="container" role="main">
+    <div id="task-number" class="small-text">Задание 1</div>
+    <div id="task-prompt" class="large-text" aria-live="polite">Послушай и напечатай!</div>
+    <button id="play-btn" class="play-button" aria-label="Воспроизвести звук">
+      <div id="play-icon" class="play-icon">
+        <svg width="24" height="24" viewBox="0 0 48 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 3.00498C0 0.618735 2.65095 -0.812389 4.64597 0.49684L46.077 27.6859C47.8824 28.8707 47.8824 31.5174 46.077 32.7022L4.64597 59.8912C2.65095 61.2004 0 59.7693 0 57.3831V3.00498Z" fill="#E0E0E0"/>
+        </svg>
+      </div>
+    </button>
+    <div class="input-wrapper" aria-live="polite">
+      <div id="input-fill" class="input-fill"></div>
+      <input
+        type="text"
+        id="input-field"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-describedby="task-number"
+        placeholder="Напечатай здесь..."
+        aria-invalid="false"
+      />
+    </div>
+    <div id="next-task" class="next-task-text"></div>
+    <button id="next-button" type="button" aria-label="Перейти к следующему заданию">Дальше</button>
+  </main>
+  <footer class="home-link-container" role="contentinfo" id="footer-link">
+    <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+  </footer>
+<script>
+  const tasks = [
+    { phrase: 'мы отдыхаем в новогодние праздники', audioSrc: 'entersentence04/voice1.mp3', taskLabel: 'Задание №1', prompt: 'Послушай и напечатай!' },
+    { phrase: 'дети играют в снежки на улице', audioSrc: 'entersentence04/voice2.mp3', taskLabel: 'Задание №2', prompt: 'Послушай и напечатай!' },
+    { phrase: 'мальчик катается с горки на ватрушке', audioSrc: 'entersentence04/voice3.mp3', taskLabel: 'Задание №3', prompt: 'Послушай и напечатай!' },
+    { phrase: 'дворники убирают снег с дороги', audioSrc: 'entersentence04/voice4.mp3', taskLabel: 'Задание №4', prompt: 'Послушай и напечатай!' },
+    { phrase: 'папа несёт пакет с покупками', audioSrc: 'entersentence04/voice5.mp3', taskLabel: 'Задание №5', prompt: 'Послушай и напечатай!' },
+    { phrase: 'мы едем в лифте на восьмой этаж', audioSrc: 'entersentence04/voice6.mp3', taskLabel: 'Задание №6', prompt: 'Послушай и напечатай!' },
+    { phrase: 'бабушка фотографирует меня на телефон', audioSrc: 'entersentence04/voice7.mp3', taskLabel: 'Задание №7', prompt: 'Послушай и напечатай!' },
+    { phrase: 'мы ходили в аквапарк на каникулах', audioSrc: 'entersentence04/voice8.mp3', taskLabel: 'Задание №8', prompt: 'Послушай и напечатай!' },
+    { phrase: 'я прикладываю карточку к турникету', audioSrc: 'entersentence04/voice9.mp3', taskLabel: 'Задание №9', prompt: 'Послушай и напечатай!' },
+    { phrase: 'мама готовит еду на кухне', audioSrc: 'entersentence04/voice10.mp3', taskLabel: 'Задание №10', prompt: 'Послушай и напечатай!' }
+  ];
+
+  const successAudio = new Audio('entersentence03/success.mp3');
+  let currentTaskIndex = 0;
+  const taskNumberElem = document.getElementById("task-number");
+  const taskPromptElem = document.getElementById("task-prompt");
+  const playBtn = document.getElementById("play-btn");
+  const playIconDiv = document.getElementById("play-icon");
+  const inputField = document.getElementById("input-field");
+  const inputFill = document.getElementById("input-fill");
+  const nextTaskElem = document.getElementById("next-task");
+  const nextButton = document.getElementById("next-button");
+  const footerLink = document.getElementById("footer-link");
+  const audio = new Audio();
+
+  function loadTask(index) {
+    const task = tasks[index];
+    taskNumberElem.textContent = task.taskLabel;
+    taskNumberElem.classList.remove("completed");
+    taskPromptElem.textContent = task.prompt;
+    inputField.value = "";
+    inputField.classList.remove("incorrect");
+    inputFill.style.width = "0";
+    inputField.disabled = false;
+    nextButton.style.display = "none";
+    nextTaskElem.textContent = "";
+    inputField.setAttribute("aria-invalid", "false");
+    inputField.focus();
+    audio.src = task.audioSrc;
+    audio.load();
+    playBtn.classList.remove("played", "disabled");
+    showPlayIcon();
+    footerLink.style.display = "block";
+  }
+
+  function showPlayIcon() {
+    playIconDiv.innerHTML = `
+      <svg width="24" height="24" viewBox="0 0 48 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 3.00498C0 0.618735 2.65095 -0.812389 4.64597 0.49684L46.077 27.6859C47.8824 28.8707 47.8824 31.5174 46.077 32.7022L4.64597 59.8912C2.65095 61.2004 0 59.7693 0 57.3831V3.00498Z" fill="#E0E0E0"/>
+      </svg>
+    `;
+  }
+
+  function showStopIcon() {
+    playIconDiv.innerHTML = `
+      <svg class="stop-icon" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 3C0 1.34315 1.34315 0 3 0H46.8989C48.5558 0 49.8989 1.34315 49.8989 3V46.8989C49.8989 48.5558 48.5558 49.8989 46.8989 49.8989H3C1.34315 49.8989 0 48.5558 0 46.8989V3Z" fill="#E0E0E0"/>
+      </svg>
+    `;
+  }
+
+  function togglePlay() {
+    if (audio.paused) {
+      audio.currentTime = 0;
+      audio.play()
+        .then(() => {
+          showStopIcon();
+          playBtn.classList.add("played");
+        })
+        .catch((e) => console.error("Ошибка воспроизведения аудио:", e));
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+      showPlayIcon();
+      playBtn.classList.add("played");
+    }
+  }
+
+  playBtn.addEventListener("click", togglePlay);
+
+  audio.addEventListener("ended", () => {
+    showPlayIcon();
+    playBtn.classList.add("played");
+  });
+
+  function updateFillWidth(entered, expected) {
+    let percent = 0;
+    if (entered.length > 0)
+      percent = Math.min(entered.length / expected.length, 1);
+    if (entered === expected) percent = 1;
+    inputFill.style.width = percent * 100 + "%";
+  }
+
+  inputField.addEventListener("input", () => {
+    const entered = inputField.value.toLowerCase();
+    const expected = tasks[currentTaskIndex].phrase.toLowerCase();
+    updateFillWidth(entered, expected);
+    if (expected.startsWith(entered)) {
+      inputField.classList.remove("incorrect");
+      inputField.setAttribute("aria-invalid", "false");
+      if (entered === expected) {
+        nextTaskElem.textContent = "";
+        nextButton.style.display = "inline-block";
+        footerLink.style.display = "none";
+        successAudio.currentTime = 0;
+        successAudio.play().catch((e) =>
+          console.error("Ошибка воспроизведения success аудио:", e)
+        );
+      } else {
+        nextButton.style.display = "none";
+        footerLink.style.display = "block";
+        nextTaskElem.textContent = "";
+      }
+    } else {
+      inputField.classList.add("incorrect");
+      inputField.setAttribute("aria-invalid", "true");
+      nextButton.style.display = "none";
+      footerLink.style.display = "block";
+      nextTaskElem.textContent = "";
+    }
+  });
+
+  nextButton.addEventListener("click", () => {
+    currentTaskIndex++;
+    if (currentTaskIndex < tasks.length) {
+      loadTask(currentTaskIndex);
+    } else {
+      taskNumberElem.textContent = "Все задания выполнены!";
+      taskNumberElem.classList.add("completed");
+      nextTaskElem.textContent = "";
+      inputField.disabled = true;
+      playBtn.disabled = true;
+      nextButton.style.display = "none";
+      inputFill.style.width = "0";
+      showPlayIcon();
+      playBtn.classList.add("disabled");
+      footerLink.style.display = "block";
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && nextButton.style.display === 'inline-block' && document.activeElement !== nextButton) {
+      event.preventDefault();
+      nextButton.click();
+    }
+    if (event.code === 'Space' && document.activeElement !== nextButton && document.activeElement !== inputField) {
+      event.preventDefault();
+      togglePlay();
+    }
+  });
+
+  loadTask(currentTaskIndex);
+</script>
+</body>
+</html>
