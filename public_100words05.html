@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <meta name="google" content="notranslate" />
+    <title>100 слов (часть 5)</title>
+    <style>
+        /* Общие сбросы и стили */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            color: #e0e0e0;
+            background-color: #040507;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Добавляем отступ сверху к первому элементу в body */
+        body > *:first-child {
+            margin-top: 0px;
+        }
+
+        /* Добавляем отступ снизу к последнему элементу в body */
+        body > *:last-child {
+            margin-bottom: 60px; /* Увеличиваем отступ снизу */
+        }
+
+        /* Контейнер слайдера */
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 90vw;
+            max-width: 400px;
+            padding: 30px;
+            background-color: #040507;
+            border-radius: 8px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* Название картинки */
+        #image-title {
+            font-size: 2em;
+            margin-bottom: 26px;
+            text-align: center;
+            color: #5A6171;
+            cursor: pointer; /* Добавляем курсор, чтобы показать, что на название можно кликнуть */
+        }
+
+        /* Область отображения картинки */
+        .slider-image-wrapper {
+            width: 100%;
+            padding-bottom: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background-color: #040507;
+        }
+
+        .slider-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            border-radius: 24px;
+        }
+
+        /* Кнопки навигации */
+        .slider-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            background-color: #15151B; /* Изменяем цвет неактивной кнопки */
+            color: #e0e0e0;
+            border: none;
+            cursor: pointer;
+            border-radius: 9999px;
+            /*transition: background-color 0.2s ease, transform 0.1s ease;*/ /* Анимация убрана */
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-sizing: border-box;
+            min-width: 85px;
+            height: 75px;
+        }
+
+        .nav-button.prev {
+            width: 30%;
+            height: 75px;
+        }
+
+        .nav-button.next {
+            width: 30%;
+            height: 75px;
+        }
+
+        /* SVG иконки */
+        .nav-icon {
+            width: 30%;
+            height: 30%;
+            display: block;
+        }
+
+        /* Задаем цвет стрелкам через CSS, чтобы можно было легко менять */
+        .nav-icon path {
+          stroke: #e0e0e0;
+        }
+
+        /* Отражаем SVG для кнопки "Предыдущая" */
+        .nav-button.prev .nav-icon {
+            transform: scaleX(-1);
+        }
+
+        .nav-button:hover {
+            background-color: #1a1a20; /* Немного темнее для ховера */
+            /*transform: translateY(-1px);*/ /* Анимация убрана */
+        }
+
+        .nav-button:active {
+            background-color: #262930; /* Более светлый цвет для нажатия */
+            /*transform: translateY(0);*/ /* Анимация убрана */
+        }
+
+        /* Ссылка на главную */
+        .home-link-container {
+            margin-top: 4px;
+        }
+
+        .home-link {
+            color: #262930;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .home-link:hover {
+            color: #363940;
+            text-decoration: underline;
+        }
+
+        /* Адаптация для очень маленьких экранов */
+        @media (max-width: 480px) {
+          .slider-container {
+              width: 95vw;
+              padding: 15px;
+          }
+          #image-title {
+              font-size: 2em; /* На маленьких экранах по-прежнему 2em */
+              margin-bottom: 15px; /* И этот отступ остался прежним для маленьких экранов */
+          }
+          .nav-button {
+            border-radius: 9999px; /* Максимальное скругление */
+             height: 60px; /* Уменьшаем высоту кнопок: */
+              width: 30%; /* Уменьшили ширину кнопок */
+            min-width: auto; /* убираем минимальную ширину */
+
+          }
+          .nav-icon {
+            width: 24%; /* Уменьшаем размер стрелки для маленьких экранов */
+            height: 24%; /* Уменьшаем размер стрелки для маленьких экранов */
+          }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slider-container">
+        <div id="image-title">Показать подсказку</div>
+        <div class="slider-image-wrapper">
+            <img id="current-image" src="" alt="Слайд" class="slider-image">
+        </div>
+        <div class="slider-buttons">
+            <button id="prev-btn" class="nav-button prev" aria-label="Предыдущий слайд">
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001"  stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button id="next-btn" class="nav-button next" aria-label="Следующий слайд">
+                <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001"  stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="home-link-container">
+        <a href="index.html" class="home-link">   </a>
+    </div>
+
+    <script>
+        const imageElement = document.getElementById('current-image');
+        const imageTitleElement = document.getElementById('image-title');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        const images = [
+            { src: '100words05/Гайка.jpg', title: 'Гайка' },
+            { src: '100words05/Пар.jpg', title: 'Пар' },
+            { src: '100words05/Ветка.jpg', title: 'Ветка' },
+            { src: '100words05/Река.jpg', title: 'Река' },
+            { src: '100words05/Глобус.jpg', title: 'Глобус' },
+            { src: '100words05/Ящерица.jpg', title: 'Ящерица' },
+            { src: '100words05/Арахис.jpg', title: 'Арахис' },
+            { src: '100words05/Топор.jpg', title: 'Топор' },
+            { src: '100words05/Коробка.jpg', title: 'Коробка' },
+            { src: '100words05/Рябина.jpg', title: 'Рябина' },
+
+            { src: '100words05/Принтер.jpg', title: 'Принтер' },
+            { src: '100words05/Открывашка.jpg', title: 'Открывашка' },
+            { src: '100words05/Домофон.jpg', title: 'Домофон' },
+            { src: '100words05/Рулетка.jpg', title: 'Рулетка' },
+            { src: '100words05/Консервная_банка.jpg', title: 'Консервная банка' },
+            { src: '100words05/Пробка.jpg', title: 'Пробка' },
+            { src: '100words05/Фара.jpg', title: 'Фара' },
+            { src: '100words05/Мухомор.jpg', title: 'Мухомор' },
+            { src: '100words05/Бахилы.jpg', title: 'Бахилы' },
+            { src: '100words05/Лама.jpg', title: 'Лама' },
+
+            { src: '100words05/Гаечный_ключ.jpg', title: 'Гаечный ключ' },
+            { src: '100words05/Краски.jpg', title: 'Краски' },
+            { src: '100words05/Тёрка.jpg', title: 'Тёрка' },
+            { src: '100words05/Горох.jpg', title: 'Горох' },
+            { src: '100words05/Турник.jpg', title: 'Турник' },
+            { src: '100words05/Репа.jpg', title: 'Репа' },
+            { src: '100words05/Енот.jpg', title: 'Енот' },
+            { src: '100words05/Мел.jpg', title: 'Мел' },
+            { src: '100words05/Рыцарь.jpg', title: 'Рыцарь' },
+            { src: '100words05/Остров.jpg', title: 'Остров' },
+
+            { src: '100words05/Пинцет.jpg', title: 'Пинцет' },
+            { src: '100words05/Шашлык.jpg', title: 'Шашлык' },
+            { src: '100words05/Кьюаркод.jpg', title: 'Кьюаркод' },
+            { src: '100words05/Дверная_ручка.jpg', title: 'Дверная ручка' },
+            { src: '100words05/Персик.jpg', title: 'Персик' },
+            { src: '100words05/Лейка.jpg', title: 'Лейка' },
+            { src: '100words05/Обрезки_бумаги.jpg', title: 'Обрезки бумаги' },
+            { src: '100words05/Панда.jpg', title: 'Панда' },
+            { src: '100words05/Колонки.jpg', title: 'Колонки' },
+            { src: '100words05/Подсолнечное_масло.jpg', title: 'Подсолнечное масло' },
+
+            { src: '100words05/Бензопила.jpg', title: 'Бензопила' },
+            { src: '100words05/Свёкла.jpg', title: 'Свёкла' },
+            { src: '100words05/Бокал.jpg', title: 'Бокал' },
+            { src: '100words05/Школьная_доска.jpg', title: 'Школьная доска' },
+            { src: '100words05/Меч.jpg', title: 'Меч' },
+            { src: '100words05/Хурма.jpg', title: 'Хурма' },
+            { src: '100words05/Цепочка.jpg', title: 'Цепочка' },
+            { src: '100words05/Лопата.jpg', title: 'Лопата' },
+            { src: '100words05/Штопор.jpg', title: 'Штопор' },
+            { src: '100words05/Мыло.jpg', title: 'Мыло' }
+        ];
+
+        let currentIndex = 0;
+        let titleIsOriginal = false; // Инвертируем начальное значение флага
+
+        function updateSlider() {
+            const currentImage = images[currentIndex];
+            imageElement.src = currentImage.src;
+            imageElement.alt = currentImage.title;
+
+            imageTitleElement.textContent = "Показать подсказку"; // Всегда показываем "Показать подсказку"
+            titleIsOriginal = false; // Сбрасываем флаг
+        }
+
+        function showNextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateSlider();
+        }
+
+        function showPrevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateSlider();
+        }
+
+        function toggleTitle() {
+            titleIsOriginal = !titleIsOriginal; // Инвертируем флаг
+
+            if (!titleIsOriginal) {
+                imageTitleElement.textContent = "Показать подсказку";
+            } else {
+                imageTitleElement.textContent = images[currentIndex].title;
+            }
+        }
+
+        nextBtn.addEventListener('click', showNextImage);
+        prevBtn.addEventListener('click', showPrevImage);
+
+        // Слушаем событие click на НАЗВАНИИ картинки
+        imageTitleElement.addEventListener('click', toggleTitle);
+
+        // Слушаем события keydown на document
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') {
+                showNextImage();
+            } else if (event.key === 'ArrowLeft') {
+                showPrevImage();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (images.length > 0) {
+                updateSlider();
+            } else {
+                imageTitleElement.textContent = "Изображения не найдены";
+                imageElement.alt = "Нет изображений для показа";
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                prevBtn.style.cursor = 'not-allowed';
+                nextBtn.style.cursor = 'not-allowed';
+            }
+        });
+    </script>
+
+</body>
+</html>
