@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
     <title>Перепеши предложения</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <style>
@@ -16,7 +16,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #1a1a1a;
             color: white;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -24,15 +24,18 @@
             overflow: hidden;
             user-select: none;
             padding: 20px;
+            padding-top: 120px;
+            padding-bottom: 100px;
             position: relative;
         }
 
         .header {
             text-align: center;
             position: absolute;
-            top: 100px;
+            top: 60px;
             width: 100%;
             max-width: 100%;
+            z-index: 10;
         }
 
         .title {
@@ -55,12 +58,14 @@
             justify-content: center;
             width: 90%;
             max-width: 1000px;
+            margin-top: 40px;
+            margin-bottom: 40px;
         }
 
         .current-word {
             font-size: clamp(1.6rem, 4.5vw, 2.8rem);
             font-weight: 700;
-            margin-bottom: 106px;
+            margin-bottom: 60px; /* Увеличен отступ до кнопки */
             text-align: center;
             line-height: 1.2;
             max-width: 100%;
@@ -70,7 +75,7 @@
         .arrow {
             width: clamp(35px, 8vw, 45px);
             height: clamp(47px, 10vw, 60px);
-            margin-bottom: 72px;
+            margin-bottom: 40px;
             animation: bounce 1.5s infinite;
         }
 
@@ -130,7 +135,7 @@
 
         .home-link-container {
             position: fixed;
-            bottom: 42px;
+            bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1001;
@@ -163,6 +168,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .completion-popup {
@@ -190,20 +196,25 @@
         @media (max-width: 480px) {
             body {
                 padding: 15px;
+                padding-top: 100px;
+                padding-bottom: 80px;
             }
 
             .header {
-                top: 80px;
+                top: 50px;
             }
 
             .word-container {
                 width: 100%;
                 max-width: 95vw;
+                margin-top: 20px;
+                margin-bottom: 20px;
             }
 
             .current-word {
                 white-space: normal;
                 font-size: clamp(1.4rem, 5vw, 1.8rem);
+                margin-bottom: 40px; /* Уменьшен отступ для мобильных */
             }
 
             .space-hint {
@@ -217,7 +228,39 @@
             }
 
             .home-link-container {
-                bottom: 37px;
+                bottom: 40px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            body {
+                padding-top: 80px;
+                padding-bottom: 60px;
+            }
+
+            .header {
+                top: 30px;
+            }
+
+            .word-container {
+                min-height: 200px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            .current-word {
+                margin-bottom: 30px; /* Уменьшен отступ для малых высот */
+                font-size: clamp(1.2rem, 4vw, 1.6rem);
+            }
+
+            .arrow {
+                width: clamp(25px, 6vw, 35px);
+                height: clamp(35px, 8vw, 45px);
+                margin-bottom: 20px;
+            }
+
+            .home-link-container {
+                bottom: 30px;
             }
         }
     </style>
