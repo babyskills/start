@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru" translate="no">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+ <meta name="google" content="notranslate" />
+ <title>Послушай и напиши!</title>
+ <style>
+   html, body {
+     margin: 0;
+     padding: 0;
+     height: 100%;
+     box-sizing: border-box;
+     font-family: 'Arial', sans-serif;
+     color: #2C2D2E;
+     background-color: #040507;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+     min-height: 100vh;
+     width: 100%;
+     overflow-x: hidden;
+     text-align: center;
+   }
+
+   .container {
+     width: 100%;
+     max-width: 600px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     padding: 10px;
+     box-sizing: border-box;
+   }
+
+   .title {
+     font-size: 2em;
+     font-weight: bold;
+     color: #ffffff;
+     margin-bottom: 20px;
+     white-space: nowrap;
+   }
+
+   .counter {
+     font-size: 1.1em;
+     color: #28323D;
+     margin-bottom: 20px;
+   }
+
+   .squares-container {
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: center;
+     gap: 6px;
+     margin-bottom: 30px;
+     max-width: 300px;
+     width: 100%;
+   }
+
+   .squares-row {
+     display: flex;
+     justify-content: center;
+     gap: 6px;
+     width: 100%;
+   }
+
+   .square {
+     width: 24px;
+     height: 24px;
+     border: 2px solid #0C4E85;
+     border-radius: 4px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background-color: transparent;
+     flex-shrink: 0;
+   }
+
+   .square svg {
+     width: 14px;
+     height: 14px;
+   }
+
+   .play-button {
+     cursor: pointer;
+     margin-bottom: 30px;
+     transition: transform 0.1s ease;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+   }
+
+   .play-button:active {
+     transform: scale(0.95);
+   }
+
+   .play-button svg {
+     width: 80px;
+     height: 80px;
+   }
+
+   .next-button {
+     padding: 12px 0;
+     border: 2px solid #0C4E85;
+     border-radius: 8px;
+     background-color: transparent;
+     color: #ffffff;
+     font-size: 1.1em;
+     cursor: pointer;
+     transition: all 0.3s ease;
+     width: 100%;
+     max-width: 334px;
+     margin: 0 auto;
+   }
+
+   .next-button:hover {
+     background-color: rgba(12, 78, 133, 0.1);
+   }
+
+   .home-link-container {
+     margin-top: 40px;
+     width: 100%;
+   }
+
+   .home-link {
+     color: #28323D;
+     text-decoration: none;
+     font-size: 1.1em;
+     display: inline-block;
+   }
+
+   .home-link:hover {
+     text-decoration: underline;
+   }
+
+   .completion-message {
+     display: none;
+     background-color: #ffffff;
+     color: #2C2D2E;
+     padding: 20px;
+     border-radius: 8px;
+     text-align: center;
+     font-size: 1.2em;
+     font-weight: bold;
+     margin-bottom: 30px;
+     width: 100%;
+     max-width: 300px;
+   }
+
+   .warning {
+     border-color: #CD3041 !important;
+     color: #CD3041 !important;
+   }
+
+   @media (max-width: 720px) {
+     .title {
+       font-size: 1.6em;
+     }
+     .squares-container {
+       max-width: 260px;
+     }
+     .square {
+       width: 20px;
+       height: 20px;
+     }
+     .square svg {
+       width: 12px;
+       height: 12px;
+     }
+     .play-button svg {
+       width: 70px;
+       height: 70px;
+     }
+   }
+
+   @media (max-width: 480px) {
+     .title {
+       font-size: 1.4em;
+     }
+     .squares-container {
+       max-width: 220px;
+     }
+     .square {
+       width: 18px;
+       height: 18px;
+     }
+     .square svg {
+       width: 10px;
+       height: 10px;
+     }
+     .play-button svg {
+       width: 60px;
+       height: 60px;
+     }
+     .next-button {
+       font-size: 1em;
+       max-width: 260px;
+     }
+   }
+
+   @media (max-width: 360px) {
+     .container {
+       padding: 10px;
+     }
+     .squares-container {
+       max-width: 180px;
+     }
+     .square {
+       width: 16px;
+       height: 16px;
+     }
+     .square svg {
+       width: 8px;
+       height: 8px;
+     }
+     .play-button svg {
+       width: 50px;
+       height: 50px;
+     }
+     .next-button {
+       max-width: 240px;
+       font-size: 0.9em;
+     }
+     .home-link {
+       font-size: 1em;
+     }
+   }
+ </style>
+</head>
+<body>
+ <div class="container">
+   <div class="title">Послушай и напиши!</div>
+
+   <div class="counter" id="counter">Осталось 20 слов</div>
+
+   <div class="squares-container" id="squares-container">
+   </div>
+
+   <div class="play-button" id="play-button">
+     <svg viewBox="0 0 116 116" fill="none" xmlns="http://www.w3.org/2000/svg">
+       <g clip-path="url(#clip0_7_38)">
+         <path d="M57.9496 115.899C89.9542 115.899 115.899 89.9542 115.899 57.9496C115.899 25.9449 89.9542 0 57.9496 0C25.9449 0 0 25.9449 0 57.9496C0 89.9542 25.9449 115.899 57.9496 115.899Z" fill="#0C4E85"/>
+         <path fill-rule="evenodd" clip-rule="evenodd" d="M76.9641 55.736L49.3978 39.8401C47.6875 38.8341 45.5747 40.0413 45.5747 42.0535V73.8453C45.5747 75.8574 47.6875 77.0647 49.3978 76.1592L76.9641 60.1627C78.6744 59.2573 78.6744 56.7421 76.9641 55.736Z" fill="white"/>
+       </g>
+       <defs>
+         <clipPath id="clip0_7_38">
+           <rect width="115.899" height="115.899" fill="white"/>
+         </clipPath>
+       </defs>
+     </svg>
+   </div>
+
+   <button class="next-button" id="next-button">Я написал слово</button>
+
+   <div class="completion-message" id="completion-message">
+     Все задания выполнены!
+   </div>
+
+   <div class="home-link-container">
+     <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+   </div>
+ </div>
+
+ <audio id="win-sound" src="20audiowords/fin.mp3" preload="auto"></audio>
+
+ <script>
+   const allWords = [
+     "авокадо", "автобус", "айсберг", "аэропорт", "бабочка", "банкомат", "бассейн",
+     "батарейка", "батарея", "бегемот", "булавка", "бутылка", "варежки", "ватрушка",
+     "велосипед", "верблюд", "вертолёт", "вешалка", "водоросли", "вокзал", "волна",
+     "волосы", "воробей", "ворона", "выключатель", "гранат", "деньги", "джойстик",
+     "динозавр", "дырокол", "занавески", "зеркало", "иллюминатор", "йогурт", "кабель",
+     "кактус", "камера", "камин", "капуста", "карандаш", "карусель", "кастрюля",
+     "кепка", "клавиатура", "класс", "клубника", "ключ", "клюшка", "конверт",
+     "конструктор", "конура", "конфета", "корабль", "корзина", "корова", "корона",
+     "кошка", "крапива", "крокодил", "кукуруза", "курица", "куртка", "лампочка",
+     "ласточка", "лестница", "линейка", "лягушка", "магазин", "мандарин",
+     "микроволновка", "мотоцикл", "ножницы", "ноздри", "обезьяна", "одуванчик",
+     "остановка", "осьминог", "палатка", "паровоз", "пингвин", "поварёшка",
+     "подбородок", "подушка", "полотенце", "помидор", "пончик", "попугай", "потолок",
+     "принтер", "прищепка", "пружина", "пуговица", "пылесос", "пятка", "радуга",
+     "раковина", "расчёска", "рация", "рюкзак", "салфетки"
+   ];
+
+   function declineWords(count) {
+     if (count % 10 === 1 && count % 100 !== 11) {
+       return "слово";
+     } else if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100)) {
+       return "слова";
+     } else {
+       return "слов";
+     }
+   }
+
+   let selectedWords = [];
+   const wordsCopy = [...allWords];
+   while (selectedWords.length < 20 && wordsCopy.length > 0) {
+     const randomIndex = Math.floor(Math.random() * wordsCopy.length);
+     selectedWords.push(wordsCopy[randomIndex]);
+     wordsCopy.splice(randomIndex, 1);
+   }
+
+   let currentWordIndex = 0;
+   let audio = new Audio();
+   let wordPlayed = false;
+   const nextButton = document.getElementById('next-button');
+   const winSound = document.getElementById('win-sound');
+   let warningTimeout = null;
+
+   const squaresContainer = document.getElementById('squares-container');
+   for (let i = 0; i < 2; i++) {
+     const row = document.createElement('div');
+     row.className = 'squares-row';
+     for (let j = 0; j < 10; j++) {
+       const squareIndex = i * 10 + j;
+       const square = document.createElement('div');
+       square.className = 'square';
+       square.id = `square-${squareIndex}`;
+       row.appendChild(square);
+     }
+     squaresContainer.appendChild(row);
+   }
+
+   function updateCounter() {
+     const remaining = 20 - currentWordIndex;
+     const wordForm = declineWords(remaining);
+     document.getElementById('counter').textContent = `Осталось ${remaining} ${wordForm}`;
+   }
+
+   function playCurrentWord() {
+     if (currentWordIndex < selectedWords.length) {
+       audio.src = `20audiowords/${selectedWords[currentWordIndex]}.mp3`;
+       audio.play().catch(e => console.log("Ошибка воспроизведения:", e));
+       wordPlayed = true;
+       if (warningTimeout) {
+         clearTimeout(warningTimeout);
+       }
+       nextButton.textContent = "Следующее слово";
+       nextButton.classList.remove('warning');
+     }
+   }
+
+   function showWarning() {
+     if (warningTimeout) {
+       clearTimeout(warningTimeout);
+     }
+     nextButton.textContent = "Сначала послушай и напиши!";
+     nextButton.classList.add('warning');
+     warningTimeout = setTimeout(() => {
+       nextButton.textContent = "Следующее слово";
+       nextButton.classList.remove('warning');
+     }, 2000);
+   }
+
+   function nextWord() {
+     if (!wordPlayed) {
+       showWarning();
+       return;
+     }
+
+     if (currentWordIndex < selectedWords.length) {
+       const currentSquare = document.getElementById(`square-${currentWordIndex}`);
+       currentSquare.innerHTML = `
+         <svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+           <path d="M1.5 1.5L11.5 11.5M1.5 11.5L11.5 1.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+         </svg>
+       `;
+
+       currentWordIndex++;
+       wordPlayed = false;
+       updateCounter();
+
+       if (currentWordIndex >= selectedWords.length) {
+         document.getElementById('play-button').style.display = 'none';
+         nextButton.style.display = 'none';
+         const completionMessage = document.getElementById('completion-message');
+         completionMessage.style.display = 'block';
+         winSound.play().catch(e => console.log("Ошибка воспроизведения звука победы:", e));
+       }
+     }
+   }
+
+   document.getElementById('play-button').addEventListener('click', playCurrentWord);
+   nextButton.addEventListener('click', nextWord);
+
+   updateCounter();
+ </script>
+</body>
+</html>
