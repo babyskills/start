@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ru" translate="no">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+ <meta name="google" content="notranslate" />
+ <title>Послушай и ответь!</title>
+ <style>
+   html, body {
+     margin: 0;
+     padding: 0;
+     height: 100%;
+     box-sizing: border-box;
+     font-family: 'Arial', sans-serif;
+     color: #2C2D2E;
+     background-color: #040507;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+     min-height: 100vh;
+     width: 100%;
+     overflow-x: hidden;
+     text-align: center;
+   }
+
+   .container {
+     width: 100%;
+     max-width: 600px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     padding: 10px;
+     box-sizing: border-box;
+   }
+
+   .title {
+     font-size: 2em;
+     font-weight: bold;
+     color: #ffffff;
+     margin-bottom: 20px;
+     white-space: nowrap;
+   }
+
+   .counter {
+     font-size: 1.1em;
+     color: #757575;
+     margin-bottom: 20px;
+   }
+
+   .squares-container {
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: center;
+     gap: 6px;
+     margin-bottom: 30px;
+     max-width: 300px;
+     width: 100%;
+   }
+
+   .squares-row {
+     display: flex;
+     justify-content: center;
+     gap: 6px;
+     width: 100%;
+   }
+
+   .square {
+     width: 24px;
+     height: 24px;
+     border: 2px solid #44A950;
+     border-radius: 4px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background-color: transparent;
+     flex-shrink: 0;
+   }
+
+   .square svg {
+     width: 14px;
+     height: 14px;
+   }
+
+   .play-button {
+     cursor: pointer;
+     margin-bottom: 30px;
+     transition: transform 0.1s ease;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 80px;
+     height: 80px;
+     border-radius: 50%;
+     background-color: #28872D;
+   }
+
+   .play-button:active {
+     transform: scale(0.95);
+   }
+
+   .play-button svg {
+     width: 35px;
+     height: 35px;
+     fill: white;
+   }
+
+   .input-container {
+     width: 100%;
+     max-width: 334px;
+     margin: 0 auto 20px;
+   }
+
+   .answer-input {
+     width: 100%;
+     padding: 12px;
+     border: 2px solid #757575;
+     border-radius: 8px;
+     background-color: transparent;
+     color: #ffffff;
+     font-size: 1.1em;
+     box-sizing: border-box;
+     text-align: center;
+   }
+
+   .answer-input:focus {
+     outline: none;
+     border-color: #ffffff;
+   }
+
+   .answer-input.correct {
+     border-color: #3A8443;
+     background-color: rgba(58, 132, 67, 0.1);
+   }
+
+   .slider-buttons {
+     display: flex;
+     justify-content: center;
+     width: 100%;
+     margin-top: 20px;
+   }
+
+   .nav-button {
+     background-color: #0A110D;
+     color: #e0e0e0;
+     border: none;
+     cursor: pointer;
+     border-radius: 9999px;
+     outline: none;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     padding: 0;
+     box-sizing: border-box;
+     width: 75px;
+     height: 75px;
+     transition: opacity 0.3s ease;
+     display: none;
+   }
+
+   .nav-button.disabled {
+     opacity: 0.3;
+     cursor: default;
+   }
+
+   .nav-icon {
+     width: 30%;
+     height: 30%;
+     display: block;
+   }
+
+   .nav-icon path {
+     stroke: #e0e0e0;
+   }
+
+   .home-link-container {
+     margin-top: 40px;
+     width: 100%;
+   }
+
+   .home-link {
+     color: #484849;
+     text-decoration: none;
+     font-size: 1.1em;
+     display: inline-block;
+   }
+
+   .home-link:hover {
+     text-decoration: underline;
+   }
+
+   .completion-message {
+     display: none;
+     background-color: #ffffff;
+     color: #2C2D2E;
+     padding: 20px;
+     border-radius: 8px;
+     text-align: center;
+     font-size: 1.2em;
+     font-weight: bold;
+     margin-bottom: 30px;
+     width: 100%;
+     max-width: 300px;
+   }
+
+   @media (max-width: 720px) {
+     .title {
+       font-size: 1.6em;
+     }
+     .squares-container {
+       max-width: 260px;
+     }
+     .square {
+       width: 20px;
+       height: 20px;
+     }
+     .square svg {
+       width: 12px;
+       height: 12px;
+     }
+     .play-button {
+       width: 70px;
+       height: 70px;
+     }
+     .play-button svg {
+       width: 30px;
+       height: 30px;
+     }
+     .nav-button {
+       height: 68px;
+       width: 68px;
+     }
+   }
+
+   @media (max-width: 480px) {
+     .title {
+       font-size: 1.4em;
+     }
+     .squares-container {
+       max-width: 220px;
+     }
+     .square {
+       width: 18px;
+       height: 18px;
+     }
+     .square svg {
+       width: 10px;
+       height: 10px;
+     }
+     .play-button {
+       width: 60px;
+       height: 60px;
+     }
+     .play-button svg {
+       width: 25px;
+       height: 25px;
+     }
+     .answer-input {
+       font-size: 1em;
+       max-width: 260px;
+     }
+     .nav-button {
+       height: 60px;
+       width: 60px;
+     }
+     .nav-icon {
+       width: 24%;
+       height: 24%;
+     }
+   }
+
+   @media (max-width: 360px) {
+     .container {
+       padding: 10px;
+     }
+     .squares-container {
+       max-width: 180px;
+     }
+     .square {
+       width: 16px;
+       height: 16px;
+     }
+     .square svg {
+       width: 8px;
+       height: 8px;
+     }
+     .play-button {
+       width: 50px;
+       height: 50px;
+     }
+     .play-button svg {
+       width: 20px;
+       height: 20px;
+     }
+     .answer-input {
+       max-width: 240px;
+       font-size: 0.9em;
+     }
+     .home-link {
+       font-size: 1em;
+     }
+     .nav-button {
+       height: 50px;
+       width: 50px;
+     }
+   }
+ </style>
+</head>
+<body>
+ <div class="container">
+   <div class="title">Послушай и ответь на вопрос!</div>
+
+   <div class="counter" id="counter">Осталось 20 вопросов</div>
+
+   <div class="squares-container" id="squares-container">
+   </div>
+
+   <div class="play-button" id="play-button">
+     <svg viewBox="0 0 28 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+       <path d="M12.7468 34.9043C15.1503 34.9043 17.0983 36.8533 17.0983 39.2568C17.0982 41.6602 15.1502 43.6084 12.7468 43.6084C10.3433 43.6084 8.39533 41.6603 8.39522 39.2568C8.39522 36.8533 10.3433 34.9043 12.7468 34.9043Z" fill="white"/>
+       <path d="M13.7956 0C21.2316 0 27.9721 4.52878 27.9724 12.6113C27.9724 14.2927 27.6921 15.7345 27.1316 16.9355C24.8145 21.8995 17.0553 24.1448 16.2126 29.6904C16.1296 30.2364 15.6907 30.6885 15.1384 30.6885H10.531C9.97868 30.6885 9.52589 30.2389 9.571 29.6885C10.0096 24.3389 13.9583 21.2323 18.1208 18.0166C19.819 16.6275 21.1237 14.8853 21.1237 12.6113C21.1235 8.54814 17.9888 6.12615 14.0964 6.12598C9.57995 6.12598 7.02327 9.26995 6.39425 13.3779C6.31548 13.8924 5.88636 14.2928 5.36593 14.293H0.972372C0.420187 14.293 -0.0309998 13.8441 0.00166936 13.293C0.4582 5.63079 6.14616 7.77678e-06 13.7956 0Z" fill="white"/>
+     </svg>
+   </div>
+
+   <div class="input-container">
+     <input type="text" class="answer-input" id="answer-input" placeholder="Напечатай ответ здесь">
+   </div>
+
+   <div class="slider-buttons">
+     <button id="next-btn" class="nav-button next" aria-label="Следующий слайд">
+       <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+         <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+       </svg>
+     </button>
+   </div>
+
+   <div class="completion-message" id="completion-message">
+     Все задания выполнены!
+   </div>
+
+   <div class="home-link-container">
+     <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+   </div>
+ </div>
+
+ <audio id="win-sound" src="20audioquestions/fin.mp3" preload="auto"></audio>
+ <audio id="success-sound" src="20audioquestions/success.mp3" preload="auto"></audio>
+
+ <script>
+   const questionsAndAnswers = [
+     { question: "в каком классе ты учишься", answers: ["в первом", "в первом классе"] },
+     { question: "где растут яблоки", answers: ["на дереве", "на деревьях", "яблоки растут на дереве", "яблоки растут на деревьях"] },
+     { question: "для чего нужен зонтик", answers: ["чтобы укрыться от дождя", "от дождя", "от дождика", "чтобы спрятаться от дождя", "чтобы спрятаться от дождика", "чтобы укрыться от дождика"] },
+     { question: "зачем нужен стул", answers: ["чтобы сидеть", "сидеть", "стул нужен чтобы сидеть"] },
+     { question: "из чего пьют чай", answers: ["из чашки", "из кружки", "чай пьют из кружки"] },
+     { question: "как называется твой город", answers: ["москва", "мой город называется москва"] },
+     { question: "какого цвета апельсин", answers: ["оранжевый", "оранжевого", "оранжевого цвета", "апельсин оранжевый"] },
+     { question: "какого цвета твои глаза", answers: ["коричневые", "карие", "мои глаза карие", "мои глаза коричневые"] },
+     { question: "какой формы монета", answers: ["монета круглая", "круглой", "круглая"] },
+     { question: "когда мы просыпаемся", answers: ["утром", "мы просыпаемся утром"] },
+     { question: "кто говорит мяу", answers: ["кошка", "кот", "котёнок"] },
+     { question: "можно есть камни", answers: ["нет", "нельзя"] },
+     { question: "на чём носят сапоги", answers: ["на ногах", "сапоги носят на ногах"] },
+     { question: "ночью светло или темно", answers: ["ночью темно", "темно"] },
+     { question: "сколько дней в неделе", answers: ["семь", "в неделе семь дней", "7", "семь дней"] },
+     { question: "сколько колёс у машины", answers: ["четыре колеса", "4", "четыре"] },
+     { question: "сколько пальцев на одной руке", answers: ["пять пальцев", "5", "пять"] },
+     { question: "ты мальчик или девочка", answers: ["я мальчик", "мальчик"] },
+     { question: "чем едят суп", answers: ["суп едят ложкой", "ложкой"] },
+     { question: "что внутри абрикоса", answers: ["косточка", "кость", "внутри абрикоса косточка"] }
+   ];
+
+   function declineQuestions(count) {
+     if (count % 10 === 1 && count % 100 !== 11) {
+       return "вопрос";
+     } else if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100)) {
+       return "вопроса";
+     } else {
+       return "вопросов";
+     }
+   }
+
+   let selectedQuestions = [...questionsAndAnswers].sort(() => 0.5 - Math.random()).slice(0, 20);
+   let currentQuestionIndex = 0;
+   let audio = new Audio();
+   let questionPlayed = false;
+   let soundPlayed = false;
+   const answerInput = document.getElementById('answer-input');
+   const nextBtn = document.getElementById('next-btn');
+   const winSound = document.getElementById('win-sound');
+   const successSound = document.getElementById('success-sound');
+
+   const squaresContainer = document.getElementById('squares-container');
+   for (let i = 0; i < 2; i++) {
+     const row = document.createElement('div');
+     row.className = 'squares-row';
+     for (let j = 0; j < 10; j++) {
+       const squareIndex = i * 10 + j;
+       const square = document.createElement('div');
+       square.className = 'square';
+       square.id = `square-${squareIndex}`;
+       row.appendChild(square);
+     }
+     squaresContainer.appendChild(row);
+   }
+
+   function updateCounter() {
+     const remaining = 20 - currentQuestionIndex;
+     const questionForm = declineQuestions(remaining);
+     document.getElementById('counter').textContent = `Осталось ${remaining} ${questionForm}`;
+   }
+
+   function playCurrentQuestion() {
+     if (currentQuestionIndex < selectedQuestions.length) {
+       audio.src = `20audioquestions/${selectedQuestions[currentQuestionIndex].question}.mp3`;
+       audio.play().catch(e => console.log("Ошибка воспроизведения:", e));
+       questionPlayed = true;
+       soundPlayed = false;
+       answerInput.value = "";
+       answerInput.classList.remove('correct', 'incorrect');
+       nextBtn.style.display = 'none';
+     }
+   }
+
+   function checkAnswer() {
+     const currentQuestion = selectedQuestions[currentQuestionIndex];
+     const userAnswer = answerInput.value.trim().toLowerCase();
+     answerInput.classList.remove('correct', 'incorrect');
+
+     if (userAnswer.length === 0) {
+       return;
+     }
+
+     const isCorrect = currentQuestion.answers.some(answer => userAnswer === answer.toLowerCase());
+     if (isCorrect && !soundPlayed) {
+       answerInput.classList.add('correct');
+       nextBtn.style.display = 'flex';
+       successSound.currentTime = 0;
+       successSound.play().catch(e => console.log("Ошибка воспроизведения звука успеха:", e));
+       soundPlayed = true;
+     }
+   }
+
+   function nextQuestion() {
+     if (!questionPlayed || !answerInput.classList.contains('correct')) return;
+
+     if (currentQuestionIndex < selectedQuestions.length) {
+       const currentSquare = document.getElementById(`square-${currentQuestionIndex}`);
+       currentSquare.innerHTML = `
+         <svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+           <path d="M1.5 1.5L11.5 11.5M1.5 11.5L11.5 1.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+         </svg>
+       `;
+
+       currentQuestionIndex++;
+       questionPlayed = false;
+       soundPlayed = false;
+       updateCounter();
+       answerInput.value = "";
+       answerInput.classList.remove('correct', 'incorrect');
+       nextBtn.style.display = 'none';
+
+       if (currentQuestionIndex >= selectedQuestions.length) {
+         document.getElementById('play-button').style.display = 'none';
+         answerInput.style.display = 'none';
+         nextBtn.style.display = 'none';
+         const completionMessage = document.getElementById('completion-message');
+         completionMessage.style.display = 'block';
+         winSound.currentTime = 0;
+         winSound.play().catch(e => console.log("Ошибка воспроизведения звука победы:", e));
+       }
+     }
+   }
+
+   document.getElementById('play-button').addEventListener('click', playCurrentQuestion);
+   answerInput.addEventListener('input', checkAnswer);
+   nextBtn.addEventListener('click', nextQuestion);
+   answerInput.addEventListener('keydown', (e) => {
+     if (e.key === 'Enter') {
+       if (answerInput.classList.contains('correct')) {
+         nextQuestion();
+       } else {
+         checkAnswer();
+       }
+     }
+   });
+
+   // Очистка плейсхолдера при фокусе
+   answerInput.addEventListener('focus', () => {
+     if (answerInput.placeholder === "Напечатай ответ здесь") {
+       answerInput.placeholder = "";
+     }
+   });
+
+   // Возврат плейсхолдера при потере фокуса, если поле пустое
+   answerInput.addEventListener('blur', () => {
+     if (answerInput.value === "") {
+       answerInput.placeholder = "Напечатай ответ здесь";
+     }
+   });
+
+   updateCounter();
+ </script>
+</body>
+</html>
