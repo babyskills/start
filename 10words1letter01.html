@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru" translate="no">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+ <meta name="google" content="notranslate" />
+ <title>Слова начинающиеся с буквы...</title>
+ <style>
+ html, body {
+ margin: 0;
+ padding: 0;
+ height: 100%;
+ overflow: hidden;
+ box-sizing: border-box;
+ font-family: 'Arial', sans-serif;
+ color: #e0e0e0;
+ background-color: #050504;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: column;
+ min-height: 100vh;
+}
+body > *:last-child { margin-bottom: 60px; }
+.slider-container {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ width: 90vw;
+ max-width: 500px;
+ padding: 20px 30px;
+ background-color: #050504;
+ border-radius: 8px;
+ position: relative;
+ box-sizing: border-box;
+}
+.title-container {
+ position: relative;
+ margin-bottom: 42px;
+ text-align: center;
+ height: auto;
+ min-height: 60px;
+}
+#main-title {
+ font-size: 1.8em;
+ font-weight: bold;
+ color: #e0e0e0;
+ line-height: 1.2;
+ margin: 0;
+ padding: 0;
+}
+.letter-part {
+ color: #3A8443;
+}
+.checkmark-icon {
+ position: absolute;
+ top: -76px;
+ left: 50%;
+ transform: translateX(-50%);
+ width: 50px;
+ height: 50px;
+ display: none;
+}
+.slider-view {
+ width: 100%;
+ display: grid;
+ grid-template-columns: 1fr;
+ gap: 8px;
+ padding: 0 4px;
+}
+.field-set {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 8px;
+ width: 100%;
+}
+.text-field {
+ width: 85%;
+ max-width: 350px;
+ padding: 16px 18px;
+ border-radius: 6px;
+ border: none;
+ color: #C4C4C4;
+ font-size: 1.4em;
+ outline: none;
+ text-align: center;
+ background-color: #0C0C0C;
+}
+.text-field::placeholder {
+ color: #232323;
+}
+.text-field:focus {
+ border: none;
+ box-shadow: 0 0 0 3px rgba(58, 132, 67, 0.3);
+}
+.text-field.incorrect {
+ background-color: #1D0B0A;
+}
+.text-field:disabled {
+ opacity: 0.7;
+ cursor: not-allowed;
+}
+.slider-buttons {
+ display: flex;
+ justify-content: center;
+ width: 100%;
+ margin-top: 15px;
+}
+.nav-button {
+ background-color: #0C0C0C;
+ color: #e0e0e0;
+ border: none;
+ cursor: pointer;
+ border-radius: 9999px;
+ outline: none;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ padding: 0;
+ box-sizing: border-box;
+ width: 75px;
+ height: 75px;
+ transition: opacity 0.3s ease;
+}
+.nav-button.disabled {
+ opacity: 0.3;
+ cursor: default;
+}
+.nav-icon { width: 30%; height: 30%; display: block; }
+.nav-icon path { stroke: #e0e0e0; }
+.home-link-container { margin-top: 4px; }
+.home-link { color: #303030; text-decoration: none; font-size: 1.1em; transition: color 0.3s ease; }
+.home-link:hover { color: #303030; text-decoration: underline; }
+
+.word-tag {
+ background-color: #152B17;
+ color: #465848;
+ padding: 10px 16px;
+ border-radius: 6px;
+ margin: 4px;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 1.1em;
+ line-height: 1;
+}
+
+.words-container {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: center;
+ margin-top: 8px;
+ min-height: 60px;
+ max-height: 120px;
+ overflow-y: auto;
+}
+
+.completion-message {
+ color: #3A8443;
+ font-size: 1.8em;
+ font-weight: bold;
+ text-align: center;
+ margin-top: 40px;
+ margin-bottom: 20px;
+}
+
+.final-checkmark {
+ margin-top: 20px;
+ margin-bottom: 20px;
+}
+
+@media (max-width: 720px) {
+ .slider-container { max-width: 90vw; padding: 15px 20px; }
+ #main-title { font-size: 1.5em; }
+ .text-field { font-size: 1.3em; }
+ .nav-button { height: 68px; width: 68px; }
+}
+@media (max-width: 480px) {
+ .slider-container { width: 95vw; padding: 10px 15px; }
+ .text-field { font-size: 1.2em; padding: 14px 16px; }
+ .nav-button { height: 60px; width: 60px; }
+ .nav-icon { width: 24%; height: 24%; }
+ .word-tag { font-size: 1em; padding: 8px 12px; }
+}
+ </style>
+</head>
+<body>
+ <div class="slider-container">
+ <div class="title-container">
+    <div id="main-title">Напиши 5 слов,<br>которые начинаются<br><span class="letter-part">на букву В</span></div>
+    <svg class="checkmark-icon" width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Анимация эллипса и галочки без зазора">
+        <circle cx="50" cy="50" r="45.551" stroke="#3A8443" stroke-width="8.89794" fill="none"
+            stroke-dasharray="287" stroke-dashoffset="287" stroke-linejoin="round" stroke-linecap="round">
+            <animate attributeName="stroke-dashoffset" from="287" to="0" dur="0.6s" begin="indefinite" fill="freeze" />
+        </circle>
+        <path d="M28.9971 45.6246L45.2427 60.9787L73.4868 34.2849"
+            stroke="#3A8443" stroke-width="8.89794" fill="none" stroke-linecap="round" stroke-linejoin="round"
+            stroke-dasharray="70" stroke-dashoffset="70">
+            <animate attributeName="stroke-dashoffset" from="70" to="0" dur="0.4s" begin="indefinite" fill="freeze" />
+        </path>
+    </svg>
+ </div>
+ <div class="slider-view">
+    <div class="field-set">
+        <input class="text-field" type="text" placeholder="Напечатай здесь" id="word-input" autocomplete="off">
+        <div class="words-container" id="words-container"></div>
+    </div>
+ </div>
+ <div class="slider-buttons">
+    <button id="next-btn" class="nav-button next" aria-label="Следующее задание" style="display: none;">
+        <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+ </div>
+ </div>
+ <div id="completion-message" class="completion-message" style="display: none;">Все задания выполнены!</div>
+ <svg class="checkmark-icon final-checkmark" width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Анимация эллипса и галочки без зазора" style="display: none;">
+    <circle cx="50" cy="50" r="45.551" stroke="#3A8443" stroke-width="8.89794" fill="none"
+        stroke-dasharray="287" stroke-dashoffset="287" stroke-linejoin="round" stroke-linecap="round">
+        <animate attributeName="stroke-dashoffset" from="287" to="0" dur="0.6s" begin="indefinite" fill="freeze" />
+    </circle>
+    <path d="M28.9971 45.6246L45.2427 60.9787L73.4868 34.2849"
+        stroke="#3A8443" stroke-width="8.89794" fill="none" stroke-linecap="round" stroke-linejoin="round"
+        stroke-dasharray="70" stroke-dashoffset="70">
+        <animate attributeName="stroke-dashoffset" from="70" to="0" dur="0.4s" begin="indefinite" fill="freeze" />
+    </path>
+</svg>
+ <div class="home-link-container">
+    <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+ </div>
+ <audio id="success-sound" src="10words1letter01/success.mp3" preload="auto"></audio>
+ <audio id="fin-sound" src="10words1letter01/fin.mp3" preload="auto"></audio>
+ <script>
+ // Словари для каждой буквы
+ const wordLists = {
+    'В': ['ворона', 'веник', 'вата', 'вагон', 'вход', 'волна', 'волны', 'врач', 'вафли', 'вафля', 'ваза', 'взгляд', 'вещь', 'вещи', 'велосипед', 'волос', 'волосы', 'вилка', 'виноград', 'вулкан', 'волк', 'ветер', 'ветка', 'варенье', 'воробей', 'время', 'вопрос', 'вода', 'вишня', 'вьюга', 'ванна', 'весна', 'ворота', 'витамин', 'верёвка', 'водоросли', 'вертолёт', 'ведро', 'выдра', 'веер', 'верблюд', 'василёк', 'верба', 'валенки', 'выход', 'вечер', 'вокзал', 'вешалка', 'выключатель'],
+    'Б': ['берёза', 'бабочка', 'бинт', 'бадминтон', 'ботинки', 'ботинок', 'багаж', 'болт', 'берег', 'бокал', 'блокнот', 'булавка', 'борщ', 'бант', 'бантик', 'билет', 'бинокль', 'блин', 'блины', 'бегемот', 'барсук', 'бык', 'белка', 'банан', 'бритва', 'бабушка', 'барабан', 'боль', 'буква', 'буквы', 'баран', 'букварь', 'бумага', 'бутылка', 'блюдце', 'бровь', 'брови', 'брюки', 'булка', 'булочка', 'бок', 'бобр', 'банк', 'банка', 'баня', 'бусы', 'батон', 'борода', 'болото', 'батарея', 'балерина', 'брокколи', 'баклажан', 'балкон'],
+    'А': ['арбуз', 'апельсин', 'автомобиль', 'аист', 'автобус', 'аптека', 'абрикос', 'адрес', 'август', 'апрель', 'автобус', 'аэропорт', 'акула', 'альбом', 'асфальт', 'ананас', 'азбука', 'аквариум', 'ангел', 'алмаз', 'астра', 'айсберг'],
+    'Г': ['груша', 'гриб', 'губы', 'голубь', 'гитара', 'гармошка', 'губа', 'гром', 'гантеля', 'глаз', 'гвоздь', 'гнездо', 'губка', 'голова', 'горох', 'гусь', 'гвоздика', 'глина', 'гребень', 'гроза', 'год', 'град', 'гора', 'гепард', 'галка', 'галстук', 'газета', 'горчица', 'гирлянда', 'грузовик', 'градусник', 'гранат', 'гном', 'гиря', 'гарилла', 'грабли', 'горка'],
+    'Д': ['дом', 'дерево', 'дети', 'день', 'деньги', 'дорога', 'дождь', 'дуб', 'дыня', 'дверь', 'диван', 'доска', 'девочка', 'дочь', 'друг', 'декабрь', 'доска', 'дочка', 'доктор', 'динозавр', 'дедушка', 'деревня', 'дача', 'дельфин', 'дудочка', 'дудка', 'дым', 'дятел', 'дракон', 'добро'],
+    'Е': ['ель', 'еда', 'енот', 'ежевика', 'единорог'],
+    'Ж': ['жаба', 'жук', 'живот', 'жираф', 'журнал', 'жаворонок', 'жёлудь', 'жилет', 'жемчуг', 'жир', 'жизнь', 'журавль', 'желток', 'железо', 'желудок', 'жилетка', 'жилет', 'жужелица', 'жеребёнок', 'желе'],
+    'З': ['заяц', 'звезда', 'звёзды', 'затылок', 'завтрак', 'зарядка', 'зима', 'зефир', 'зяблик', 'занавески', 'занавеска', 'земля', 'золото', 'звук', 'звуки', 'загар', 'зверь', 'звери', 'земляника', 'забор', 'зеркало', 'зуб', 'зубы', 'зебра', 'замок', 'змея', 'зонт', 'зонтик', 'закат', 'загадка', 'зубр', 'звон', 'звонок', 'завтра', 'зоопарк', 'заколка', 'здание', 'задание'],
+    'И': ['игла', 'ириска', 'игра', 'интернет', 'индюк', 'изюм', 'ива', 'июнь', 'июль', 'изба', 'изумруд', 'икра', 'инструменты', 'инструмент', 'игрушки', 'игрушка', 'имя', 'иней', 'инжир', 'искра', 'иголка', 'иволга', 'индеец'],
+    'К': ['кошка', 'книга', 'корова', 'крот', 'куст', 'кино', 'клубника', 'карандаш', 'кролик', 'курица', 'капуста', 'картина', 'кровать', 'кот', 'кит', 'ком', 'конь', 'круг', 'каша', 'коза', 'кофе', 'кусок', 'ковёр', 'капля', 'компот', 'корка', 'куртка', 'квадрат', 'кубик', 'кубики', 'конфета', 'котлета', 'кенгуру', 'картофель', 'картошка', 'косточка', 'крапива', 'кактус', 'клоун', 'корабль', 'корона', 'крокодил', 'конец', 'кукуруза', 'кукла', 'кулак', 'кроссовки', 'кнопка', 'компьютер'],
+    'Л': ['лиса', 'лама', 'лилия', 'лещ', 'лопата', 'люстра', 'люди', 'ладонь', 'лапша', 'лейка', 'лён', 'лифт', 'лев', 'луг', 'лопух', 'лава', 'лабиринт', 'лень', 'любовь', 'лента', 'льдина', 'лёд', 'липа', 'луч', 'линии', 'линия', 'листья', 'лист', 'лес', 'ласточка', 'локоть', 'ласточки', 'лоб', 'лупа', 'лицо', 'ложка', 'луна', 'лето', 'лось', 'лодка', 'лампа', 'лимон', 'лошадь', 'лестница', 'лук', 'лыжи', 'лак', 'лапа', 'ленточка', 'лекарство'],
+    'М': ['машина', 'мир', 'меч', 'мех', 'мозг', 'мазь', 'мел', 'мяч', 'манго', 'моль', 'место', 'миска', 'мох', 'молоток', 'мама', 'мать', 'малыш', 'мёд', 'масло', 'макароны', 'май', 'метро', 'мороженое', 'мыло', 'муха', 'медведь', 'молоко', 'морковь', 'мышь', 'малина', 'муравей', 'море', 'мебель', 'музыка', 'морж', 'мост', 'мука', 'мясо', 'музей', 'мальчик', 'минута', 'магазин', 'молния', 'мандарин', 'монстр'],
+    'Н': ['нос', 'небо', 'нож', 'носок', 'носки', 'нитка', 'нитки', 'нить', 'нога', 'ноги', 'ночь', 'неделя', 'ножницы', 'ноль', 'нора', 'няня', 'нота', 'ноты', 'насос', 'номер', 'нектарин', 'носорог', 'награда', 'навигатор', 'ноготь', 'ногти'],
+    'О': ['облако', 'осколки', 'осколок', 'окунь', 'овраг', 'огонь', 'очередь', 'охота', 'осина', 'оркестр', 'обруч', 'отвёртка', 'океан', 'обои', 'обувь', 'омлет', 'одеяло', 'одежда', 'осёл', 'орёл', 'овал', 'осьминог', 'обед', 'одуванчик', 'остров', 'оса', 'октябрь', 'охотник', 'огурец', 'овца', 'окно', 'орех', 'очки', 'осень', 'обезьяна', 'овёс', 'озеро', 'олень', 'окунь', 'огород'],
+    'П': ['птица', 'пёс', 'пирог', 'песня', 'папа', 'печенье', 'помидор', 'пчела', 'пальто', 'подушка', 'плед', 'перо', 'петрушка', 'пятно', 'пар', 'путь', 'парк', 'плот', 'приз', 'пруд', 'пила', 'пена', 'паук', 'петух', 'пакет', 'панда', 'парта', 'пример', 'погода', 'паровоз', 'пылесос', 'попугай', 'пианино', 'подарок', 'пингвин', 'пароход'],
+    'Р': ['роза', 'рыба', 'радость', 'рай', 'родина', 'ромашка', 'растение', 'река', 'речка', 'рубашка', 'рога', 'резинка', 'резина', 'рейс', 'работа', 'ребёнок', 'ромб', 'рот', 'радуга', 'руки', 'рука', 'ручка', 'рюкзак', 'ритм', 'рана', 'репа', 'репка', 'рожь', 'ракета', 'робот', 'руль', 'рысь', 'рост', 'рубль', 'рама', 'рассказ', 'радио', 'рябина', 'ручей'],
+    'С': ['собака', 'солнце', 'соль', 'салат', 'сало', 'салют', 'сыр', 'сила', 'сметана', 'сосиска', 'стол', 'сосна', 'сахар', 'садик', 'сугроб', 'суп', 'стул', 'страна', 'стена', 'стены', 'скала', 'скалы', 'снег', 'сушка', 'сова', 'слово', 'слова', 'самолёт', 'сани', 'санки', 'сентябрь', 'сирень', 'сок', 'слива', 'сумка', 'свеча', 'смородина', 'соловей', 'снежинка', 'сон', 'сад', 'сом', 'слон', 'снеговик', 'стихотворение', 'салют', 'сапог', 'сапоги', 'салат'],
+    'Т': ['трава', 'топор', 'тетрадь', 'тыква', 'труба', 'тарелка', 'тень', 'туча', 'тюльпан', 'телефон', 'ток', 'танк', 'торт', 'тигр', 'текст', 'туман', 'трактор', 'тростник', 'таракан', 'табуретка', 'точилка', 'телевизор', 'трамвай', 'троллейбус', 'тир', 'тополь', 'тапки', 'трусы'],
+    'У': ['утка', 'ухо', 'усы', 'уговор', 'уровень', 'ученик', 'ученики', 'ураган', 'удача', 'укроп', 'удав', 'удар', 'укол', 'угорь', 'узор', 'утро', 'улитка', 'урожай', 'утюг', 'угол', 'улица', 'учитель', 'удочка', 'узел', 'улыбка', 'ум', 'уголь', 'ужин', 'укроп', 'урок', 'улей'],
+    'Ф': ['флаг', 'фрукт', 'фрукты', 'фонарь', 'фонарик', 'фотография', 'фонтан', 'фен', 'фасоль', 'флейта', 'фарш', 'фильм', 'фара', 'финиш', 'фокус', 'фокусник', 'факел', 'филин', 'фантик', 'фартук', 'финик', 'финики', 'фигура', 'фиалка', 'футбол', 'футболка', 'фотоаппарат', 'фольга'],
+    'Х': ['хлеб', 'хвост', 'холод', 'хомяк', 'художник', 'хурма', 'хоккей', 'халат', 'хобот', 'хорёк', 'хлопушка', 'халява', 'халва', 'холодильник', 'хамелеон', 'хоровод', 'хижина', 'хлопья', 'холм', 'холст', 'храп'],
+    'Ц': ['цвет', 'цыплёнок', 'цифра', 'цифры', 'цепочка', 'цепь', 'цапля', 'цирк', 'церковь', 'цветок', 'цитрус', 'цена', 'царапина'],
+    'Ч': ['чай', 'чашка', 'черепаха', 'чеснок', 'чемодан', 'часы', 'чайка', 'черешня', 'чайник', 'чудо', 'червь', 'червяк', 'человек', 'череп', 'чипсы', 'число', 'черника', 'чучело'],
+    'Ш': ['шапка', 'школа', 'шар', 'шарик', 'шишка', 'шум', 'штаны', 'шпилька', 'шнурок', 'шашлык', 'шёпот', 'шахматы', 'шайба', 'шампунь', 'шиповник', 'шуба', 'шея', 'шоколад', 'шоколадка', 'шашки', 'шляпа', 'шкаф', 'шарф', 'шимпанзе', 'шнурки', 'шорты', 'шприц', 'шило'],
+    'Щ': ['щука', 'щавель', 'щель', 'щека', 'щёки', 'щегол', 'щётка', 'щепка', 'щит', 'щербет', 'щенок', 'щи'],
+    'Э': ['электричество', 'экран', 'эхо', 'экскаватор', 'эклер', 'этаж', 'эскалатор', 'эскимо', 'эму'],
+    'Ю': ['юла', 'юбилей', 'юнга', 'юмор', 'юрта', 'юг', 'юрок', 'юбка'],
+    'Я': ['яблоко', 'яблоки', 'ягода', 'ягоды', 'язык', 'яйцо', 'яйца', 'яхта', 'якорь', 'яма', 'ящик', 'ящерица', 'ягуар']
+ };
+
+ // Буквы, для которых требуется 3 слова
+ const lettersWithThreeWords = ['Е', 'И', 'Я', 'Ц', 'Х', 'Щ', 'Э'];
+
+ // Получаем список всех допустимых букв (кроме Ъ, Ь, Ы, Й)
+ const letters = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ'.split('');
+
+ // Количество итераций (заданий на разные буквы)
+ const totalTasks = 5;
+
+ // Выбираем случайную букву при загрузке страницы
+ let currentLetter = letters[Math.floor(Math.random() * letters.length)];
+ let currentWords = [...wordLists[currentLetter]];
+ let requiredCount = lettersWithThreeWords.includes(currentLetter) ? 3 : 5;
+ requiredCount = Math.min(requiredCount, currentWords.length);
+ let enteredWords = [];
+ let allDone = false;
+ let allTasksCompleted = false;
+ let usedLetters = new Set();
+ let tasksCompleted = 0;
+
+ // Элементы
+ const wordInput = document.getElementById('word-input');
+ const wordsContainer = document.getElementById('words-container');
+ const mainTitle = document.getElementById('main-title');
+ const nextBtn = document.getElementById('next-btn');
+ const successSound = document.getElementById('success-sound');
+ const finSound = document.getElementById('fin-sound');
+ const completionMessage = document.getElementById('completion-message');
+ const sliderContainer = document.querySelector('.slider-container');
+ const sliderView = document.querySelector('.slider-view');
+ const sliderButtons = document.querySelector('.slider-buttons');
+ const fieldSet = document.querySelector('.field-set');
+ let checkmarkIcon = document.querySelector('.checkmark-icon');
+ const finalCheckmarkIcon = document.querySelector('.final-checkmark');
+
+ function getWordForm(count) {
+     if (count === 1) return 'слово';
+     if (count >= 2 && count <= 4) return 'слова';
+     return 'слов';
+ }
+
+ function resetAndAnimateCheckmark() {
+     const oldIcon = document.querySelector('.title-container .checkmark-icon');
+     const newIcon = oldIcon.cloneNode(true);
+     oldIcon.parentNode.replaceChild(newIcon, oldIcon);
+     checkmarkIcon = newIcon;
+     const newCircleAnim = newIcon.querySelector('circle animate');
+     const newPathAnim = newIcon.querySelector('path animate');
+     newCircleAnim.beginElement();
+     setTimeout(() => newPathAnim.beginElement(), 600);
+ }
+
+ function updateTitle() {
+     const wordForm = getWordForm(requiredCount);
+     mainTitle.innerHTML = `Напиши ${requiredCount} ${wordForm},<br>которые начинаются<br><span class="letter-part">на букву ${currentLetter}</span>`;
+     mainTitle.classList.remove('completed');
+ }
+
+ function playSuccessSound() {
+     successSound.currentTime = 0;
+     successSound.play().catch(e => console.log("Audio play failed:", e));
+ }
+
+ function playFinSound() {
+     finSound.currentTime = 0;
+     finSound.play().catch(e => console.log("Audio play failed:", e));
+ }
+
+ function addWordTag(word) {
+     const tag = document.createElement('span');
+     tag.className = 'word-tag';
+     tag.textContent = word;
+     wordsContainer.appendChild(tag);
+ }
+
+ function checkWord(word) {
+     const normalizedWord = word.toLowerCase().trim();
+     return currentWords.some(w => w.toLowerCase() === normalizedWord);
+ }
+
+ function handleInput() {
+     const value = wordInput.value.trim();
+     if (value === '') {
+         wordInput.classList.remove('incorrect');
+         return;
+     }
+
+     const isCorrectWord = checkWord(value);
+     const isAlreadyEntered = enteredWords.some(w => w.toLowerCase() === value.toLowerCase());
+
+     if (isCorrectWord && !isAlreadyEntered) {
+         enteredWords.push(value.toLowerCase());
+         addWordTag(value);
+         playSuccessSound();
+         checkmarkIcon.style.display = 'block';
+         resetAndAnimateCheckmark();
+         wordInput.value = '';
+         wordInput.classList.remove('incorrect');
+
+         if (enteredWords.length >= requiredCount) {
+             allDone = true;
+             wordInput.disabled = true;
+             mainTitle.classList.add('completed');
+             nextBtn.style.display = 'flex';
+         }
+     } else {
+         wordInput.classList.add('incorrect');
+     }
+ }
+
+ function nextTask() {
+     usedLetters.add(currentLetter);
+     tasksCompleted++;
+
+     if (tasksCompleted >= totalTasks) {
+         allTasksCompleted = true;
+         sliderContainer.style.display = 'none';
+         completionMessage.style.display = 'block';
+         finalCheckmarkIcon.style.display = 'block';
+         playFinSound();
+         return;
+     }
+
+     const availableLetters = letters.filter(l => !usedLetters.has(l));
+     currentLetter = availableLetters[Math.floor(Math.random() * availableLetters.length)];
+     currentWords = [...wordLists[currentLetter]];
+     requiredCount = lettersWithThreeWords.includes(currentLetter) ? 3 : 5;
+     requiredCount = Math.min(requiredCount, currentWords.length);
+     enteredWords = [];
+     allDone = false;
+     nextBtn.style.display = 'none';
+     wordsContainer.innerHTML = '';
+     wordInput.value = '';
+     wordInput.classList.remove('incorrect');
+     wordInput.disabled = false;
+     updateTitle();
+     wordInput.focus();
+ }
+
+ // События
+ wordInput.addEventListener('blur', () => {
+     handleInput();
+ });
+ wordInput.addEventListener('keydown', (e) => {
+     if (e.key === 'Enter') {
+         handleInput();
+         if (allDone) {
+             nextTask();
+         }
+     }
+ });
+ wordInput.addEventListener('input', () => {
+     wordInput.classList.remove('incorrect');
+     const value = wordInput.value.trim();
+     if (value !== '') {
+         const isCorrectWord = checkWord(value);
+         const isAlreadyEntered = enteredWords.some(w => w.toLowerCase() === value.toLowerCase());
+         if (isCorrectWord && !isAlreadyEntered) {
+             handleInput();
+         }
+     }
+ });
+ nextBtn.addEventListener('click', nextTask);
+
+ // Инициализация
+ updateTitle();
+ wordInput.focus();
+ </script>
+</body>
+</html>
