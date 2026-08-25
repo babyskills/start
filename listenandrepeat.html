@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Послушай и повтори</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #050504;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .counter {
+            color: #3E3E3E;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 28px;
+            margin-bottom: 40px;
+            max-width: 80%;
+        }
+
+        .play-button {
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            margin-bottom: 30px;
+        }
+
+        .play-button:active {
+            transform: scale(0.95);
+        }
+
+        .loader-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            height: 24px;
+        }
+
+        .loader {
+            display: none;
+            gap: 5px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-circle {
+            width: 10px;
+            height: 10px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .loader-circle:nth-child(1) { animation-delay: -0.32s; }
+        .loader-circle:nth-child(2) { animation-delay: -0.16s; }
+        .loader-circle:nth-child(3) { animation-delay: 0s; }
+        .loader-circle:nth-child(4) { animation-delay: 0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .next-button-container {
+            width: 160px;
+            height: 48px;
+            margin-bottom: 20px;
+        }
+
+        .next-button {
+            width: 100%;
+            height: 100%;
+            border: none;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #272727;
+            color: white;
+        }
+
+        .next-button.ready {
+            background: #287032;
+        }
+
+        .back-link {
+            color: #3E3E3E;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .completion-message {
+            color: #287032;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .title {
+                font-size: 22px;
+            }
+            .counter {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="counter" class="counter">Осталось 10 предложений</div>
+    <div id="title" class="title"><b>Послушай и повтори предложение!</b></div>
+
+    <svg id="playButton" class="play-button" width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="70" height="70" rx="35" fill="#287032"/>
+        <path d="M26.7646 23.3865C26.7646 22.5973 27.6164 22.1016 28.3026 22.4915L47.8365 33.5907C48.531 33.9853 48.5309 34.9861 47.8364 35.3807L28.3026 46.4791C27.6163 46.8691 26.7646 46.3734 26.7646 45.5841V23.3865Z" fill="white"/>
+    </svg>
+
+    <div class="loader-container">
+        <div class="loader" id="loader">
+            <div class="loader-circle"></div>
+            <div class="loader-circle"></div>
+            <div class="loader-circle"></div>
+            <div class="loader-circle"></div>
+        </div>
+    </div>
+
+    <div class="next-button-container">
+        <button id="nextButton" class="next-button">
+            Далее
+        </button>
+    </div>
+
+    <a href="index.html" class="back-link">Вернуться к другим заданиям</a>
+
+    <audio id="audioPlayer" preload="auto"></audio>
+    <audio id="beepSound" src="listenandrepeat/beep.mp3" preload="auto"></audio>
+    <audio id="finSound" src="listenandrepeat/fin.mp3" preload="auto"></audio>
+
+    <script>
+        const totalSentences = 10;
+        let remainingSentences = totalSentences;
+        let currentSentenceIndex = 0;
+        let shuffledSentences = [];
+
+        // Массив с названиями аудиофайлов
+        // Добавляйте сюда новые файлы, когда будете их добавлять в папку
+        const sentences = [
+            "listenandrepeat/sentence_01.mp3",
+            "listenandrepeat/sentence_02.mp3",
+            "listenandrepeat/sentence_03.mp3",
+            "listenandrepeat/sentence_04.mp3",
+            "listenandrepeat/sentence_05.mp3",
+            "listenandrepeat/sentence_06.mp3",
+            "listenandrepeat/sentence_07.mp3",
+            "listenandrepeat/sentence_08.mp3",
+            "listenandrepeat/sentence_09.mp3",
+            "listenandrepeat/sentence_10.mp3",
+            "listenandrepeat/sentence_11.mp3",
+            "listenandrepeat/sentence_12.mp3",
+            "listenandrepeat/sentence_13.mp3",
+            "listenandrepeat/sentence_14.mp3",
+            "listenandrepeat/sentence_15.mp3"
+            // Добавляйте новые файлы здесь, например:
+            // "listenandrepeat/sentence_16.mp3",
+            // "listenandrepeat/sentence_17.mp3",
+        ];
+
+        let audioPlayer = document.getElementById('audioPlayer');
+        let beepSound = document.getElementById('beepSound');
+        let finSound = document.getElementById('finSound');
+        let playButton = document.getElementById('playButton');
+        let nextButton = document.getElementById('nextButton');
+        let loader = document.getElementById('loader');
+        let counter = document.getElementById('counter');
+        let title = document.getElementById('title');
+
+        function updateCounter() {
+            counter.textContent = `Осталось ${remainingSentences} предложений`;
+        }
+
+        function stopAllAudio() {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            beepSound.pause();
+            beepSound.currentTime = 0;
+            finSound.pause();
+            finSound.currentTime = 0;
+        }
+
+        function playAudio() {
+            stopAllAudio();
+            nextButton.classList.remove('ready');
+            loader.style.display = 'none';
+
+            const currentSentence = shuffledSentences[currentSentenceIndex];
+            audioPlayer.src = currentSentence;
+
+            audioPlayer.onended = function() {
+                beepSound.currentTime = 0;
+                beepSound.play().catch(e => console.error("Ошибка beep.mp3:", e));
+                beepSound.onended = function() {
+                    loader.style.display = 'flex';
+                    nextButton.classList.add('ready');
+                };
+            };
+
+            audioPlayer.play().catch(e => {
+                console.error("Ошибка воспроизведения:", e);
+                alert("Не удалось воспроизвести аудио. Проверьте путь: " + currentSentence);
+            });
+        }
+
+        playButton.addEventListener('click', playAudio);
+
+        nextButton.addEventListener('click', function() {
+            if (!nextButton.classList.contains('ready')) return;
+
+            stopAllAudio();
+            loader.style.display = 'none';
+            nextButton.classList.remove('ready');
+
+            currentSentenceIndex++;
+            remainingSentences--;
+
+            if (remainingSentences <= 0) {
+                counter.style.display = 'none';
+                title.style.display = 'none';
+                playButton.style.display = 'none';
+                nextButton.closest('.next-button-container').style.display = 'none';
+                loader.style.display = 'none';
+
+                const completionMessage = document.createElement('div');
+                completionMessage.className = 'completion-message';
+                completionMessage.textContent = 'Все задания выполнены!';
+                document.body.insertBefore(completionMessage, document.querySelector('.back-link'));
+
+                finSound.currentTime = 0;
+                finSound.play().catch(e => console.error("Ошибка fin.mp3:", e));
+            } else {
+                updateCounter();
+            }
+        });
+
+        // Выбираем 10 случайных файлов из массива
+        shuffledSentences = sentences.sort(() => Math.random() - 0.5).slice(0, totalSentences);
+        updateCounter();
+    </script>
+</body>
+</html>
