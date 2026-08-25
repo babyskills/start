@@ -220,7 +220,7 @@ body > *:last-child { margin-bottom: 60px; }
  <!-- Остальной HTML остаётся без изменений -->
  <div class="slider-container">
  <div class="title-container">
-    <div id="main-title">Напиши 5 слов,<br>которые начинаются<br><span class="letter-part">на букву В</span></div>
+    <div id="main-title">Напечатай 5 слов,<br>которые начинаются<br><span class="letter-part">на букву В</span></div>
     <svg class="checkmark-icon" width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Анимация эллипса и галочки без зазора">
         <circle cx="50" cy="50" r="45.551" stroke="#3A8443" stroke-width="8.89794" fill="none"
             stroke-dasharray="287" stroke-dashoffset="287" stroke-linejoin="round" stroke-linecap="round">
@@ -356,7 +356,7 @@ body > *:last-child { margin-bottom: 60px; }
 
  function updateTitle() {
      const wordForm = getWordForm(requiredCount);
-     mainTitle.innerHTML = `Напиши ${requiredCount} ${wordForm},<br>которые начинаются<br><span class="letter-part">на букву ${currentLetter}</span>`;
+     mainTitle.innerHTML = `Напечатай ${requiredCount} ${wordForm},<br>которые начинаются<br><span class="letter-part">на букву ${currentLetter}</span>`;
      mainTitle.classList.remove('completed');
  }
 
