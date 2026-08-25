@@ -77,32 +77,61 @@ body > *:last-child { margin-bottom: 60px; }
  gap: 8px;
  width: 100%;
 }
-.text-field {
- width: 85%;
- max-width: 350px;
- padding: 16px 18px;
- border-radius: 6px;
- border: none;
- color: #C4C4C4;
- font-size: 1.4em;
- outline: none;
- text-align: center;
- background-color: #0C0C0C;
+.input-wrapper {
+  display: flex;
+  width: 85%;
+  max-width: 350px;
+  height: 52px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: #0C0C0C;
 }
-.text-field::placeholder {
- color: #232323;
+.input-wrapper:focus-within {
+  border: 1px solid #465848;
 }
-.text-field:focus {
- border: none;
- box-shadow: 0 0 0 3px rgba(58, 132, 67, 0.3);
+.input-wrapper input {
+  flex: 1;
+  min-width: 0;
+  padding: 0 18px;
+  border: none;
+  outline: none;
+  color: #C4C4C4;
+  background: #0C0C0C;
+  font-size: 1.4em;
 }
-.text-field.incorrect {
- background-color: #1D0B0A;
+.input-wrapper input::placeholder {
+  color: #232323;
+  opacity: 1;
 }
-.text-field:disabled {
- opacity: 0.7;
- cursor: not-allowed;
+.input-wrapper button {
+  display: flex;
+  width: 58px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-left: 1px solid #0C0C0C;
+  border-radius: 0;
+  background: #3a8443;
+  cursor: pointer;
 }
+.input-wrapper button:hover {
+  background: #32743a;
+}
+.input-wrapper button svg {
+  display: block;
+  width: 11px;
+  height: 19px;
+}
+.input-wrapper input.incorrect {
+  background-color: #1D0B0A;
+}
+.input-wrapper input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .slider-buttons {
  display: flex;
  justify-content: center;
@@ -175,12 +204,12 @@ body > *:last-child { margin-bottom: 60px; }
 @media (max-width: 720px) {
  .slider-container { max-width: 90vw; padding: 15px 20px; }
  #main-title { font-size: 1.5em; }
- .text-field { font-size: 1.3em; }
+ .input-wrapper input { font-size: 1.3em; }
  .nav-button { height: 68px; width: 68px; }
 }
 @media (max-width: 480px) {
  .slider-container { width: 95vw; padding: 10px 15px; }
- .text-field { font-size: 1.2em; padding: 14px 16px; }
+ .input-wrapper input { font-size: 1.2em; padding: 0 14px; }
  .nav-button { height: 60px; width: 60px; }
  .nav-icon { width: 24%; height: 24%; }
  .word-tag { font-size: 1em; padding: 8px 12px; }
@@ -188,6 +217,7 @@ body > *:last-child { margin-bottom: 60px; }
  </style>
 </head>
 <body>
+ <!-- Остальной HTML остаётся без изменений -->
  <div class="slider-container">
  <div class="title-container">
     <div id="main-title">Напиши 5 слов,<br>которые начинаются<br><span class="letter-part">на букву В</span></div>
@@ -205,7 +235,14 @@ body > *:last-child { margin-bottom: 60px; }
  </div>
  <div class="slider-view">
     <div class="field-set">
-        <input class="text-field" type="text" placeholder="Напечатай здесь" id="word-input" autocomplete="off">
+        <div class="input-wrapper">
+          <input type="text" placeholder="Напечатай здесь" id="word-input" autocomplete="off">
+          <button type="button" id="submit-btn" aria-label="Подтвердить">
+            <svg width="11" height="19" viewBox="0 0 11 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 17.9455L9.5 9.44553L1 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
         <div class="words-container" id="words-container"></div>
     </div>
  </div>
@@ -247,7 +284,7 @@ body > *:last-child { margin-bottom: 60px; }
     'З': ['заяц', 'звезда', 'звёзды', 'затылок', 'завтрак', 'зарядка', 'зима', 'зефир', 'зяблик', 'занавески', 'занавеска', 'земля', 'золото', 'звук', 'звуки', 'загар', 'зверь', 'звери', 'земляника', 'забор', 'зеркало', 'зуб', 'зубы', 'зебра', 'замок', 'змея', 'зонт', 'зонтик', 'закат', 'загадка', 'зубр', 'звон', 'звонок', 'завтра', 'зоопарк', 'заколка', 'здание', 'задание'],
     'И': ['игла', 'ириска', 'игра', 'интернет', 'индюк', 'изюм', 'ива', 'июнь', 'июль', 'изба', 'изумруд', 'икра', 'инструменты', 'инструмент', 'игрушки', 'игрушка', 'имя', 'иней', 'инжир', 'искра', 'иголка', 'иволга', 'индеец'],
     'К': ['кошка', 'книга', 'корова', 'крот', 'куст', 'кино', 'клубника', 'карандаш', 'кролик', 'курица', 'капуста', 'картина', 'кровать', 'кот', 'кит', 'ком', 'конь', 'круг', 'каша', 'коза', 'кофе', 'кусок', 'ковёр', 'капля', 'компот', 'корка', 'куртка', 'квадрат', 'кубик', 'кубики', 'конфета', 'котлета', 'кенгуру', 'картофель', 'картошка', 'косточка', 'крапива', 'кактус', 'клоун', 'корабль', 'корона', 'крокодил', 'конец', 'кукуруза', 'кукла', 'кулак', 'кроссовки', 'кнопка', 'компьютер'],
-    'Л': ['лиса', 'лама', 'лилия', 'лещ', 'лопата', 'люстра', 'люди', 'ладонь', 'лапша', 'лейка', 'лён', 'лифт', 'лев', 'луг', 'лопух', 'лава', 'лабиринт', 'лень', 'любовь', 'лента', 'льдина', 'лёд', 'липа', 'луч', 'линии', 'линия', 'листья', 'лист', 'лес', 'ласточка', 'локоть', 'ласточки', 'лоб', 'лупа', 'лицо', 'ложка', 'луна', 'лето', 'лось', 'лодка', 'лампа', 'лимон', 'лошадь', 'лестница', 'лук', 'лыжи', 'лак', 'лапа', 'ленточка', 'лекарство'],
+    'Л': ['лиса', 'лама', 'лилия', 'лещ', 'литр', 'лом', 'ларёк', 'лопата', 'люстра', 'люди', 'ладонь', 'лапша', 'лейка', 'лён', 'лифт', 'лев', 'луг', 'лопух', 'лава', 'лабиринт', 'лень', 'любовь', 'лента', 'льдина', 'лёд', 'липа', 'луч', 'линии', 'линия', 'листья', 'лист', 'лес', 'ласточка', 'локоть', 'ласточки', 'лоб', 'лупа', 'лицо', 'ложка', 'луна', 'лето', 'лось', 'лодка', 'лампа', 'лимон', 'лошадь', 'лестница', 'лук', 'лыжи', 'лак', 'лапа', 'ленточка', 'лекарство'],
     'М': ['машина', 'мир', 'меч', 'мех', 'мозг', 'мазь', 'мел', 'мяч', 'манго', 'моль', 'место', 'миска', 'мох', 'молоток', 'мама', 'мать', 'малыш', 'мёд', 'масло', 'макароны', 'май', 'метро', 'мороженое', 'мыло', 'муха', 'медведь', 'молоко', 'морковь', 'мышь', 'малина', 'муравей', 'море', 'мебель', 'музыка', 'морж', 'мост', 'мука', 'мясо', 'музей', 'мальчик', 'минута', 'магазин', 'молния', 'мандарин', 'монстр'],
     'Н': ['нос', 'небо', 'нож', 'носок', 'носки', 'нитка', 'нитки', 'нить', 'нога', 'ноги', 'ночь', 'неделя', 'ножницы', 'ноль', 'нора', 'няня', 'нота', 'ноты', 'насос', 'номер', 'нектарин', 'носорог', 'награда', 'навигатор', 'ноготь', 'ногти'],
     'О': ['облако', 'осколки', 'осколок', 'окунь', 'овраг', 'огонь', 'очередь', 'охота', 'осина', 'оркестр', 'обруч', 'отвёртка', 'океан', 'обои', 'обувь', 'омлет', 'одеяло', 'одежда', 'осёл', 'орёл', 'овал', 'осьминог', 'обед', 'одуванчик', 'остров', 'оса', 'октябрь', 'охотник', 'огурец', 'овца', 'окно', 'орех', 'очки', 'осень', 'обезьяна', 'овёс', 'озеро', 'олень', 'окунь', 'огород'],
@@ -256,15 +293,15 @@ body > *:last-child { margin-bottom: 60px; }
     'С': ['собака', 'солнце', 'соль', 'салат', 'сало', 'салют', 'сыр', 'сила', 'сметана', 'сосиска', 'стол', 'сосна', 'сахар', 'садик', 'сугроб', 'суп', 'стул', 'страна', 'стена', 'стены', 'скала', 'скалы', 'снег', 'сушка', 'сова', 'слово', 'слова', 'самолёт', 'сани', 'санки', 'сентябрь', 'сирень', 'сок', 'слива', 'сумка', 'свеча', 'смородина', 'соловей', 'снежинка', 'сон', 'сад', 'сом', 'слон', 'снеговик', 'стихотворение', 'салют', 'сапог', 'сапоги', 'салат'],
     'Т': ['трава', 'топор', 'тетрадь', 'тыква', 'труба', 'тарелка', 'тень', 'туча', 'тюльпан', 'телефон', 'ток', 'танк', 'торт', 'тигр', 'текст', 'туман', 'трактор', 'тростник', 'таракан', 'табуретка', 'точилка', 'телевизор', 'трамвай', 'троллейбус', 'тир', 'тополь', 'тапки', 'трусы'],
     'У': ['утка', 'ухо', 'усы', 'уговор', 'уровень', 'ученик', 'ученики', 'ураган', 'удача', 'укроп', 'удав', 'удар', 'укол', 'угорь', 'узор', 'утро', 'улитка', 'урожай', 'утюг', 'угол', 'улица', 'учитель', 'удочка', 'узел', 'улыбка', 'ум', 'уголь', 'ужин', 'укроп', 'урок', 'улей'],
-    'Ф': ['флаг', 'фрукт', 'фрукты', 'фонарь', 'фонарик', 'фотография', 'фонтан', 'фен', 'фасоль', 'флейта', 'фарш', 'фильм', 'фара', 'финиш', 'фокус', 'фокусник', 'факел', 'филин', 'фантик', 'фартук', 'финик', 'финики', 'фигура', 'фиалка', 'футбол', 'футболка', 'фотоаппарат', 'фольга'],
+    'Ф': ['флаг', 'фрукт', 'фрукты', 'фон', 'фея', 'фонарь', 'фонарик', 'фотография', 'фонтан', 'фен', 'фасоль', 'флейта', 'фарш', 'фильм', 'фара', 'финиш', 'фокус', 'фокусник', 'факел', 'филин', 'фантик', 'фартук', 'финик', 'финики', 'фигура', 'фиалка', 'футбол', 'футболка', 'фотоаппарат', 'фольга'],
     'Х': ['хлеб', 'хвост', 'холод', 'хомяк', 'художник', 'хурма', 'хоккей', 'халат', 'хобот', 'хорёк', 'хлопушка', 'халява', 'халва', 'холодильник', 'хамелеон', 'хоровод', 'хижина', 'хлопья', 'холм', 'холст', 'храп'],
     'Ц': ['цвет', 'цыплёнок', 'цифра', 'цифры', 'цепочка', 'цепь', 'цапля', 'цирк', 'церковь', 'цветок', 'цитрус', 'цена', 'царапина'],
     'Ч': ['чай', 'чашка', 'черепаха', 'чеснок', 'чемодан', 'часы', 'чайка', 'черешня', 'чайник', 'чудо', 'червь', 'червяк', 'человек', 'череп', 'чипсы', 'число', 'черника', 'чучело'],
-    'Ш': ['шапка', 'школа', 'шар', 'шарик', 'шишка', 'шум', 'штаны', 'шпилька', 'шнурок', 'шашлык', 'шёпот', 'шахматы', 'шайба', 'шампунь', 'шиповник', 'шуба', 'шея', 'шоколад', 'шоколадка', 'шашки', 'шляпа', 'шкаф', 'шарф', 'шимпанзе', 'шнурки', 'шорты', 'шприц', 'шило'],
+    'Ш': ['шапка', 'школа', 'шар', 'шорох', 'шарик', 'шишка', 'шум', 'штаны', 'шаурма', 'шпилька', 'шнурок', 'шашлык', 'шампанское', 'шашлыки', 'шёпот', 'шахматы', 'шайба', 'шампунь', 'шиповник', 'шуба', 'шея', 'шоколад', 'шоколадка', 'шашки', 'шляпа', 'шкаф', 'шарф', 'шимпанзе', 'шнурки', 'шорты', 'шприц', 'шило'],
     'Щ': ['щука', 'щавель', 'щель', 'щека', 'щёки', 'щегол', 'щётка', 'щепка', 'щит', 'щербет', 'щенок', 'щи'],
     'Э': ['электричество', 'экран', 'эхо', 'экскаватор', 'эклер', 'этаж', 'эскалатор', 'эскимо', 'эму'],
     'Ю': ['юла', 'юбилей', 'юнга', 'юмор', 'юрта', 'юг', 'юрок', 'юбка'],
-    'Я': ['яблоко', 'яблоки', 'ягода', 'ягоды', 'язык', 'яйцо', 'яйца', 'яхта', 'якорь', 'яма', 'ящик', 'ящерица', 'ягуар']
+    'Я': ['яблоко', 'яблоки', 'ягода', 'январь', 'ягоды', 'язык', 'яйцо', 'яйца', 'яхта', 'якорь', 'яма', 'ящик', 'ящерица', 'ягуар']
  };
 
  // Буквы, для которых требуется 3 слова
@@ -292,13 +329,11 @@ body > *:last-child { margin-bottom: 60px; }
  const wordsContainer = document.getElementById('words-container');
  const mainTitle = document.getElementById('main-title');
  const nextBtn = document.getElementById('next-btn');
+ const submitBtn = document.getElementById('submit-btn');
  const successSound = document.getElementById('success-sound');
  const finSound = document.getElementById('fin-sound');
  const completionMessage = document.getElementById('completion-message');
- const sliderContainer = document.querySelector('.slider-container');
- const sliderView = document.querySelector('.slider-view');
- const sliderButtons = document.querySelector('.slider-buttons');
- const fieldSet = document.querySelector('.field-set');
+
  let checkmarkIcon = document.querySelector('.checkmark-icon');
  const finalCheckmarkIcon = document.querySelector('.final-checkmark');
 
@@ -383,7 +418,7 @@ body > *:last-child { margin-bottom: 60px; }
 
      if (tasksCompleted >= totalTasks) {
          allTasksCompleted = true;
-         sliderContainer.style.display = 'none';
+         document.querySelector('.slider-container').style.display = 'none';
          completionMessage.style.display = 'block';
          finalCheckmarkIcon.style.display = 'block';
          playFinSound();
@@ -406,10 +441,6 @@ body > *:last-child { margin-bottom: 60px; }
      wordInput.focus();
  }
 
- // События
- wordInput.addEventListener('blur', () => {
-     handleInput();
- });
  wordInput.addEventListener('keydown', (e) => {
      if (e.key === 'Enter') {
          handleInput();
@@ -420,18 +451,15 @@ body > *:last-child { margin-bottom: 60px; }
  });
  wordInput.addEventListener('input', () => {
      wordInput.classList.remove('incorrect');
-     const value = wordInput.value.trim();
-     if (value !== '') {
-         const isCorrectWord = checkWord(value);
-         const isAlreadyEntered = enteredWords.some(w => w.toLowerCase() === value.toLowerCase());
-         if (isCorrectWord && !isAlreadyEntered) {
-             handleInput();
-         }
+ });
+ submitBtn.addEventListener('click', () => {
+     handleInput();
+     if (allDone) {
+         nextTask();
      }
  });
  nextBtn.addEventListener('click', nextTask);
 
- // Инициализация
  updateTitle();
  wordInput.focus();
  </script>
