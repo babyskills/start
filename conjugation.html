@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru" translate="no">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+ <meta name="google" content="notranslate" />
+ <title>Допиши предложение</title>
+ <style>
+ html, body {
+ margin: 0;
+ padding: 0;
+ height: 100%;
+ overflow: hidden;
+ box-sizing: border-box;
+ font-family: 'Arial', sans-serif;
+ color: #e0e0e0;
+ background-color: #050504;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: column;
+ min-height: 100vh;
+}
+ body > *:last-child { margin-bottom: 60px; }
+ .slider-container {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ width: 90vw;
+ max-width: 500px;
+ padding: 30px;
+ background-color: #050504;
+ border-radius: 8px;
+ position: relative;
+ box-sizing: border-box;
+}
+ .title-container {
+ text-align: center;
+ margin-bottom: 16px;
+}
+ #main-title {
+ font-size: 1.4em;
+ color: #808080;
+ font-weight: normal;
+}
+ .progress-container {
+ width: 386px;
+ height: 8px;
+ background-color: #0C0C0C;
+ border-radius: 4px;
+ margin-bottom: 80px;
+ overflow: hidden;
+}
+ .progress-bar {
+ height: 100%;
+ background-color: #2974F6;
+ width: 0%;
+ transition: width 0.3s ease;
+}
+ .verb-container {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ margin-bottom: 30px;
+ width: 100%;
+}
+ .verb {
+ font-size: 2em;
+ font-weight: bold;
+ color: #fff;
+ margin-bottom: 5px;
+ transition: color 0.3s ease;
+}
+ .verb.blink {
+ animation: blinkOnce 0.5s ease-in-out forwards;
+}
+ @keyframes blinkOnce {
+ 0% { color: #2974F6; }
+ 100% { color: #fff; }
+}
+ .slider-view {
+ width: 100%;
+ display: grid;
+ grid-template-columns: 1fr;
+ gap: 12px;
+ padding: 0 4px;
+}
+ .field-set {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 12px;
+ width: 100%;
+}
+ .text-field {
+ width: 386px;
+ padding: 16px 18px;
+ border-radius: 6px;
+ border: none;
+ color: #e8e8e8;
+ font-size: 1.4em;
+ outline: none;
+ text-align: center;
+ box-sizing: border-box;
+}
+ .text-field[readonly] {
+ font-weight: bold;
+ color: #fff;
+ background-color: #050504;
+}
+ .text-field:not([readonly]) {
+ color: #C4C4C4;
+ background-color: #0C0C0C;
+}
+ .text-field:not([readonly])::placeholder {
+ color: #232323;
+}
+ .text-field:not([readonly]):focus {
+ border: none;
+ box-shadow: 0 0 0 3px rgba(41, 116, 246, 0.3);
+}
+ .text-field.correct {
+ border: none;
+ background-color: #0C1B34;
+}
+ .text-field.incorrect {
+ border: none;
+ background-color: rgba(244, 67, 54, 0.1);
+}
+ .slider-buttons {
+ display: flex;
+ justify-content: center;
+ width: 100%;
+ margin-top: 40px;
+}
+ .nav-button {
+ background-color: #0C0C0C;
+ color: #e0e0e0;
+ border: none;
+ cursor: pointer;
+ border-radius: 9999px;
+ outline: none;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ padding: 0;
+ box-sizing: border-box;
+ width: 75px;
+ height: 75px;
+ transition: opacity 0.3s ease;
+}
+ .nav-button.disabled {
+ opacity: 0.3;
+ cursor: default;
+}
+ .nav-icon { width: 30%; height: 30%; display: block; }
+ .nav-icon path { stroke: #e0e0e0; }
+ .home-link-container { margin-top: 4px; }
+ .home-link {
+ color: #303030;
+ text-decoration: none;
+ font-size: 1.1em;
+ transition: color 0.3s ease;
+}
+ .home-link:hover {
+ color: #303030;
+ text-decoration: underline;
+}
+ .completion-message {
+ display: none;
+ color: #2974F6;
+ font-size: 1.5em;
+ text-align: center;
+ margin: 20px 0;
+ font-weight: bold;
+}
+.final-screen .slider-view,
+.final-screen .slider-buttons,
+.final-screen .title-container {
+ display: none !important;
+}
+.final-screen .completion-message {
+ display: block;
+}
+.final-screen .home-link-container {
+ margin-top: 20px;
+}
+.final-screen .progress-container {
+ margin-bottom: 20px;
+}
+ @media (max-width: 720px) {
+ .slider-container { max-width: 90vw; padding: 20px; }
+ #main-title { font-size: 1.3em; }
+ .text-field, .progress-container { width: 85vw; max-width: 350px; }
+ .nav-button { height: 68px; width: 68px; }
+ .verb { font-size: 1.8em; }
+}
+ @media (max-width: 480px) {
+ .slider-container { width: 95vw; padding: 15px; }
+ .text-field, .progress-container { width: 85vw; max-width: 300px; }
+ .text-field { font-size: 1.2em; padding: 14px 16px; }
+ .nav-button { height: 60px; width: 60px; }
+ .nav-icon { width: 24%; height: 24%; }
+ .verb { font-size: 1.6em; }
+}
+ </style>
+</head>
+<body>
+ <div class="slider-container">
+  <div class="title-container">
+    <div id="main-title">Допиши предложение!</div>
+  </div>
+  <div class="progress-container">
+   <div class="progress-bar" id="progress-bar"></div>
+  </div>
+ <div class="slider-view" id="slider-view">
+ </div>
+ <div class="slider-buttons">
+    <button id="next-btn" class="nav-button next" aria-label="Следующий слайд">
+        <svg class="nav-icon" width="67" height="50" viewBox="0 0 67 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M42.0001 3.33014L64.0001 25.4009L42.0001 47.3301M3.00006 25.3301H64.0001" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+ </div>
+ <div class="completion-message" id="completion-message">
+    Все задания выполнены
+ </div>
+ </div>
+ <div class="home-link-container">
+    <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+ </div>
+ <script>
+ const verbs = ["Слушать", "Решать", "Варить", "Говорить", "Одевать", "Открывать", "Наливать", "Писать", "Читать", "Прыгать", "Мыть", "Сидеть", "Спать", "Идти", "Рисовать", "Улыбаться", "Злиться", "Брать", "Смотреть", "Лежать", "Ехать", "Кушать", "Плыть", "Гулять", "Играть"];
+ const pronouns = ["Я", "Ты", "Он", "Она", "Оно", "Мы", "Вы", "Они"];
+
+ const view = document.getElementById('slider-view');
+ const nextBtn = document.getElementById('next-btn');
+ const progressBar = document.getElementById('progress-bar');
+ const completionMessage = document.getElementById('completion-message');
+ const sliderContainer = document.querySelector('.slider-container');
+ let currentIndex = 0;
+ let allDone = false;
+ let currentInputField = null;
+ let correctCount = 0;
+ let selectedVerbs = [];
+ let slides = [];
+
+ function getConjugation(verb, pronoun) {
+     const conjugations = {
+         "Слушать": { "Я": "слушаю", "Ты": "слушаешь", "Он": "слушает", "Она": "слушает", "Оно": "слушает", "Мы": "слушаем", "Вы": "слушаете", "Они": "слушают" },
+         "Решать": { "Я": "решаю", "Ты": "решаешь", "Он": "решает", "Она": "решает", "Оно": "решает", "Мы": "решаем", "Вы": "решаете", "Они": "решают" },
+         "Варить": { "Я": "варю", "Ты": "варишь", "Он": "варит", "Она": "варит", "Оно": "варит", "Мы": "варим", "Вы": "варите", "Они": "варят" },
+         "Говорить": { "Я": "говорю", "Ты": "говоришь", "Он": "говорит", "Она": "говорит", "Оно": "говорит", "Мы": "говорим", "Вы": "говорите", "Они": "говорят" },
+         "Одевать": { "Я": "одеваю", "Ты": "одеваешь", "Он": "одевает", "Она": "одевает", "Оно": "одевает", "Мы": "одеваем", "Вы": "одеваете", "Они": "одевают" },
+         "Открывать": { "Я": "открываю", "Ты": "открываешь", "Он": "открывает", "Она": "открывает", "Оно": "открывает", "Мы": "открываем", "Вы": "открываете", "Они": "открывают" },
+         "Наливать": { "Я": "наливаю", "Ты": "наливаешь", "Он": "наливает", "Она": "наливает", "Оно": "наливает", "Мы": "наливаем", "Вы": "наливаете", "Они": "наливают" },
+         "Писать": { "Я": "пишу", "Ты": "пишешь", "Он": "пишет", "Она": "пишет", "Оно": "пишет", "Мы": "пишем", "Вы": "пишете", "Они": "пишут" },
+         "Читать": { "Я": "читаю", "Ты": "читаешь", "Он": "читает", "Она": "читает", "Оно": "читает", "Мы": "читаем", "Вы": "читаете", "Они": "читают" },
+         "Прыгать": { "Я": "прыгаю", "Ты": "прыгаешь", "Он": "прыгает", "Она": "прыгает", "Оно": "прыгает", "Мы": "прыгаем", "Вы": "прыгаете", "Они": "прыгают" },
+         "Мыть": { "Я": "мою", "Ты": "моешь", "Он": "моет", "Она": "моет", "Оно": "моет", "Мы": "моем", "Вы": "моете", "Они": "моют" },
+         "Сидеть": { "Я": "сижу", "Ты": "сидишь", "Он": "сидит", "Она": "сидит", "Оно": "сидит", "Мы": "сидим", "Вы": "сидите", "Они": "сидят" },
+         "Спать": { "Я": "сплю", "Ты": "спишь", "Он": "спит", "Она": "спит", "Оно": "спит", "Мы": "спим", "Вы": "спите", "Они": "спят" },
+         "Идти": { "Я": "иду", "Ты": "идёшь", "Он": "идёт", "Она": "идёт", "Оно": "идёт", "Мы": "идём", "Вы": "идёте", "Они": "идут" },
+         "Рисовать": { "Я": "рисую", "Ты": "рисуешь", "Он": "рисует", "Она": "рисует", "Оно": "рисует", "Мы": "рисуем", "Вы": "рисуете", "Они": "рисуют" },
+         "Улыбаться": { "Я": "улыбаюсь", "Ты": "улыбаешься", "Он": "улыбается", "Она": "улыбается", "Оно": "улыбается", "Мы": "улыбаемся", "Вы": "улыбаетесь", "Они": "улыбаются" },
+         "Злиться": { "Я": "злюсь", "Ты": "злишься", "Он": "злится", "Она": "злится", "Оно": "злится", "Мы": "злимся", "Вы": "злитесь", "Они": "злятся" },
+         "Брать": { "Я": "беру", "Ты": "берёшь", "Он": "берёт", "Она": "берёт", "Оно": "берёт", "Мы": "берём", "Вы": "берёте", "Они": "берут" },          
+         "Смотреть": { "Я": "смотрю", "Ты": "смотришь", "Он": "смотрит", "Она": "смотрит", "Оно": "смотрит", "Мы": "смотрим", "Вы": "смотрите", "Они": "смотрят" },
+         "Лежать": { "Я": "лежу", "Ты": "лежишь", "Он": "лежит", "Она": "лежит", "Оно": "лежит", "Мы": "лежим", "Вы": "лежите", "Они": "лежат" },
+         "Ехать": { "Я": "еду", "Ты": "едешь", "Он": "едет", "Она": "едет", "Оно": "едет", "Мы": "едем", "Вы": "едете", "Они": "едут" },
+         "Кушать": { "Я": "кушаю", "Ты": "кушаешь", "Он": "кушает", "Она": "кушает", "Оно": "кушает", "Мы": "кушаем", "Вы": "кушаете", "Они": "кушают" },
+         "Плыть": { "Я": "плыву", "Ты": "плывёшь", "Он": "плывёт", "Она": "плывёт", "Оно": "плывёт", "Мы": "плывём", "Вы": "плывёте", "Они": "плывут" },
+         "Гулять": { "Я": "гуляю", "Ты": "гуляешь", "Он": "гуляет", "Она": "гуляет", "Оно": "гуляет", "Мы": "гуляем", "Вы": "гуляете", "Они": "гуляют" },
+         "Играть": { "Я": "играю", "Ты": "играешь", "Он": "играет", "Она": "играет", "Оно": "играет", "Мы": "играем", "Вы": "играете", "Они": "играют" }
+     };
+     return conjugations[verb][pronoun];
+ }
+
+ function selectRandomVerbs() {
+     const shuffled = [...verbs].sort(() => 0.5 - Math.random());
+     return shuffled.slice(0, 3);
+ }
+
+ function generateSlides() {
+     selectedVerbs = selectRandomVerbs();
+     slides = [];
+     view.innerHTML = '';
+
+     selectedVerbs.forEach(verb => {
+         pronouns.forEach((pronoun, i) => {
+             const answer = `${pronoun} ${getConjugation(verb, pronoun)}`;
+             const fieldSet = document.createElement('div');
+             fieldSet.className = 'field-set';
+             fieldSet.style.display = 'none';
+             fieldSet.innerHTML = `
+                 <div class="verb-container">
+                     <div class="verb">${verb}</div>
+                 </div>
+                 <input class="text-field" type="text" value="${pronoun} ${getConjugation(verb, pronoun).slice(0, 2)}" placeholder="..." data-answer="${answer}">
+             `;
+             view.appendChild(fieldSet);
+             slides.push(fieldSet);
+         });
+     });
+ }
+
+ function setCaretToEnd(input) {
+     const len = input.value.length;
+     input.setSelectionRange(len, len);
+ }
+
+ function showSlide(index) {
+     slides.forEach((el, idx) => {
+         el.style.display = (idx === index) ? 'flex' : 'none';
+     });
+     currentInputField = slides[index].querySelector('.text-field:not([readonly])');
+     currentInputField.focus();
+     setCaretToEnd(currentInputField);
+
+     // Мигание глагола при смене слова
+     const currentVerb = slides[index].querySelector('.verb');
+     if (index === 0 || (index > 0 && slides[index].querySelector('.verb').textContent !== slides[index-1].querySelector('.verb').textContent)) {
+         currentVerb.classList.add('blink');
+         setTimeout(() => {
+             currentVerb.classList.remove('blink');
+         }, 500);
+     }
+ }
+
+ function updateView() {
+     showSlide(currentIndex);
+ }
+
+ function updateProgress() {
+     const progress = (currentIndex / (slides.length - 1)) * 100;
+     progressBar.style.width = `${progress}%`;
+ }
+
+ function showNext() {
+     if (allDone) return;
+     const currentInput = slides[currentIndex].querySelector('.text-field:not([readonly])');
+     if (!currentInput.classList.contains('correct')) {
+         return;
+     }
+
+     const nextIndex = currentIndex + 1;
+     const currentVerb = slides[currentIndex].querySelector('.verb').textContent;
+     const nextVerb = nextIndex < slides.length ? slides[nextIndex].querySelector('.verb').textContent : null;
+
+     if (nextIndex < slides.length && nextVerb === currentVerb) {
+         currentIndex = nextIndex;
+         updateView();
+         updateProgress();
+     } else if (nextIndex < slides.length) {
+         currentIndex = nextIndex;
+         updateView();
+         updateProgress();
+     } else {
+         allDone = true;
+         nextBtn.classList.add('disabled');
+         progressBar.style.width = '100%';
+         completionMessage.style.display = 'block';
+         sliderContainer.classList.add('final-screen');
+     }
+ }
+
+ function checkAnswer(input) {
+     const answer = input.getAttribute('data-answer').toLowerCase();
+     const userAnswer = input.value.trim().toLowerCase();
+     input.classList.remove('correct', 'incorrect');
+     if (userAnswer.length > 0) {
+         if (userAnswer === answer) {
+             input.classList.add('correct');
+             correctCount++;
+         } else if (!answer.startsWith(userAnswer)) {
+             input.classList.add('incorrect');
+         }
+     }
+ }
+
+ document.addEventListener('DOMContentLoaded', () => {
+     generateSlides();
+     updateView();
+     updateProgress();
+
+     document.querySelectorAll('.text-field:not([readonly])').forEach(input => {
+         input.addEventListener('input', () => checkAnswer(input));
+         input.addEventListener('focus', () => {
+             setCaretToEnd(input);
+         });
+     });
+
+     nextBtn.addEventListener('click', showNext);
+
+     document.addEventListener('keydown', (event) => {
+         if ((event.key === 'ArrowRight' || event.key === 'Enter') && !allDone) {
+             event.preventDefault();
+             const currentInput = slides[currentIndex].querySelector('.text-field:not([readonly])');
+             if (currentInput.classList.contains('correct')) {
+                 showNext();
+             }
+             currentInput.focus();
+             setCaretToEnd(currentInput);
+         }
+     });
+ });
+ </script>
+</body>
+</html>
