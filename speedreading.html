@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ru" translate="no">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+ <meta name="google" content="notranslate" />
+ <title>Чтение предложений</title>
+ <style>
+ html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+  color: #e0e0e0;
+  background-color: #050504;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+}
+body > *:last-child { margin-bottom: 60px; }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90vw;
+  max-width: 800px;
+  padding: 30px;
+  background-color: #050504;
+  border-radius: 8px;
+  position: relative;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.sentence-field {
+  width: 100%;
+  max-width: 700px;
+  min-height: 100px;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  color: #fff;
+  font-size: 2.2em;
+  outline: none;
+  text-align: center;
+  background-color: #050504;
+  margin-bottom: 40px;
+  line-height: 1.3;
+  white-space: normal;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.start-button, .repeat-button {
+  background-color: #095CBB;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  border-radius: 9999px;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+  width: 240px;
+  height: 64px;
+  font-size: 1.3em;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.start-button:hover, .repeat-button:hover {
+  background-color: #004a99;
+}
+
+.home-link-container {
+  margin-top: 40px;
+}
+
+.home-link {
+  color: #303030;
+  text-decoration: none;
+  font-size: 1.1em;
+  transition: color 0.3s ease;
+}
+.home-link:hover {
+  color: #505050;
+  text-decoration: underline;
+}
+
+.final-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.progress-container {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+}
+
+.progress-circle {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.progress-circle circle {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.progress-circle .background {
+  stroke: #1E1E1D;
+}
+
+.progress-circle .progress {
+  stroke: #095CBB;
+  stroke-dasharray: 125.6;
+  stroke-dashoffset: 125.6;
+  transition: stroke-dashoffset 0.01s linear;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin: 0 auto 20px;
+}
+
+.control-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  outline: none;
+}
+
+.control-btn svg {
+  width: 42px;
+  height: 42px;
+  fill: #111110;
+  transition: fill 0.3s ease;
+}
+
+.control-btn:hover svg {
+  fill: #004a99;
+}
+
+.controls-link-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.controls-link {
+  color: #303030;
+  text-decoration: none;
+  font-size: 1em;
+  transition: color 0.3s ease;
+}
+.controls-link:hover {
+  color: #505050;
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .container { max-width: 90vw; padding: 20px; }
+  .sentence-field {
+    font-size: 1.6em;
+    min-height: 80px;
+  }
+  .start-button, .repeat-button { height: 68px; width: 180px; font-size: 1.1em; }
+  .home-link-container { margin-top: 20px; }
+  .controls { gap: 15px; }
+}
+@media (max-width: 480px) {
+  .container { width: 95vw; padding: 15px; }
+  .sentence-field { font-size: 1.4em; padding: 10px; min-height: 70px; }
+  .start-button, .repeat-button { height: 60px; width: 160px; font-size: 1em; }
+  .home-link-container { margin-top: 15px; }
+  .controls { gap: 10px; }
+}
+ </style>
+</head>
+<body>
+ <div class="container">
+  <div id="start-screen">
+   <div class="buttons">
+    <button id="start-btn" class="start-button">Начать</button>
+   </div>
+   <div class="home-link-container">
+    <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+   </div>
+  </div>
+
+  <div id="sentence-screen" style="display: none;">
+   <div class="progress-container">
+    <svg class="progress-circle" width="60" height="60" viewBox="0 0 60 60">
+     <circle class="background" cx="30" cy="30" r="20" />
+     <circle class="progress" cx="30" cy="30" r="20" />
+    </svg>
+   </div>
+   <div class="sentence-field" id="sentence"></div>
+   <div class="controls">
+    <button class="control-btn" id="prev-btn">
+     <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M21 0C9.40202 0 0 9.40202 0 21C0 32.598 9.40202 42 21 42C32.598 42 42 32.598 42 21C42 9.40202 32.598 0 21 0ZM27.3594 14.4209L20.7803 21L27.3594 27.5791L24.04 30.8994L14.1406 21L24.04 11.1006L27.3594 14.4209Z" fill="#111110"/>
+     </svg>
+    </button>
+    <button class="control-btn" id="play-pause-btn">
+     <svg id="play-icon" style="display: none;" width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M21 0C32.598 0 42 9.40202 42 21C42 32.598 32.598 42 21 42C9.40202 42 0 32.598 0 21C0 9.40202 9.40202 0 21 0ZM17 29.5L30 21.0273L17 12.5V29.5Z" fill="#111110"/>
+     </svg>
+     <svg id="pause-icon" width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M21 0C32.598 0 42 9.40202 42 21C42 32.598 32.598 42 21 42C9.40202 42 0 32.598 0 21C0 9.40202 9.40202 0 21 0ZM14 12.7617V29.2383H18.6953V12.7617H14ZM23.3047 12.7617V29.2383H28V12.7617H23.3047Z" fill="#111110"/>
+     </svg>
+    </button>
+    <button class="control-btn" id="next-btn">
+     <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M21 0C32.598 0 42 9.40202 42 21C42 32.598 32.598 42 21 42C9.40202 42 0 32.598 0 21C0 9.40202 9.40202 0 21 0ZM14.6406 14.4209L21.2197 21L14.6406 27.5791L17.96 30.8994L27.8594 21L17.96 11.1006L14.6406 14.4209Z" fill="#111110"/>
+     </svg>
+    </button>
+   </div>
+   <div class="controls-link-container">
+    <a href="index.html" class="controls-link">Вернуться к другим заданиям</a>
+   </div>
+   <audio id="beep-sound" src="speedreading/beep.mp3" preload="auto"></audio>
+  </div>
+
+  <div id="final-screen" class="final-screen">
+   <div class="buttons">
+    <button id="repeat-btn" class="repeat-button">Повторить</button>
+   </div>
+   <div class="home-link-container">
+    <a href="index.html" class="home-link">Вернуться к другим заданиям</a>
+   </div>
+  </div>
+ </div>
+
+ <script>
+  const sentences = [
+   "Сегодня у Максима будет день рождения.",
+   "Налей мне пожалуйста кофе с молоком.",
+   "Завтра утром мне надо сходить в поликлинику.",
+   "Я положил бананы в корзину для покупок.",
+   "Мама поставила на зарядку свой телефон.",
+   "Помоги мне найти мячик, он куда-то укатился.",
+   "Я научился завязывать шнурки на ботинках.",
+   "Дай мне, пожалуйста, синюю ручку.",
+   "После дождя на дороге появились лужи.",
+   "Закрой, пожалуйста окно, мне холодно.",
+   "Через пять минут автобус приедет на нашу остановку.",
+   "Папа начкачивает колёса велосипеда.",
+   "Я взял лист бумаги и нарисовал кота.",
+   "Коля нашёл свою любимую игрушку под диваном.",
+   "Пожалуйста, закрой дверь в комнату.",
+   "Врач попросил меня открыть рот.",
+   "Бабушка испекла пирог с яблоками.",
+   "Убери свои носки в корзину для грязного белья.",
+   "В моём рюкзаке лежит школьная тетрадь."
+  ];
+
+  const startScreen = document.getElementById('start-screen');
+  const sentenceScreen = document.getElementById('sentence-screen');
+  const finalScreen = document.getElementById('final-screen');
+  const sentenceElement = document.getElementById('sentence');
+  const startBtn = document.getElementById('start-btn');
+  const repeatBtn = document.getElementById('repeat-btn');
+  const progressCircle = document.querySelector('.progress-circle .progress');
+  const beepSound = document.getElementById('beep-sound');
+
+  const prevBtn = document.getElementById('prev-btn');
+  const playPauseBtn = document.getElementById('play-pause-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const playIcon = document.getElementById('play-icon');
+  const pauseIcon = document.getElementById('pause-icon');
+
+  let currentSentences = [];
+  let currentIndex = 0;
+  let timerInterval;
+  let sentenceStartTime;
+  let pausedTime = 0;
+  let isPaused = false;
+  const sentenceDuration = 10000;
+
+  function playBeep() {
+    beepSound.currentTime = 0;
+    beepSound.play().catch(e => console.log("Audio play failed:", e));
+  }
+
+  function resetProgress() {
+    const radius = 20;
+    const circumference = 2 * Math.PI * radius;
+    progressCircle.style.strokeDashoffset = circumference;
+  }
+
+  function updateProgress() {
+    const radius = 20;
+    const circumference = 2 * Math.PI * radius;
+    const elapsed = Date.now() - sentenceStartTime;
+    const progress = (elapsed / sentenceDuration) * circumference;
+    progressCircle.style.strokeDashoffset = Math.max(0, circumference - progress);
+  }
+
+  function showSentence() {
+    if (currentIndex < currentSentences.length) {
+      playBeep();
+      sentenceElement.textContent = currentSentences[currentIndex];
+      sentenceStartTime = Date.now() - pausedTime;
+      resetProgress();
+    }
+  }
+
+  function startTimer() {
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      if (isPaused) return;
+      updateProgress();
+      const elapsed = Date.now() - sentenceStartTime;
+      if (elapsed >= sentenceDuration) {
+        currentIndex++;
+        pausedTime = 0;
+        if (currentIndex < currentSentences.length) {
+          showSentence();
+        } else {
+          clearInterval(timerInterval);
+          finishSession();
+        }
+      }
+    }, 10);
+  }
+
+  function togglePlayPause() {
+    isPaused = !isPaused;
+    if (isPaused) {
+      pausedTime = Date.now() - sentenceStartTime;
+      playIcon.style.display = 'block';
+      pauseIcon.style.display = 'none';
+    } else {
+      sentenceStartTime = Date.now() - pausedTime;
+      playIcon.style.display = 'none';
+      pauseIcon.style.display = 'block';
+    }
+  }
+
+  function goToPrev() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      pausedTime = 0;
+      showSentence();
+    }
+  }
+
+  function goToNext() {
+    if (currentIndex < currentSentences.length - 1) {
+      currentIndex++;
+      pausedTime = 0;
+      showSentence();
+    }
+  }
+
+  function startSession() {
+    currentSentences = [...sentences].sort(() => 0.5 - Math.random()).slice(0, 10);
+    currentIndex = 0;
+    isPaused = false;
+    pausedTime = 0;
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = 'block';
+    startScreen.style.display = 'none';
+    sentenceScreen.style.display = 'block';
+    finalScreen.style.display = 'none';
+    showSentence();
+    startTimer();
+  }
+
+  function finishSession() {
+    clearInterval(timerInterval);
+    sentenceScreen.style.display = 'none';
+    finalScreen.style.display = 'flex';
+  }
+
+  startBtn.addEventListener('click', startSession);
+  repeatBtn.addEventListener('click', startSession);
+  playPauseBtn.addEventListener('click', togglePlayPause);
+  prevBtn.addEventListener('click', goToPrev);
+  nextBtn.addEventListener('click', goToNext);
+ </script>
+</body>
+</html>
